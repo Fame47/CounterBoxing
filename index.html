@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Counter Boxing</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
+.screen{display:none;min-height:100vh;width:100%;align-items:center;justify-content:center;background:#000}
+.screen.active{display:flex}
+.frame{position:relative;width:min(100vw,1920px);aspect-ratio:16/9;background:#000;overflow:hidden;margin:auto}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
+.start-btn{
+  position:absolute;left:50%;bottom:12%;transform:translateX(-50%);
+  width:22%;height:9%;border-radius:12px;border:2px solid #ffd032;
+  background:linear-gradient(180deg,#e0a21f,#9e6500);color:#111;
+  font-size:clamp(20px,2.5vw,46px);font-weight:1000;cursor:pointer;
+  box-shadow:0 0 26px rgba(255,210,50,.45);z-index:20;text-transform:uppercase
+}
+.start-btn:hover{transform:translateX(-50%) scale(1.04)}
+.clean-menu{position:absolute;left:50%;top:43%;transform:translateX(-50%);width:31%;display:flex;flex-direction:column;gap:1.35vh}
+.ui-btn{
+  border:2px solid rgba(255,210,60,.78);background:linear-gradient(180deg,rgba(10,10,10,.82),rgba(0,0,0,.92));
+  color:#fff;border-radius:10px;min-height:clamp(42px,6.2vh,82px);font-weight:950;font-size:clamp(17px,2.05vw,39px);
+  letter-spacing:.04em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.55), inset 0 0 16px rgba(255,255,255,.08);text-shadow:0 2px 4px #000
+}
+.ui-btn:hover{transform:scale(1.025);border-color:#ffd032;box-shadow:0 0 18px rgba(255,210,50,.45),0 8px 22px rgba(0,0,0,.55)}
+.ui-btn small{display:block;font-size:.48em;color:#bdbdc8;line-height:.9}
+.top-back,.fight-menu{
+  position:absolute;left:2%;top:3%;width:13%;height:7%;border:2px solid rgba(255,210,60,.78);
+  background:rgba(0,0,0,.66);color:#fff;border-radius:10px;font-weight:950;
+  font-size:clamp(13px,1.5vw,26px);cursor:pointer;z-index:30;pointer-events:auto
+}
+.fight-menu{top:4%;width:17.5%;pointer-events:auto}
+.top-back:hover,.fight-menu:hover{box-shadow:0 0 16px rgba(255,210,50,.5)}
+.notice{
+  position:absolute;top:2%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.76);
+  border:2px solid rgba(255,210,60,.8);border-radius:999px;padding:.7% 2%;color:#ffd032;
+  font-weight:950;font-size:clamp(13px,1.3vw,24px);text-align:center;display:none
+}
+.notice.show{display:block}
+.record-box{
+  position:absolute;left:4.7%;top:18.5%;width:20.8%;height:32%;
+  background:rgba(0,0,0,.58);border:2px solid rgba(255,210,60,.75);
+  border-radius:14px;padding:1.1% 1.6%;box-shadow:0 8px 24px rgba(0,0,0,.6)
+}
+.record-title{color:#ffd032;font-weight:950;text-align:center;font-size:clamp(18px,2vw,40px);margin-bottom:5%;text-transform:uppercase}
+.record-row{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.18);padding:4.8% 0;font-size:clamp(15px,1.55vw,32px);font-weight:900;text-transform:uppercase}
+.record-row span:last-child{color:#ffd032;font-size:1.18em}
+.locker-tabs{position:absolute;right:3.2%;top:17%;width:26.5%;display:flex;flex-direction:column;gap:1.6vh}
+.locker-tab{
+  min-height:clamp(56px,9.2vh,108px);display:flex;align-items:center;justify-content:space-between;padding:0 6%;
+  border:2px solid rgba(255,210,60,.72);border-radius:12px;background:rgba(0,0,0,.62);
+  font-size:clamp(18px,1.8vw,36px);font-weight:950;text-transform:uppercase
+}
+.locker-tab small{display:block;color:#aaa;font-size:.56em;margin-top:2%}
+.locker-tab{cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
+.locker-tab:hover{
+  transform:scale(1.025);
+  border-color:#ffd032;
+  box-shadow:0 0 20px rgba(255,210,50,.55), inset 0 0 18px rgba(255,210,50,.16);
+}
+.lock{color:#ffd032;font-size:1.1em}
+.hud{position:absolute;inset:0;pointer-events:none}
+.panel{position:absolute;background:rgba(0,0,0,.64);border:2px solid rgba(255,255,255,.15);border-radius:12px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.player{left:2%;top:12.5%;width:17.5%;height:29%;border-color:rgba(46,123,255,.75)}
+.enemy{right:2%;top:12.5%;width:17.5%;height:22%;border-color:rgba(255,53,53,.75)}
+.title{font-size:clamp(15px,2vw,38px);font-weight:950;margin-top:5%}
+.champGlow{color:#ffd032;text-shadow:0 0 8px #ffd032,0 0 18px #ffd032,0 0 32px rgba(255,210,50,.8);animation:champPulse 1.15s infinite alternate}
+@keyframes champPulse{from{text-shadow:0 0 8px #ffd032,0 0 18px rgba(255,210,50,.7)}to{text-shadow:0 0 14px #fff2a0,0 0 34px #ffd032,0 0 55px rgba(255,210,50,.95)}}
+.hearts{font-size:clamp(15px,1.5vw,30px);margin:6% auto 3%;letter-spacing:.04em;width:92%}
+.row{border-top:1px solid rgba(255,255,255,.18);padding:4% 0;color:#d2d2d8;font-size:clamp(10px,1.2vw,20px);font-weight:850}
+.row strong{display:block;color:#ffd032;font-size:clamp(18px,2vw,38px);margin-top:1%}
+.round{position:absolute;top:4%;right:7.8%;width:6.5%;height:9%;border:2px solid rgba(255,210,60,.75);border-radius:0 0 16px 16px;background:rgba(0,0,0,.64);text-align:center;font-weight:950;padding-top:.4%}
+.round small{display:block;font-size:clamp(8px,1vw,16px);color:#ddd}
+.round span{font-size:clamp(18px,3vw,52px);line-height:.9}
+.status{position:absolute;left:50%;bottom:18.5%;transform:translateX(-50%);min-width:28%;max-width:60%;padding:.8% 2%;border-radius:999px;background:rgba(0,0,0,.66);border:2px solid rgba(255,210,60,.7);font-weight:950;text-align:center;font-size:clamp(12px,1.35vw,28px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.actions{position:absolute;left:6.5%;right:6.5%;bottom:2.7%;height:14.5%;display:grid;grid-template-columns:repeat(5,1fr);gap:1.3%;pointer-events:auto}
+.move{border:2px solid rgba(255,255,255,.25);border-radius:14px;color:#fff;font-size:clamp(16px,2vw,38px);font-weight:950;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.45),inset 0 0 14px rgba(255,255,255,.08);text-shadow:0 2px 4px #000}
+.move:active{transform:scale(.98)}
+.move:disabled{opacity:.55;cursor:not-allowed}
+.jab{background:linear-gradient(135deg,#700707,#d11d1d)}
+.hook{background:linear-gradient(135deg,#061d3f,#0b62ad)}
+.uppercut{background:linear-gradient(135deg,#8b5a00,#d89b22);color:#111;text-shadow:none}
+.block{background:linear-gradient(135deg,#063f19,#108336)}
+.taunt{background:linear-gradient(135deg,#3b0a5e,#8c22df)}
+.sound{position:absolute;right:2%;bottom:2%;z-index:20;pointer-events:auto;border:2px solid rgba(255,210,60,.75);border-radius:999px;background:rgba(0,0,0,.55);color:#fff;padding:.5% 1%;font-weight:900;font-size:clamp(10px,1vw,18px);cursor:pointer}
+.flash{position:absolute;inset:0;opacity:0;pointer-events:none;z-index:10}
+.flash.red{animation:fr .28s ease-out}.flash.white{animation:fw .24s ease-out}.flash.gold{animation:fg .45s ease-out}
+@keyframes fr{0%{opacity:.45;background:#ff1b1b}100%{opacity:0;background:#ff1b1b}}
+@keyframes fw{0%{opacity:.38;background:#fff}100%{opacity:0;background:#fff}}
+@keyframes fg{0%{opacity:.5;background:#ffd032}100%{opacity:0;background:#ffd032}}
+.shake{animation:shake .35s linear}.bigShake{animation:bigShake .45s linear}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-7px,4px)}40%{transform:translate(7px,-3px)}60%{transform:translate(-5px,-5px)}80%{transform:translate(5px,4px)}}
+@keyframes bigShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-13px,7px)}30%{transform:translate(12px,-8px)}45%{transform:translate(-10px,-9px)}60%{transform:translate(9px,8px)}75%{transform:translate(-7px,5px)}}
+.koOverlay{position:absolute;inset:0;display:none;z-index:40;pointer-events:auto;background:rgba(0,0,0,.42);align-items:center;justify-content:center;flex-direction:column;text-align:center}
+.koOverlay.show{display:flex}
+.koText{color:#fff;font-size:clamp(72px,11vw,220px);font-weight:1000;letter-spacing:.08em;text-shadow:0 0 12px #fff,0 0 32px #ff2020,0 0 60px #ff2020;animation:koPop .45s ease-out}
+@keyframes koPop{from{transform:scale(.65);opacity:.2}to{transform:scale(1);opacity:1}}
+.nextBtn{margin-top:1.5%;min-width:clamp(180px,24vw,420px);padding:clamp(12px,1.2vw,24px) clamp(22px,2vw,42px);border-radius:12px;border:2px solid #ffd032;background:linear-gradient(180deg,#e0a21f,#9e6500);color:#111;font-weight:1000;font-size:clamp(18px,2.1vw,42px);text-transform:uppercase;cursor:pointer;box-shadow:0 0 24px rgba(255,210,50,.45)}
+.nextBtn:hover{transform:scale(1.04)}
+@media(max-width:760px){
+  .frame{width:100vw;height:100vh;aspect-ratio:auto}.bg{object-fit:cover}.clean-menu{width:60%;top:38%}.ui-btn{font-size:16px;min-height:42px}
+  .start-btn{width:42%;height:8%;bottom:10%;font-size:22px}.top-back{left:1%;top:2%;width:22%;height:7%;font-size:12px}.fight-menu{left:1%;top:2%;width:24%;height:7%;font-size:12px}
+  .round{right:2%;top:2%;width:18%;height:7%}.player,.enemy{width:24%}.player{left:1%;top:10%;height:27%}.enemy{right:1%;top:10%;height:20%}
+  .actions{left:2%;right:2%;bottom:2%;height:13%;gap:.7%}.move{border-radius:8px;font-size:13px}.status{bottom:18%;max-width:82%;font-size:12px}
+  .record-box{left:3%;top:13%;width:32%;height:31%}.locker-tabs{right:3%;top:15%;width:33%;gap:.8vh}.locker-tab{min-height:44px;font-size:12px}
+}
+</style>
+</head>
+
+<body>
+
+<section id="start" class="screen active">
+  <div class="frame">
+    <img class="bg" src="images/start.png" alt="Counter Boxing">
+    <button class="start-btn" onclick="show('menu')">Start</button>
+  </div>
+</section>
+
+<section id="menu" class="screen">
+  <div class="frame">
+    <img class="bg" src="images/menu.png" alt="Main menu">
+    <div class="clean-menu">
+      <button class="ui-btn" onclick="startCareer()">Career</button>
+      <button class="ui-btn" onclick="notice('VS Mode coming soon')">VS Mode</button>
+      <button class="ui-btn" onclick="show('locker')">Locker Room</button>
+      <button class="ui-btn" onclick="notice('Rankings coming soon')">Rankings <small>Coming Soon</small></button>
+      <button class="ui-btn" onclick="show('howto')">How To Play</button>
+    </div>
+    <div id="menuNotice" class="notice"></div>
+  </div>
+</section>
+
+<section id="locker" class="screen">
+  <div class="frame">
+    <img class="bg" src="images/locker.png" alt="Locker Room">
+    <button class="top-back" onclick="show('menu')">BACK</button>
+
+    <div class="record-box">
+      <div class="record-title">Fight Record</div>
+      <div class="record-row"><span>Wins</span><span id="lockerWins">0</span></div>
+      <div class="record-row"><span>Losses</span><span id="lockerLosses">0</span></div>
+      <div class="record-row"><span>Title Defenses</span><span id="lockerDefenses">0</span></div>
+    </div>
+
+    <div class="locker-tabs">
+      <div class="locker-tab" onclick="lockerNotice('Gender coming soon')"><div>Gender<small>Coming Soon</small></div><div class="lock">🔒</div></div>
+      <div class="locker-tab" onclick="lockerNotice('Race coming soon')"><div>Race<small>Coming Soon</small></div><div class="lock">🔒</div></div>
+      <div class="locker-tab" onclick="lockerNotice('Gloves coming soon')"><div>Gloves<small>Coming Soon</small></div><div class="lock">🔒</div></div>
+      <div class="locker-tab" onclick="lockerNotice('Trunks coming soon')"><div>Trunks<small>Coming Soon</small></div><div class="lock">🔒</div></div>
+      <div class="locker-tab" onclick="lockerNotice('Store coming soon')"><div>Store<small>Coming Soon</small></div><div class="lock">🔒</div></div>
+    </div>
+  <div id="lockerNotice" class="notice"></div>
+  </div>
+</section>
+
+<section id="howto" class="screen">
+  <div class="frame">
+    <img class="bg" src="images/howto.png" alt="How to Play">
+    <button class="top-back" onclick="show('menu')">BACK</button>
+  </div>
+</section>
+
+<section id="career" class="screen">
+  <div class="frame" id="fightFrame">
+    <img id="scene" class="bg" src="images/idle.png" alt="Fight scene">
+    <div class="hud">
+      <div class="round"><small>ROUND</small><span id="round">1</span></div>
+      <div class="panel player">
+        <div class="title" id="youTitle">YOU</div>
+        <div class="hearts" id="youHearts"></div>
+        <div class="row">STREAK<strong id="streak">0</strong></div>
+        <div class="row">WINS<strong id="wins">0</strong></div>
+      </div>
+      <div class="panel enemy">
+        <div class="title">OPPONENT</div>
+        <div class="hearts" id="enemyHearts"></div>
+        <div class="row">FIGHT<strong id="fightNum">1 OF 6</strong></div>
+      </div>
+      <div class="status" id="status">Choose your move.</div>
+      <div class="actions" id="actionButtons">
+        <button class="move jab" onclick="play('jab')">Jab</button>
+        <button class="move hook" onclick="play('hook')">Hook</button>
+        <button class="move uppercut" onclick="play('uppercut')">Uppercut</button>
+        <button class="move block" onclick="play('block')">Block</button>
+        <button class="move taunt" onclick="play('taunt')">Taunt</button>
+      </div>
+      <button class="sound" id="soundBtn" onclick="toggleSound()">🔊 Sound</button>
+      <button class="fight-menu" onclick="backToMenu()">MENU</button>
+      <div id="flash" class="flash"></div>
+      <div id="koOverlay" class="koOverlay">
+        <div class="koText">K.O.</div>
+        <button id="nextFightBtn" class="nextBtn" onclick="continueAfterKO()">Next Fight</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+const MAX=8;
+const scenes={idle:"images/idle.png",counter:"images/counter.png",countered:"images/countered.png",playerBlock:"images/playerBlock.png",opponentBlock:"images/opponentBlock.png",playerTaunt:"images/playerTaunt.png",opponentTaunt:"images/opponentTaunt.png",draw:"images/draw.png"};
+let hp=MAX,ehp=MAX,round=1,fight=1,wins=0,losses=0,streak=0,titleDefenses=0;
+let champ=false,pPower=false,ePower=false,locked=false,soundOn=true,audioCtx=null,audioUnlocked=false,idleTimer=null,pendingContinue=false;
+function $(id){return document.getElementById(id)}
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");if(id==="locker"||id==="career")render()}
+function notice(text){const n=$("menuNotice");n.textContent=text;n.classList.add("show");setTimeout(()=>n.classList.remove("show"),1400)}
+function lockerNotice(text){const n=$("lockerNotice");if(!n)return; n.textContent=text;n.classList.add("show");setTimeout(()=>n.classList.remove("show"),1400)}
+function backToMenu(){
+  clearTimeout(idleTimer);
+  pendingContinue=false;
+  locked=false;
+  setButtons(false);
+  const ko=$("koOverlay");
+  if(ko) ko.classList.remove("show");
+  show("menu");
+}
+function startCareer(){unlockAudio();$("koOverlay").classList.remove("show");pendingContinue=false;show("career");render()}
+function hearts(n){return "❤️".repeat(Math.max(0,n))+"🖤".repeat(Math.max(0,MAX-n))}
+function render(){
+  $("youHearts").textContent=hearts(hp);$("enemyHearts").textContent=hearts(ehp);$("round").textContent=round;$("streak").textContent=streak;$("wins").textContent=wins;$("fightNum").textContent=champ?"TITLE DEFENSE":`${fight} OF 6`;
+  const title=$("youTitle");title.textContent=champ?"CHAMPION":"YOU";title.classList.toggle("champGlow",champ);
+  if($("lockerWins")){$("lockerWins").textContent=wins;$("lockerLosses").textContent=losses;$("lockerDefenses").textContent=titleDefenses}
+}
+function setButtons(disabled){document.querySelectorAll(".move").forEach(b=>b.disabled=disabled)}
+function setScene(name,msg="",shake="",flash="",autoReturn=true){
+  clearTimeout(idleTimer);$("scene").src=scenes[name]||scenes.idle;if(msg)$("status").textContent=msg;
+  if(shake){const frame=$("fightFrame");frame.classList.remove("shake","bigShake");void frame.offsetWidth;frame.classList.add(shake);setTimeout(()=>frame.classList.remove(shake),520)}
+  if(flash){const fl=$("flash");fl.className="flash";void fl.offsetWidth;fl.classList.add(flash);setTimeout(()=>fl.className="flash",520)}
+  if(autoReturn){idleTimer=setTimeout(()=>{$("scene").src=scenes.idle;$("status").textContent=champ?"Champion mode. Defend the belt.":"Choose your move.";locked=false;setButtons(false)},2000)}
+}
+function cpu(){return["jab","hook","uppercut","block","taunt"][Math.floor(Math.random()*5)]}
+function beats(a,b){return(a==="jab"&&b==="uppercut")||(a==="uppercut"&&b==="hook")||(a==="hook"&&b==="jab")}
+function pow(dmg,who){if(dmg<=0)return dmg;if(who==="p"&&pPower){pPower=false;return dmg*2}if(who==="e"&&ePower){ePower=false;return dmg*2}return dmg}
+async function play(p){
+  if(locked||pendingContinue)return;locked=true;setButtons(true);await unlockAudio();
+  const c=cpu();let pd=0,ed=0,sc="idle",msg="",sh="",fl="";bell();
+  if(p==="taunt"&&c==="block"){pPower=true;sc="playerTaunt";msg="Taunt success! Next hit does double.";cheer();fl="gold"}
+  else if(c==="taunt"&&p==="block"){ePower=true;sc="opponentTaunt";msg="Opponent taunt success.";cheer(false);fl="gold"}
+  else if(p==="taunt"){pd=4;sc="countered";msg="Bad taunt! You lose 4 hearts.";sh="bigShake";fl="red";punchSound()}
+  else if(c==="taunt"){ed=pow(2,"p");sc="counter";msg="You catch them taunting!";sh="shake";fl="white";punchSound()}
+  else if(p==="block"){sc="playerBlock";if(c==="jab"){msg="Perfect block. Jab stopped.";blockSound()}else{pd=pow(1,"e");msg="You block. Still lose 1 heart.";blockSound();sh="shake"}}
+  else if(c==="block"){sc="opponentBlock";if(p==="jab"){msg="Opponent blocks your Jab.";blockSound()}else{ed=pow(1,"p");msg="You hit their block. They lose 1 heart.";blockSound();sh="shake"}}
+  else if(p===c){pd=pow(1,"e");ed=pow(1,"p");sc="draw";msg="Same move. Both lose 1 heart.";blockSound();sh="shake"}
+  else if(beats(p,c)){ed=pow(2,"p");sc="counter";msg=`Counter lands! Opponent loses ${ed} hearts.`;sh="shake";fl="white";punchSound()}
+  else{pd=pow(2,"e");sc="countered";msg=`You got countered! Lose ${pd} hearts.`;sh="bigShake";fl="red";punchSound()}
+  hp=Math.max(0,hp-pd);ehp=Math.max(0,ehp-ed);
+  if(hp<=0&&ehp<=0){losses++;streak=0;champ=false;fight=1;msg="Double K.O. Ladder resets.";koSound();resetRoundState();render();setScene("draw",msg,"bigShake","white",false);showKO("Restart Ladder");return}
+  if(hp<=0){losses++;streak=0;champ=false;fight=1;msg="K.O. You lost. Ladder resets.";koSound();resetRoundState();render();setScene("countered",msg,"bigShake","red",false);showKO("Restart Ladder");return}
+  if(ehp<=0){
+    wins++;koSound();
+    if(champ){streak+=2;titleDefenses++;msg="K.O. Title defense won!";resetRoundState();render();setScene("counter",msg,"shake","white",false);showKO("Defend Belt");return}
+    if(fight===6){champ=true;streak+=2;msg="K.O. You are the Champion!";resetRoundState();render();setScene("counter",msg,"shake","gold",false);showKO("Defend Belt");return}
+    streak++;fight++;msg=fight===6?"K.O. Championship fight next!":"K.O. You climb the ladder!";resetRoundState();render();setScene("counter",msg,"shake","white",false);showKO("Next Fight");return
+  }
+  round++;render();setScene(sc,msg,sh,fl,true)
+}
+function resetRoundState(){hp=MAX;ehp=MAX;round=1;pPower=false;ePower=false}
+function showKO(buttonText){pendingContinue=true;locked=true;setButtons(true);$("nextFightBtn").textContent=buttonText;setTimeout(()=>{$("koOverlay").classList.add("show")},650)}
+function continueAfterKO(){$("koOverlay").classList.remove("show");$("scene").src=scenes.idle;$("status").textContent=champ?"Champion mode. Defend the belt.":"Choose your move.";pendingContinue=false;locked=false;setButtons(false);render();bell()}
+function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
+async function unlockAudio(){try{const ctx=getAudio();if(ctx.state==="suspended")await ctx.resume();if(!audioUnlocked){const o=ctx.createOscillator();const g=ctx.createGain();g.gain.value=.00001;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.01);audioUnlocked=true}}catch(e){}}
+function tone(f,d,t="sine",gv=.05,slide=null){if(!soundOn)return;const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(slide,ctx.currentTime+d);g.gain.setValueAtTime(.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(gv,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+d)}
+function noise(d=.1,gv=.04,f=900){if(!soundOn)return;const ctx=getAudio();const size=Math.floor(ctx.sampleRate*d);const buf=ctx.createBuffer(1,size,ctx.sampleRate);const data=buf.getChannelData(0);for(let i=0;i<size;i++)data[i]=(Math.random()*2-1)*(1-i/size);const s=ctx.createBufferSource();const filter=ctx.createBiquadFilter();const g=ctx.createGain();filter.type="bandpass";filter.frequency.value=f;g.gain.setValueAtTime(gv,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);s.buffer=buf;s.connect(filter);filter.connect(g);g.connect(ctx.destination);s.start();s.stop(ctx.currentTime+d)}
+function bell(){tone(760,.12,"sine",.045);setTimeout(()=>tone(980,.12,"sine",.035),80)}
+function punchSound(){noise(.09,.075,550);tone(120,.07,"square",.035,80)}
+function blockSound(){tone(210,.08,"square",.04,150);noise(.07,.035,700)}
+function koSound(){tone(180,.18,"square",.08,80);setTimeout(()=>tone(90,.24,"sawtooth",.08,45),110);setTimeout(()=>tone(55,.32,"sawtooth",.07,35),240)}
+function cheer(){noise(.45,.055,1400);setTimeout(()=>noise(.35,.045,1800),120);tone(520,.18,"triangle",.035);setTimeout(()=>tone(660,.18,"triangle",.03),120);setTimeout(()=>tone(780,.18,"triangle",.025),240)}
+function toggleSound(){soundOn=!soundOn;$("soundBtn").textContent=soundOn?"🔊 Sound":"🔇 Muted";if(soundOn){unlockAudio();bell()}}
+render();
+</script>
+</body>
+</html>
