@@ -3,273 +3,1609 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Counter Boxing</title>
+<title>Counter Boxing - Fixed Asset Test Build</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
 .screen{display:none;min-height:100vh;width:100%;align-items:center;justify-content:center;background:#000}
 .screen.active{display:flex}
-.frame{position:relative;width:min(100vw,1920px);aspect-ratio:16/9;background:#000;overflow:hidden;margin:auto}
-.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;user-select:none;-webkit-user-drag:none}
-.start-btn{
-  position:absolute;left:50%;bottom:12%;transform:translateX(-50%);
-  width:22%;height:9%;border-radius:12px;border:2px solid #ffd032;
-  background:linear-gradient(180deg,#e0a21f,#9e6500);color:#111;
-  font-size:clamp(20px,2.5vw,46px);font-weight:1000;cursor:pointer;
-  box-shadow:0 0 26px rgba(255,210,50,.45);z-index:20;text-transform:uppercase
-}
+.frame{position:relative;width:min(100vw,calc(100vh * 16 / 9),1920px);aspect-ratio:16/9;background:#000;overflow:hidden;margin:auto}
+.bg,.layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.opponentLayer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:4;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.gloveLayer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:7;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.start-btn{position:absolute;left:50%;bottom:12%;transform:translateX(-50%);width:22%;height:9%;border-radius:12px;border:2px solid #ffd032;background:linear-gradient(180deg,#e0a21f,#9e6500);color:#111;font-size:clamp(20px,2.5vw,46px);font-weight:1000;cursor:pointer;box-shadow:0 0 26px rgba(255,210,50,.45);z-index:20;text-transform:uppercase}
 .start-btn:hover{transform:translateX(-50%) scale(1.04)}
-.clean-menu{position:absolute;left:50%;top:43%;transform:translateX(-50%);width:31%;display:flex;flex-direction:column;gap:1.35vh}
-.ui-btn{
-  border:2px solid rgba(255,210,60,.78);background:linear-gradient(180deg,rgba(10,10,10,.82),rgba(0,0,0,.92));
-  color:#fff;border-radius:10px;min-height:clamp(42px,6.2vh,82px);font-weight:950;font-size:clamp(17px,2.05vw,39px);
-  letter-spacing:.04em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.55), inset 0 0 16px rgba(255,255,255,.08);text-shadow:0 2px 4px #000
-}
+.clean-menu{position:absolute;left:50%;top:43%;transform:translateX(-50%);width:31%;display:flex;flex-direction:column;gap:1.35vh;z-index:20}
+.ui-btn{border:2px solid rgba(255,210,60,.78);background:linear-gradient(180deg,rgba(10,10,10,.82),rgba(0,0,0,.92));color:#fff;border-radius:10px;min-height:clamp(42px,6.2vh,82px);font-weight:950;font-size:clamp(17px,2.05vw,39px);letter-spacing:.04em;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 22px rgba(0,0,0,.55), inset 0 0 16px rgba(255,255,255,.08);text-shadow:0 2px 4px #000}
 .ui-btn:hover{transform:scale(1.025);border-color:#ffd032;box-shadow:0 0 18px rgba(255,210,50,.45),0 8px 22px rgba(0,0,0,.55)}
 .ui-btn small{display:block;font-size:.48em;color:#bdbdc8;line-height:.9}
-.top-back,.fight-menu{
-  position:absolute;left:2%;top:3%;width:13%;height:7%;border:2px solid rgba(255,210,60,.78);
-  background:rgba(0,0,0,.66);color:#fff;border-radius:10px;font-weight:950;
-  font-size:clamp(13px,1.5vw,26px);cursor:pointer;z-index:30;pointer-events:auto
-}
+.top-back,.fight-menu{position:absolute;left:2%;top:3%;width:13%;height:7%;border:2px solid rgba(255,210,60,.78);background:rgba(0,0,0,.66);color:#fff;border-radius:10px;font-weight:950;font-size:clamp(13px,1.5vw,26px);cursor:pointer;z-index:30;pointer-events:auto}
 .fight-menu{top:4%;width:17.5%;pointer-events:auto}
-.top-back:hover,.fight-menu:hover{box-shadow:0 0 16px rgba(255,210,50,.5)}
-.notice{
-  position:absolute;top:2%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.76);
-  border:2px solid rgba(255,210,60,.8);border-radius:999px;padding:.7% 2%;color:#ffd032;
-  font-weight:950;font-size:clamp(13px,1.3vw,24px);text-align:center;display:none
+.notice{position:absolute;top:2%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.76);border:2px solid rgba(255,210,60,.8);border-radius:999px;padding:.7% 2%;color:#ffd032;font-weight:950;font-size:clamp(13px,1.3vw,24px);text-align:center;display:none;z-index:50}.notice.show{display:block}
+.record-box{position:absolute;left:4.7%;top:18.5%;width:20.8%;height:36%;background:rgba(0,0,0,.58);border:2px solid rgba(255,210,60,.75);border-radius:14px;padding:1.1% 1.6%;box-shadow:0 8px 24px rgba(0,0,0,.6);z-index:20}
+.record-title{color:#ffd032;font-weight:950;text-align:center;font-size:clamp(18px,2vw,40px);margin-bottom:5%;text-transform:uppercase}.record-row{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.18);padding:4.5% 0;font-size:clamp(15px,1.45vw,28px);font-weight:900;text-transform:uppercase}.record-row span:last-child{color:#ffd032;font-size:1.18em}
+.locker-tabs{position:absolute;right:3.2%;top:17%;width:26.5%;display:flex;flex-direction:column;gap:1.6vh;z-index:25}.locker-tab{min-height:clamp(56px,9.2vh,108px);display:flex;align-items:center;justify-content:space-between;padding:0 6%;border:2px solid rgba(255,210,60,.72);border-radius:12px;background:rgba(0,0,0,.62);font-size:clamp(18px,1.8vw,36px);font-weight:950;text-transform:uppercase;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}.locker-tab small{display:block;color:#aaa;font-size:.56em;margin-top:2%}.locker-tab:hover{transform:scale(1.025);border-color:#ffd032;box-shadow:0 0 20px rgba(255,210,50,.55), inset 0 0 18px rgba(255,210,50,.16)}.lock{color:#ffd032;font-size:1.1em}
+.grid{position:absolute;left:50%;top:16%;transform:translateX(-50%);width:72%;height:68%;display:grid;grid-template-columns:repeat(3,1fr);gap:2%;z-index:35}.card{position:relative;background:rgba(0,0,0,.72);border:4px solid #fff;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center}.card.locked{filter:grayscale(1);opacity:.55}.card:hover{border-color:#ffd032;box-shadow:0 0 18px rgba(255,210,50,.55)}.card img{width:100%;height:100%;object-fit:cover}.card.storeCard img{object-fit:contain;background:#efefef}.cardLabel{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.82);padding:2%;font-weight:1000;font-size:clamp(16px,1.8vw,34px);text-align:center;text-transform:uppercase;color:#fff;text-shadow:0 2px 4px #000}.cardLabel span{color:#ffd032}
+.panel{position:absolute;background:rgba(0,0,0,.64);border:2px solid rgba(255,255,255,.15);border-radius:12px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.35)}.player{left:2%;top:12.5%;width:17.5%;height:29%;border-color:rgba(46,123,255,.75);z-index:24}.enemy{right:2%;top:12.5%;width:17.5%;height:22%;border-color:rgba(255,53,53,.75);z-index:24}.title{font-size:clamp(15px,2vw,38px);font-weight:950;margin-top:5%}.champGlow{color:#ffd032;text-shadow:0 0 8px #ffd032,0 0 18px #ffd032,0 0 32px rgba(255,210,50,.8);animation:champPulse 1.15s infinite alternate}@keyframes champPulse{from{text-shadow:0 0 8px #ffd032,0 0 18px rgba(255,210,50,.7)}to{text-shadow:0 0 14px #fff2a0,0 0 34px #ffd032,0 0 55px rgba(255,210,50,.95)}}.hearts{font-size:clamp(15px,1.5vw,30px);margin:6% auto 3%;letter-spacing:.04em;width:92%}.row{border-top:1px solid rgba(255,255,255,.18);padding:4% 0;color:#d2d2d8;font-size:clamp(10px,1.2vw,20px);font-weight:850}.row strong{display:block;color:#ffd032;font-size:clamp(18px,2vw,38px);margin-top:1%}.round{position:absolute;top:4%;right:7.8%;width:6.5%;height:9%;border:2px solid rgba(255,210,60,.75);border-radius:0 0 16px 16px;background:rgba(0,0,0,.64);text-align:center;font-weight:950;padding-top:.4%;z-index:24}.round small{display:block;font-size:clamp(8px,1vw,16px);color:#ddd}.round span{font-size:clamp(18px,3vw,52px);line-height:.9}.status{position:absolute;left:50%;bottom:18.5%;transform:translateX(-50%);min-width:28%;max-width:60%;padding:.8% 2%;border-radius:999px;background:rgba(0,0,0,.66);border:2px solid rgba(255,210,60,.7);font-weight:950;text-align:center;font-size:clamp(12px,1.35vw,28px);box-shadow:0 8px 20px rgba(0,0,0,.35);z-index:24}.actions{position:absolute;left:6.5%;right:6.5%;bottom:2.7%;height:14.5%;display:grid;grid-template-columns:repeat(5,1fr);gap:1.3%;pointer-events:auto;z-index:30}.move{border:2px solid rgba(255,255,255,.25);border-radius:14px;color:#fff;font-size:clamp(16px,2vw,38px);font-weight:950;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.45),inset 0 0 14px rgba(255,255,255,.08);text-shadow:0 2px 4px #000}.move:active{transform:scale(.98)}.move:disabled{opacity:.55;cursor:not-allowed}.jab{background:linear-gradient(135deg,#700707,#d11d1d)}.hook{background:linear-gradient(135deg,#061d3f,#0b62ad)}.uppercut{background:linear-gradient(135deg,#8b5a00,#d89b22);color:#111;text-shadow:none}.block{background:linear-gradient(135deg,#063f19,#108336)}.taunt{background:linear-gradient(135deg,#3b0a5e,#8c22df)}.sound{position:absolute;right:2%;bottom:2%;z-index:35;pointer-events:auto;border:2px solid rgba(255,210,60,.75);border-radius:999px;background:rgba(0,0,0,.55);color:#fff;padding:.5% 1%;font-weight:900;font-size:clamp(10px,1vw,18px);cursor:pointer}
+.flash{position:absolute;inset:0;opacity:0;pointer-events:none;z-index:40}.flash.red{animation:fr .28s ease-out}.flash.white{animation:fw .24s ease-out}.flash.gold{animation:fg .45s ease-out}@keyframes fr{0%{opacity:.45;background:#ff1b1b}100%{opacity:0;background:#ff1b1b}}@keyframes fw{0%{opacity:.38;background:#fff}100%{opacity:0;background:#fff}}@keyframes fg{0%{opacity:.5;background:#ffd032}100%{opacity:0;background:#ffd032}}.shake{animation:shake .35s linear}.bigShake{animation:bigShake .45s linear}@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-7px,4px)}40%{transform:translate(7px,-3px)}60%{transform:translate(-5px,-5px)}80%{transform:translate(5px,4px)}}@keyframes bigShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-13px,7px)}30%{transform:translate(12px,-8px)}45%{transform:translate(-10px,-9px)}60%{transform:translate(9px,8px)}75%{transform:translate(-7px,5px)}}.koOverlay{position:absolute;inset:0;display:none;z-index:55;pointer-events:auto;background:rgba(0,0,0,.42);align-items:center;justify-content:center;flex-direction:column;text-align:center}.koOverlay.show{display:flex}.koText{color:#fff;font-size:clamp(72px,11vw,220px);font-weight:1000;letter-spacing:.08em;text-shadow:0 0 12px #fff,0 0 32px #ff2020,0 0 60px #ff2020;animation:koPop .45s ease-out}@keyframes koPop{from{transform:scale(.65);opacity:.2}to{transform:scale(1);opacity:1}}.nextBtn{margin-top:1.5%;min-width:clamp(180px,24vw,420px);padding:clamp(12px,1.2vw,24px) clamp(22px,2vw,42px);border-radius:12px;border:2px solid #ffd032;background:linear-gradient(180deg,#e0a21f,#9e6500);color:#111;font-weight:1000;font-size:clamp(18px,2.1vw,42px);text-transform:uppercase;cursor:pointer;box-shadow:0 0 24px rgba(255,210,50,.45)}.nextBtn:hover{transform:scale(1.04)}
+.careerIntroFrame{display:none}.careerIntroText{position:absolute;left:50%;top:20%;transform:translateX(-50%);width:min(62%,980px);background:rgba(0,0,0,.82);border:2px solid rgba(255,210,60,.84);border-radius:16px;padding:1.1% 2%;font-size:clamp(20px,2vw,42px);font-weight:950;text-align:center;text-shadow:0 2px 4px #000;z-index:30}.careerIntroBtn{bottom:9%;z-index:32}.optionPanel{position:absolute;left:50%;top:22%;transform:translateX(-50%);width:48%;background:rgba(0,0,0,.72);border:2px solid rgba(255,210,60,.8);border-radius:14px;padding:2%;z-index:30}.optionPanel label{display:block;font-size:clamp(18px,2vw,32px);font-weight:950;text-transform:uppercase;color:#ffd032;margin:2% 0}.optionPanel input,.optionPanel select{width:100%;padding:2%;font-size:clamp(16px,1.8vw,28px);background:#111;color:#fff;border:2px solid #ffd032;border-radius:8px}
+@media(max-width:760px){.frame{width:min(100vw,calc(100vh * 16 / 9),1920px);aspect-ratio:16/9}.bg,.layer,.gloveLayer,.opponentLayer{object-fit:contain}.clean-menu{width:60%;top:38%}.ui-btn{font-size:16px;min-height:42px}.start-btn{width:42%;height:8%;bottom:10%;font-size:22px}.careerIntroFrame{display:none}.careerIntroText{top:16%;width:86%;font-size:18px;padding:3.2% 4%}.careerIntroBtn{bottom:8%}.top-back{left:1%;top:2%;width:22%;height:7%;font-size:12px}.fight-menu{left:1%;top:2%;width:24%;height:7%;font-size:12px}.round{right:2%;top:2%;width:18%;height:7%}.player,.enemy{width:24%}.player{left:1%;top:10%;height:27%}.enemy{right:1%;top:10%;height:20%}.actions{left:2%;right:2%;bottom:2%;height:13%;gap:.7%}.move{border-radius:8px;font-size:13px}.status{bottom:18%;max-width:82%;font-size:12px}.record-box{left:3%;top:13%;width:32%;height:38%}.locker-tabs{right:3%;top:15%;width:33%;gap:.8vh}.locker-tab{min-height:44px;font-size:12px}.grid{width:88%;grid-template-columns:repeat(2,1fr);top:14%;height:68%}}
+
+.championRoomTitle{
+  position:absolute;left:50%;top:6%;transform:translateX(-50%);
+  width:90%;text-align:center;z-index:28;
+  color:#fff;font-weight:1000;text-transform:uppercase;letter-spacing:.04em;
+  font-size:clamp(34px,4.7vw,92px);
+  text-shadow:0 0 8px #fff7aa,0 0 22px rgba(255,210,50,.8),0 5px 8px #000;
 }
-.notice.show{display:block}
-.record-box{
-  position:absolute;left:4.7%;top:18.5%;width:20.8%;height:32%;
-  background:rgba(0,0,0,.58);border:2px solid rgba(255,210,60,.75);
-  border-radius:14px;padding:1.1% 1.6%;box-shadow:0 8px 24px rgba(0,0,0,.6)
+.champRecordBox{
+  position:absolute;left:3%;top:23%;width:22%;min-height:39%;
+  background:rgba(0,0,0,.70);border:2px solid rgba(255,210,60,.88);
+  border-radius:12px;padding:1.1% 1.5%;box-shadow:0 8px 26px rgba(0,0,0,.72);
+  z-index:29;
 }
-.record-title{color:#ffd032;font-weight:950;text-align:center;font-size:clamp(18px,2vw,40px);margin-bottom:5%;text-transform:uppercase}
-.record-row{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.18);padding:4.8% 0;font-size:clamp(15px,1.55vw,32px);font-weight:900;text-transform:uppercase}
-.record-row span:last-child{color:#ffd032;font-size:1.18em}
-.locker-tabs{position:absolute;right:3.2%;top:17%;width:26.5%;display:flex;flex-direction:column;gap:1.6vh}
-.locker-tab{
-  min-height:clamp(56px,9.2vh,108px);display:flex;align-items:center;justify-content:space-between;padding:0 6%;
-  border:2px solid rgba(255,210,60,.72);border-radius:12px;background:rgba(0,0,0,.62);
-  font-size:clamp(18px,1.8vw,36px);font-weight:950;text-transform:uppercase
+.champChallengeArea{
+  position:absolute;left:28%;right:5%;top:25%;height:48%;
+  display:grid;grid-template-columns:1fr 1fr;gap:5%;z-index:29;
 }
-.locker-tab small{display:block;color:#aaa;font-size:.56em;margin-top:2%}
-.locker-tab{cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease}
-.locker-tab:hover{
-  transform:scale(1.025);
-  border-color:#ffd032;
-  box-shadow:0 0 20px rgba(255,210,50,.55), inset 0 0 18px rgba(255,210,50,.16);
+.challengeCard{
+  position:relative;background:rgba(0,0,0,.55);border:6px solid #fff;
+  box-shadow:0 10px 30px rgba(0,0,0,.65),0 0 0 2px rgba(255,210,60,.35);
+  cursor:pointer;overflow:hidden;transition:transform .18s ease, box-shadow .18s ease;
 }
-.lock{color:#ffd032;font-size:1.1em}
-.hud{position:absolute;inset:0;pointer-events:none}
-.panel{position:absolute;background:rgba(0,0,0,.64);border:2px solid rgba(255,255,255,.15);border-radius:12px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,.35)}
-.player{left:2%;top:12.5%;width:17.5%;height:29%;border-color:rgba(46,123,255,.75)}
-.enemy{right:2%;top:12.5%;width:17.5%;height:22%;border-color:rgba(255,53,53,.75)}
-.title{font-size:clamp(15px,2vw,38px);font-weight:950;margin-top:5%}
-.champGlow{color:#ffd032;text-shadow:0 0 8px #ffd032,0 0 18px #ffd032,0 0 32px rgba(255,210,50,.8);animation:champPulse 1.15s infinite alternate}
-@keyframes champPulse{from{text-shadow:0 0 8px #ffd032,0 0 18px rgba(255,210,50,.7)}to{text-shadow:0 0 14px #fff2a0,0 0 34px #ffd032,0 0 55px rgba(255,210,50,.95)}}
-.hearts{font-size:clamp(15px,1.5vw,30px);margin:6% auto 3%;letter-spacing:.04em;width:92%}
-.row{border-top:1px solid rgba(255,255,255,.18);padding:4% 0;color:#d2d2d8;font-size:clamp(10px,1.2vw,20px);font-weight:850}
-.row strong{display:block;color:#ffd032;font-size:clamp(18px,2vw,38px);margin-top:1%}
-.round{position:absolute;top:4%;right:7.8%;width:6.5%;height:9%;border:2px solid rgba(255,210,60,.75);border-radius:0 0 16px 16px;background:rgba(0,0,0,.64);text-align:center;font-weight:950;padding-top:.4%}
-.round small{display:block;font-size:clamp(8px,1vw,16px);color:#ddd}
-.round span{font-size:clamp(18px,3vw,52px);line-height:.9}
-.status{position:absolute;left:50%;bottom:18.5%;transform:translateX(-50%);min-width:28%;max-width:60%;padding:.8% 2%;border-radius:999px;background:rgba(0,0,0,.66);border:2px solid rgba(255,210,60,.7);font-weight:950;text-align:center;font-size:clamp(12px,1.35vw,28px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
-.actions{position:absolute;left:6.5%;right:6.5%;bottom:2.7%;height:14.5%;display:grid;grid-template-columns:repeat(5,1fr);gap:1.3%;pointer-events:auto}
-.move{border:2px solid rgba(255,255,255,.25);border-radius:14px;color:#fff;font-size:clamp(16px,2vw,38px);font-weight:950;text-transform:uppercase;cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.45),inset 0 0 14px rgba(255,255,255,.08);text-shadow:0 2px 4px #000}
-.move:active{transform:scale(.98)}
-.move:disabled{opacity:.55;cursor:not-allowed}
-.jab{background:linear-gradient(135deg,#700707,#d11d1d)}
-.hook{background:linear-gradient(135deg,#061d3f,#0b62ad)}
-.uppercut{background:linear-gradient(135deg,#8b5a00,#d89b22);color:#111;text-shadow:none}
-.block{background:linear-gradient(135deg,#063f19,#108336)}
-.taunt{background:linear-gradient(135deg,#3b0a5e,#8c22df)}
-.sound{position:absolute;right:2%;bottom:2%;z-index:20;pointer-events:auto;border:2px solid rgba(255,210,60,.75);border-radius:999px;background:rgba(0,0,0,.55);color:#fff;padding:.5% 1%;font-weight:900;font-size:clamp(10px,1vw,18px);cursor:pointer}
-.flash{position:absolute;inset:0;opacity:0;pointer-events:none;z-index:10}
-.flash.red{animation:fr .28s ease-out}.flash.white{animation:fw .24s ease-out}.flash.gold{animation:fg .45s ease-out}
-@keyframes fr{0%{opacity:.45;background:#ff1b1b}100%{opacity:0;background:#ff1b1b}}
-@keyframes fw{0%{opacity:.38;background:#fff}100%{opacity:0;background:#fff}}
-@keyframes fg{0%{opacity:.5;background:#ffd032}100%{opacity:0;background:#ffd032}}
-.shake{animation:shake .35s linear}.bigShake{animation:bigShake .45s linear}
-@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-7px,4px)}40%{transform:translate(7px,-3px)}60%{transform:translate(-5px,-5px)}80%{transform:translate(5px,4px)}}
-@keyframes bigShake{0%,100%{transform:translate(0,0)}15%{transform:translate(-13px,7px)}30%{transform:translate(12px,-8px)}45%{transform:translate(-10px,-9px)}60%{transform:translate(9px,8px)}75%{transform:translate(-7px,5px)}}
-.koOverlay{position:absolute;inset:0;display:none;z-index:40;pointer-events:auto;background:rgba(0,0,0,.42);align-items:center;justify-content:center;flex-direction:column;text-align:center}
-.koOverlay.show{display:flex}
-.koText{color:#fff;font-size:clamp(72px,11vw,220px);font-weight:1000;letter-spacing:.08em;text-shadow:0 0 12px #fff,0 0 32px #ff2020,0 0 60px #ff2020;animation:koPop .45s ease-out}
-@keyframes koPop{from{transform:scale(.65);opacity:.2}to{transform:scale(1);opacity:1}}
-.nextBtn{margin-top:1.5%;min-width:clamp(180px,24vw,420px);padding:clamp(12px,1.2vw,24px) clamp(22px,2vw,42px);border-radius:12px;border:2px solid #ffd032;background:linear-gradient(180deg,#e0a21f,#9e6500);color:#111;font-weight:1000;font-size:clamp(18px,2.1vw,42px);text-transform:uppercase;cursor:pointer;box-shadow:0 0 24px rgba(255,210,50,.45)}
-.nextBtn:hover{transform:scale(1.04)}
+.challengeCard:hover{
+  transform:scale(1.035);
+  box-shadow:0 0 28px rgba(255,210,50,.8),0 10px 30px rgba(0,0,0,.65);
+}
+.challengeCard img{width:100%;height:100%;object-fit:cover;display:block}
+.challengeName{
+  position:absolute;left:0;right:0;bottom:13%;text-align:center;
+  color:#fff;font-weight:1000;text-transform:uppercase;
+  font-size:clamp(34px,4vw,84px);letter-spacing:.04em;
+  text-shadow:0 4px 6px #000,0 0 14px #000;
+}
+.challengePurse{
+  position:absolute;left:50%;bottom:2.5%;transform:translateX(-50%);
+  min-width:58%;padding:1.5% 4%;background:#e60000;color:#fff;
+  font-weight:1000;text-align:center;text-transform:uppercase;
+  font-size:clamp(18px,2vw,40px);box-shadow:0 4px 10px rgba(0,0,0,.65);
+}
+.retireBtn{
+  position:absolute;left:50%;bottom:8%;transform:translateX(-50%);
+  padding:.7% 2.5%;background:#e60000;color:#fff;z-index:30;
+  font-weight:1000;font-size:clamp(26px,3.7vw,78px);text-transform:uppercase;
+  box-shadow:0 6px 18px rgba(0,0,0,.6);cursor:pointer;
+}
+.retireBtn:hover{transform:translateX(-50%) scale(1.035)}
 @media(max-width:760px){
-  .frame{width:100vw;height:100vh;aspect-ratio:auto}.bg{object-fit:cover}.clean-menu{width:60%;top:38%}.ui-btn{font-size:16px;min-height:42px}
-  .start-btn{width:42%;height:8%;bottom:10%;font-size:22px}.top-back{left:1%;top:2%;width:22%;height:7%;font-size:12px}.fight-menu{left:1%;top:2%;width:24%;height:7%;font-size:12px}
-  .round{right:2%;top:2%;width:18%;height:7%}.player,.enemy{width:24%}.player{left:1%;top:10%;height:27%}.enemy{right:1%;top:10%;height:20%}
-  .actions{left:2%;right:2%;bottom:2%;height:13%;gap:.7%}.move{border-radius:8px;font-size:13px}.status{bottom:18%;max-width:82%;font-size:12px}
-  .record-box{left:3%;top:13%;width:32%;height:31%}.locker-tabs{right:3%;top:15%;width:33%;gap:.8vh}.locker-tab{min-height:44px;font-size:12px}
+  .championRoomTitle{top:4%;font-size:26px}
+  .champRecordBox{left:2%;top:17%;width:30%;min-height:43%}
+  .champChallengeArea{left:34%;right:2%;top:20%;height:52%;gap:3%}
+  .challengeCard{border-width:3px}
+  .challengeName{font-size:22px}
+  .challengePurse{font-size:12px;min-width:74%}
+  .retireBtn{bottom:8%;font-size:22px}
 }
+
+
+/* STORE SCREEN FINAL CLEAN LAYOUT */
+#store .frame{background:#000}
+.storeHero{
+  position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+  width:26%;height:62%;object-fit:contain;opacity:.13;z-index:4;pointer-events:none;
+}
+.storeHeader{
+  position:absolute;left:2.5%;right:2.5%;top:4%;height:15%;
+  z-index:10;color:#111;background:rgba(255,255,255,.88);
+  font-weight:1000;text-transform:uppercase;font-size:clamp(44px,5vw,96px);
+  border-top:5px solid #000;border-bottom:5px solid #000;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+}
+.storeBand{
+  position:absolute;left:2.5%;right:2.5%;background:rgba(255,255,255,.88);
+  z-index:9;border-top:5px solid #000;border-bottom:5px solid #000;overflow:hidden;
+}
+#gloveBand{top:20.5%;height:21%}
+#tauntBand{top:48%;height:26%}
+.bandLabel{
+  position:absolute;left:3%;top:50%;transform:translateY(-50%);
+  width:25%;height:68%;background:#000;color:#e10000;font-weight:1000;
+  text-transform:uppercase;font-size:clamp(34px,4vw,82px);z-index:11;
+  display:flex;align-items:center;justify-content:center;line-height:.9;
+}
+.bandContent{
+  position:absolute;left:31%;right:4%;top:0;bottom:0;
+  display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:center;
+}
+.shopItem{display:grid;grid-template-columns:32% 1fr;gap:5%;align-items:center;height:100%;cursor:pointer}
+.shopItem img{width:100%;height:82%;object-fit:contain;background:transparent}
+.shopText{display:flex;flex-direction:column;justify-content:center;line-height:.95;font-weight:1000;text-transform:uppercase;color:#000;overflow:hidden}
+.shopText .name{font-size:clamp(26px,3vw,60px)}
+.shopText .price{font-size:clamp(30px,3.3vw,66px);margin-top:3%}
+.tauntItem{display:grid;grid-template-columns:35% 1fr;gap:4%;align-items:center;height:100%;cursor:pointer;overflow:hidden}
+.tauntItem img{width:100%;height:92%;object-fit:contain;justify-self:center;align-self:end}
+.tauntText{display:flex;flex-direction:column;justify-content:center;gap:8%;line-height:.95;font-weight:1000;text-transform:uppercase;color:#000;overflow:hidden}
+.tauntText .bar{display:inline-flex;align-items:center;justify-content:center;background:#000;color:#e10000;padding:.25em .45em;font-size:clamp(24px,2.7vw,54px);line-height:.9;width:max-content;max-width:100%}
+.tauntText .price{font-size:clamp(30px,3.1vw,62px);color:#000;padding-left:.2em}
+@media(max-width:760px){
+  .storeHeader{top:3%;height:12%;font-size:34px}
+  #gloveBand{top:17%;height:23%}
+  #tauntBand{top:44%;height:32%}
+  .bandLabel{left:2%;width:28%;font-size:24px}
+  .bandContent{left:33%;right:2%;gap:2%}
+  .shopText .name{font-size:18px}
+  .shopText .price{font-size:22px}
+  .tauntText .bar{font-size:16px}
+  .tauntText .price{font-size:22px}
+}
+
+
+/* FINAL SIZE TWEAKS */
+.shopText .name{
+  font-size:clamp(18px,2.15vw,42px) !important;
+}
+.shopText .price{
+  font-size:clamp(20px,2.35vw,46px) !important;
+  margin-top:1.5% !important;
+}
+.tauntText .bar{
+  font-size:clamp(18px,2vw,40px) !important;
+  padding:.18em .35em !important;
+}
+.tauntText .price{
+  font-size:clamp(20px,2.35vw,46px) !important;
+}
+.retireBtn{
+  bottom:5.5% !important;
+  font-size:clamp(18px,2.25vw,44px) !important;
+  padding:.45% 1.4% !important;
+  max-width:34% !important;
+  line-height:1 !important;
+  text-align:center !important;
+}
+.challengePurse{
+  font-size:clamp(14px,1.45vw,30px) !important;
+  min-width:42% !important;
+  padding:.9% 2.4% !important;
+}
+.challengeName{
+  font-size:clamp(24px,2.8vw,58px) !important;
+}
+@media(max-width:760px){
+  .shopText .name{font-size:14px !important}
+  .shopText .price{font-size:16px !important}
+  .tauntText .bar{font-size:13px !important}
+  .tauntText .price{font-size:16px !important}
+  .retireBtn{font-size:16px !important;max-width:46% !important}
+}
+
+
+/* SAFE MORNING FIXES */
+.championRoomTitle{
+  top:4.5% !important;
+  width:96% !important;
+  white-space:nowrap !important;
+  font-size:clamp(30px,4.05vw,78px) !important;
+  line-height:1 !important;
+  z-index:31 !important;
+}
+.champChallengeArea{top:24% !important;}
+.champRecordBox{top:22% !important;}
+
+
+/* LOCKER ROOM LAYER SYSTEM */
+.lockerDisplay{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  z-index:8;
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+#locker .record-box,
+#locker .locker-tabs,
+#locker .top-back,
+#locker .notice{
+  z-index:25;
+}
+
+
+/* CHAMPION ROOM MAIN MENU BUTTON UPDATE */
+#championRoom .fight-menu{
+  display:none !important;
+}
+#championRoom .retireBtn{
+  bottom:5.5% !important;
+  font-size:clamp(18px,2.25vw,44px) !important;
+  padding:.45% 1.4% !important;
+  max-width:40% !important;
+  line-height:1 !important;
+  text-align:center !important;
+  cursor:pointer !important;
+}
+
+
+/* GLOBAL MUSIC WIDGET SAFE */
+#globalMusicWidget{
+  position:absolute;
+  right:4%;
+  bottom:8%;
+  z-index:900;
+  min-width:24%;
+  max-width:36%;
+  padding:.65% 1.1%;
+  background:rgba(0,0,0,.58);
+  border:2px solid rgba(255,210,60,.58);
+  border-radius:10px;
+  text-align:center;
+  box-shadow:0 8px 22px rgba(0,0,0,.55);
+  display:none;
+  pointer-events:auto;
+}
+.musicNow{color:#ffd032;font-weight:1000;font-size:clamp(16px,1.6vw,32px);text-transform:uppercase;line-height:1;text-shadow:0 2px 4px #000}
+.musicSong{margin-top:3px;color:#fff;font-weight:950;font-size:clamp(10px,1vw,18px);text-transform:uppercase;line-height:1.15;text-shadow:0 2px 4px #000}
+.musicControls{margin-top:7px;display:flex;align-items:center;justify-content:center;gap:8px}
+.musicSmallBtn{border:1px solid rgba(255,210,60,.72);border-radius:8px;background:rgba(0,0,0,.72);color:#fff;font-weight:900;font-size:clamp(10px,.9vw,16px);padding:4px 9px;cursor:pointer;text-transform:uppercase}
+.musicSmallBtn:hover{border-color:#ffd032;box-shadow:0 0 12px rgba(255,210,50,.4)}
+.musicMiniRange{width:90px;accent-color:#ffd032}
+@media(max-width:760px){
+  #globalMusicWidget{right:2%;bottom:16%;min-width:34%;max-width:48%}
+  .musicNow{font-size:14px}.musicSong{font-size:10px}.musicMiniRange{width:64px}
+}
+
+
+/* FINAL BACK BUTTON + CLEAN RECORD OVERRIDE */
+.top-back{
+  position:absolute !important;
+  left:50% !important;
+  right:auto !important;
+  top:auto !important;
+  bottom:3% !important;
+  transform:translateX(-50%) !important;
+  width:clamp(180px,18vw,320px) !important;
+  height:clamp(48px,6.5vh,78px) !important;
+  z-index:120 !important;
+}
+
+/* Keep in-fight menu button where it belongs. */
+#career .fight-menu{
+  display:block !important;
+}
+
+/* Champion room should not have the old top menu button. */
+#championRoom .fight-menu{
+  display:none !important;
+}
+
+/* Remove the visible box/frame behind fight record on locker/champion screens. */
+.record-box,
+.champRecordBox{
+  background:transparent !important;
+  border:none !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+
+/* Remove any inner outline-like border effects in fight record rows */
+.record-box .record-title,
+.champRecordBox .record-title{
+  background:transparent !important;
+  border:none !important;
+  box-shadow:none !important;
+}
+
+
+/* FIREBASE SCORE + LEADERBOARD UI */
+.scoreOverlay{
+  position:absolute;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  background:rgba(0,0,0,.72);
+  z-index:80;
+  text-align:center;
+  padding:3%;
+}
+.scoreOverlay.show{display:flex}
+.scoreBox{
+  width:min(62%,760px);
+  background:rgba(0,0,0,.82);
+  border:3px solid rgba(255,210,60,.9);
+  border-radius:16px;
+  padding:3%;
+  box-shadow:0 0 32px rgba(255,210,60,.28),0 14px 40px rgba(0,0,0,.8);
+}
+.scoreTitle{
+  color:#ffd032;
+  font-size:clamp(32px,4vw,78px);
+  font-weight:1000;
+  text-transform:uppercase;
+  line-height:1;
+  text-shadow:0 0 14px rgba(255,210,60,.7),0 4px 8px #000;
+}
+.scoreStats{
+  margin:2% auto;
+  color:#fff;
+  font-size:clamp(14px,1.5vw,28px);
+  font-weight:900;
+  text-transform:uppercase;
+  line-height:1.5;
+}
+.scoreInput{
+  width:80%;
+  margin:2% auto;
+  padding:2%;
+  display:block;
+  background:#111;
+  color:#fff;
+  border:2px solid #ffd032;
+  border-radius:10px;
+  text-align:center;
+  font-size:clamp(18px,2vw,34px);
+  font-weight:1000;
+  text-transform:uppercase;
+}
+.scoreActions{
+  display:flex;
+  justify-content:center;
+  gap:2%;
+  flex-wrap:wrap;
+  margin-top:2%;
+}
+.scoreBtn{
+  border:2px solid rgba(255,210,60,.85);
+  border-radius:10px;
+  background:linear-gradient(180deg,#e0a21f,#9e6500);
+  color:#111;
+  min-width:clamp(150px,18vw,280px);
+  padding:clamp(10px,1vw,18px);
+  font-size:clamp(15px,1.5vw,28px);
+  font-weight:1000;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.scoreBtn.dark{
+  background:rgba(0,0,0,.75);
+  color:#fff;
+}
+.scoreMessage{
+  min-height:1.3em;
+  margin-top:2%;
+  color:#ffd032;
+  font-weight:900;
+  font-size:clamp(12px,1vw,20px);
+}
+.leaderboardPanel{
+  position:absolute;
+  left:50%;
+  top:18%;
+  transform:translateX(-50%);
+  width:min(78%,1180px);
+  height:64%;
+  background:rgba(0,0,0,.68);
+  border:2px solid rgba(255,210,60,.75);
+  border-radius:14px;
+  padding:1.5%;
+  z-index:24;
+  box-shadow:0 10px 28px rgba(0,0,0,.65);
+}
+.leaderboardTitle{
+  color:#ffd032;
+  text-align:center;
+  font-size:clamp(28px,3vw,64px);
+  font-weight:1000;
+  text-transform:uppercase;
+  margin-bottom:1%;
+}
+.leaderboardTabs{
+  display:flex;
+  justify-content:center;
+  gap:1%;
+  margin-bottom:1.5%;
+}
+.leaderboardTabs button{
+  border:2px solid rgba(255,210,60,.78);
+  border-radius:8px;
+  background:rgba(0,0,0,.78);
+  color:#fff;
+  font-size:clamp(12px,1.2vw,22px);
+  font-weight:950;
+  text-transform:uppercase;
+  padding:.7% 1.4%;
+  cursor:pointer;
+}
+.leaderboardRows{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  overflow:auto;
+  max-height:78%;
+}
+.leaderboardRow{
+  display:grid;
+  grid-template-columns:55px 1.2fr .8fr .8fr .8fr;
+  gap:10px;
+  align-items:center;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:clamp(12px,1.2vw,22px);
+  font-weight:900;
+  text-transform:uppercase;
+}
+.leaderboardRow.header{
+  color:#ffd032;
+  background:rgba(0,0,0,.62);
+}
+@media(max-width:760px){
+  .scoreBox{width:92%;padding:5%}
+  .scoreInput{width:92%}
+  .leaderboardPanel{width:92%;top:14%;height:70%}
+  .leaderboardRow{grid-template-columns:34px 1fr .6fr .6fr .6fr;font-size:10px;gap:5px;padding:6px}
+}
+
+
+/* ONLINE MODE + ONLINE LEADERBOARD */
+.onlinePanel{
+  position:absolute;
+  left:50%;
+  top:14%;
+  transform:translateX(-50%);
+  width:min(82%,1220px);
+  height:72%;
+  background:rgba(0,0,0,.68);
+  border:2px solid rgba(255,210,60,.75);
+  border-radius:14px;
+  padding:1.4%;
+  z-index:24;
+  box-shadow:0 10px 28px rgba(0,0,0,.65);
+  display:grid;
+  grid-template-columns:1fr 1.25fr;
+  gap:2%;
+}
+.onlineTitle{
+  grid-column:1 / -1;
+  color:#ffd032;
+  text-align:center;
+  font-size:clamp(28px,3.2vw,66px);
+  font-weight:1000;
+  text-transform:uppercase;
+  line-height:1;
+  text-shadow:0 0 12px rgba(255,210,60,.5),0 4px 8px #000;
+}
+.onlineBox{
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:12px;
+  padding:2%;
+  overflow:hidden;
+}
+.onlineSubTitle{
+  color:#fff;
+  text-align:center;
+  font-size:clamp(18px,1.7vw,34px);
+  font-weight:1000;
+  text-transform:uppercase;
+  margin-bottom:2%;
+}
+.onlineInput{
+  width:100%;
+  margin:2% 0;
+  padding:2%;
+  background:#111;
+  color:#fff;
+  border:2px solid #ffd032;
+  border-radius:10px;
+  font-size:clamp(16px,1.6vw,30px);
+  font-weight:1000;
+  text-align:center;
+  text-transform:uppercase;
+}
+.onlineBtnGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:2%;
+  margin-top:3%;
+}
+.onlineBtn{
+  border:2px solid rgba(255,210,60,.85);
+  border-radius:10px;
+  background:linear-gradient(180deg,#e0a21f,#9e6500);
+  color:#111;
+  padding:clamp(10px,1vw,18px);
+  font-size:clamp(14px,1.3vw,26px);
+  font-weight:1000;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.onlineBtn.dark{
+  background:rgba(0,0,0,.76);
+  color:#fff;
+}
+.onlineStatus{
+  margin-top:3%;
+  min-height:2.4em;
+  color:#ffd032;
+  font-size:clamp(12px,1vw,20px);
+  font-weight:900;
+  text-align:center;
+  line-height:1.25;
+}
+.onlineLeaderboard{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1.2%;
+  height:86%;
+  overflow:hidden;
+}
+.onlineRankCol{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  min-width:0;
+}
+.onlineRankRow{
+  display:grid;
+  grid-template-columns:32px 1fr 54px 54px 62px;
+  gap:6px;
+  align-items:center;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  padding:6px 8px;
+  border-radius:7px;
+  font-size:clamp(10px,.9vw,17px);
+  font-weight:900;
+  text-transform:uppercase;
+  min-height:30px;
+}
+.onlineRankRow.header{
+  color:#ffd032;
+  background:rgba(0,0,0,.72);
+}
+.onlineCashNote{
+  color:#aaa;
+  font-size:clamp(11px,.95vw,18px);
+  font-weight:800;
+  text-align:center;
+  margin-top:2%;
+}
+@media(max-width:760px){
+  .onlinePanel{top:10%;height:78%;width:92%;grid-template-columns:1fr;padding:2%;overflow:auto}
+  .onlineLeaderboard{grid-template-columns:1fr;height:auto}
+  .onlineRankRow{grid-template-columns:26px 1fr 42px 42px 48px;font-size:9px;padding:5px}
+}
+
+
+/* ONLINE STATUS POSITION FIX */
+.onlinePanel{
+  top:12% !important;
+  height:74% !important;
+}
+.onlineBox{
+  overflow:visible !important;
+}
+.onlineStatus{
+  margin-top:1.2% !important;
+  min-height:1.4em !important;
+  font-size:clamp(11px,.9vw,18px) !important;
+  line-height:1.15 !important;
+}
+.onlineCashNote{
+  margin-top:1.1% !important;
+}
+.onlineInput{
+  margin:1.3% 0 !important;
+  padding:1.55% !important;
+}
+.onlineBtnGrid{
+  margin-top:1.7% !important;
+}
+@media(max-width:760px){
+  .onlinePanel{
+    top:8% !important;
+    height:80% !important;
+  }
+  .onlineStatus{
+    font-size:10px !important;
+  }
+}
+
 </style>
 </head>
-
 <body>
-
-<section id="start" class="screen active">
+<section id="start" class="screen active"><div class="frame"><img id="startBg" class="bg" alt="Counter Boxing"><button class="start-btn" onclick="startMenuMusic();show('menu')">Start</button></div></section>
+<section id="menu" class="screen"><div class="frame"><img id="menuBg" class="bg" alt="Main menu"><div class="clean-menu"><button class="ui-btn" onclick="show('careerStart')">Career Mode</button><button class="ui-btn" onclick="show('online')">Online Mode</button><button class="ui-btn" onclick="showLocker()">Locker Room</button><button class="ui-btn" onclick="show('options')">Options</button></div></div></section>
+<section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="selectNewGame()">New Run</button><button class="ui-btn" onclick="continueCareer()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
+<section id="careerIntro" class="screen"><div class="frame"><img id="careerIntroBg" class="bg" alt="Career intro"><img id="careerIntroFrame" class="careerIntroFrame" alt="CB Frame"><div id="careerIntroWords" class="careerIntroText">Coach said \"take my time and look for a counter\", Seems easy enough!</div><button class="start-btn careerIntroBtn" onclick="startCareerFight()">Continue</button></div></section>
+<section id="locker" class="screen"><div class="frame"><img id="lockerBg" class="bg" alt="Locker Room"><img id="lockerDisplay" class="lockerDisplay" alt="Locker Room Display"><button class="top-back" onclick="show('menu')">BACK</button><div class="record-box"><div class="record-title">Fight Record</div><div class="record-row"><span>Cash</span><span id="lockerCash">0</span></div><div class="record-row"><span>Wins</span><span id="lockerWins">0</span></div><div class="record-row"><span>Losses</span><span id="lockerLosses">0</span></div><div class="record-row"><span>Title Defenses</span><span id="lockerDefenses">0</span></div></div><div class="locker-tabs"><div class="locker-tab" onclick="showFighters()"><div>Fighters<small id="fighterLockText">Win Belt</small></div><div class="lock">🔒</div></div><div class="locker-tab" onclick="showGloves()"><div>Gloves<small>Select Color</small></div><div class="lock">🥊</div></div><div class="locker-tab" onclick="showStore()"><div>Store<small>Taunts + Gloves</small></div><div class="lock">💰</div></div></div><div id="lockerNotice" class="notice"></div></div></section>
+<section id="championRoom" class="screen">
   <div class="frame">
-    <img class="bg" src="images/start.png" alt="Counter Boxing">
-    <button class="start-btn" onclick="show('menu')">Start</button>
-  </div>
-</section>
+    <img id="championRoomBg" class="bg" alt="Champion Room">
+    <div class="championRoomTitle">WHO GETS A REMATCH, CHAMP?</div>
 
-<section id="menu" class="screen">
-  <div class="frame">
-    <img class="bg" src="images/menu.png" alt="Main menu">
-    <div class="clean-menu">
-      <button class="ui-btn" onclick="startCareer()">Career</button>
-      <button class="ui-btn" onclick="notice('VS Mode coming soon')">VS Mode</button>
-      <button class="ui-btn" onclick="show('locker')">Locker Room</button>
-      <button class="ui-btn" onclick="notice('Rankings coming soon')">Rankings <small>Coming Soon</small></button>
-      <button class="ui-btn" onclick="show('howto')">How To Play</button>
-    </div>
-    <div id="menuNotice" class="notice"></div>
-  </div>
-</section>
-
-<section id="locker" class="screen">
-  <div class="frame">
-    <img class="bg" src="images/locker.png" alt="Locker Room">
-    <button class="top-back" onclick="show('menu')">BACK</button>
-
-    <div class="record-box">
+    <div class="champRecordBox">
       <div class="record-title">Fight Record</div>
-      <div class="record-row"><span>Wins</span><span id="lockerWins">0</span></div>
-      <div class="record-row"><span>Losses</span><span id="lockerLosses">0</span></div>
-      <div class="record-row"><span>Title Defenses</span><span id="lockerDefenses">0</span></div>
+      <div class="record-row"><span>Cash</span><span id="champCash">0</span></div>
+      <div class="record-row"><span>Wins</span><span id="champWins">0</span></div>
+      <div class="record-row"><span>Losses</span><span id="champLosses">0</span></div>
+      <div class="record-row"><span>Title Defenses</span><span id="champDefenses">0</span></div>
+      <div class="record-row"><span>Next Purse</span><span id="champPurse">$700</span></div>
     </div>
 
-    <div class="locker-tabs">
-      <div class="locker-tab" onclick="lockerNotice('Gender coming soon')"><div>Gender<small>Coming Soon</small></div><div class="lock">🔒</div></div>
-      <div class="locker-tab" onclick="lockerNotice('Race coming soon')"><div>Race<small>Coming Soon</small></div><div class="lock">🔒</div></div>
-      <div class="locker-tab" onclick="lockerNotice('Gloves coming soon')"><div>Gloves<small>Coming Soon</small></div><div class="lock">🔒</div></div>
-      <div class="locker-tab" onclick="lockerNotice('Trunks coming soon')"><div>Trunks<small>Coming Soon</small></div><div class="lock">🔒</div></div>
-      <div class="locker-tab" onclick="lockerNotice('Store coming soon')"><div>Store<small>Coming Soon</small></div><div class="lock">🔒</div></div>
+    <div class="champChallengeArea">
+      <div class="challengeCard" id="champChallengeA" onclick="chooseChampionChallenge(0)">
+        <img alt="Challenge A">
+        <div class="challengeName">CHALLENGER</div>
+        <div class="challengePurse">$700 PURSE</div>
+      </div>
+      <div class="challengeCard" id="champChallengeB" onclick="chooseChampionChallenge(1)">
+        <img alt="Challenge B">
+        <div class="challengeName">CHALLENGER</div>
+        <div class="challengePurse">$700 PURSE</div>
+      </div>
     </div>
-  <div id="lockerNotice" class="notice"></div>
+
+    <div class="retireBtn" onclick="show('menu')">TAKE A BREAK CHAMP?</div>
   </div>
 </section>
 
-<section id="howto" class="screen">
+<section id="fighters" class="screen"><div class="frame"><img id="fightersBg" class="bg" alt="fighters"><button class="top-back" onclick="showLocker()">BACK</button><div id="fightersGrid" class="grid"></div></div></section>
+<section id="gloves" class="screen"><div class="frame"><img id="glovesBg" class="bg" alt="gloves"><button class="top-back" onclick="showLocker()">BACK</button><div id="glovesGrid" class="grid"></div></div></section>
+
+<section id="store" class="screen">
   <div class="frame">
-    <img class="bg" src="images/howto.png" alt="How to Play">
-    <button class="top-back" onclick="show('menu')">BACK</button>
-  </div>
-</section>
+    <img id="storeBg" class="bg" alt="Store Background">
+    <img id="storeHero" class="storeHero" alt="Store Hero">
+    <button class="fight-menu" onclick="backFromStore()">BACK</button>
+    <div class="storeHeader">STORE</div>
 
-<section id="career" class="screen">
-  <div class="frame" id="fightFrame">
-    <img id="scene" class="bg" src="images/idle.png" alt="Fight scene">
-    <div class="hud">
-      <div class="round"><small>ROUND</small><span id="round">1</span></div>
-      <div class="panel player">
-        <div class="title" id="youTitle">YOU</div>
-        <div class="hearts" id="youHearts"></div>
-        <div class="row">STREAK<strong id="streak">0</strong></div>
-        <div class="row">WINS<strong id="wins">0</strong></div>
-      </div>
-      <div class="panel enemy">
-        <div class="title">OPPONENT</div>
-        <div class="hearts" id="enemyHearts"></div>
-        <div class="row">FIGHT<strong id="fightNum">1 OF 6</strong></div>
-      </div>
-      <div class="status" id="status">Choose your move.</div>
-      <div class="actions" id="actionButtons">
-        <button class="move jab" onclick="play('jab')">Jab</button>
-        <button class="move hook" onclick="play('hook')">Hook</button>
-        <button class="move uppercut" onclick="play('uppercut')">Uppercut</button>
-        <button class="move block" onclick="play('block')">Block</button>
-        <button class="move taunt" onclick="play('taunt')">Taunt</button>
-      </div>
-      <button class="sound" id="soundBtn" onclick="toggleSound()">🔊 Sound</button>
-      <button class="fight-menu" onclick="backToMenu()">MENU</button>
-      <div id="flash" class="flash"></div>
-      <div id="koOverlay" class="koOverlay">
-        <div class="koText">K.O.</div>
-        <button id="nextFightBtn" class="nextBtn" onclick="continueAfterKO()">Next Fight</button>
+    <div id="gloveBand" class="storeBand">
+      <div class="bandLabel">GLOVES</div>
+      <div class="bandContent">
+        <div class="shopItem" onclick="showNotice('locker','American Flag gloves coming soon')">
+          <img id="storeFlagImg" alt="American Flag gloves">
+          <div class="shopText">
+            <div class="name">AMERICAN FLAG</div>
+            <div class="price">$2500</div>
+          </div>
+        </div>
+        <div class="shopItem" onclick="showNotice('locker','Flame On gloves coming soon')">
+          <img id="storeFlameImg" alt="Flame On gloves">
+          <div class="shopText">
+            <div class="name">FLAME ON</div>
+            <div class="price">$2500</div>
+          </div>
+        </div>
       </div>
     </div>
+
+    <div id="tauntBand" class="storeBand">
+      <div class="bandLabel">TAUNTS</div>
+      <div class="bandContent">
+        <div class="tauntItem" onclick="buyItem(STORE_ITEMS[0])">
+          <img id="storeSleepImg" alt="Go To Sleep taunt">
+          <div class="tauntText">
+            <div class="bar">GO TO SLEEP</div>
+            <div class="price">$5000</div>
+          </div>
+        </div>
+        <div class="tauntItem" onclick="buyItem(STORE_ITEMS[1])">
+          <img id="storeSteelImg" alt="Man Of Steel taunt">
+          <div class="tauntText">
+            <div class="bar">MAN OF STEEL</div>
+            <div class="price">$5000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="storeNotice" class="notice"></div>
   </div>
 </section>
+<section id="options" class="screen"><div class="frame"><img id="optionsBg" class="bg" alt="Options"><button class="top-back" onclick="show('menu')">BACK</button><div class="optionPanel">
+<label>Music Volume</label>
+<input id="musicVolume" type="range" min="0" max="100" value="30" oninput="setMusicVolume(this.value)">
+<div style="height:1.5vh"></div>
+<button id="musicToggle" class="ui-btn" onclick="toggleMenuMusic()">Music: On</button>
+<label>SFX</label><select id="sfxSelect" onchange="soundOn=this.value==='on'"><option value="on">On</option><option value="off">Off</option></select><div style="height:3vh"></div><button class="ui-btn" onclick="show('howto')">How To Play</button></div></div></section>
+<section id="howto" class="screen"><div class="frame"><img id="howtoBg" class="bg" alt="How to Play"><button class="top-back" onclick="show('options')">BACK</button></div></section>
+<section id="online" class="screen">
+  <div class="frame">
+    <img id="onlineBg" class="bg" alt="Online Mode">
+    <button class="top-back" onclick="show('menu')">BACK</button>
+
+    <div class="onlinePanel">
+      <div class="onlineTitle">Online Mode</div>
+
+      <div class="onlineBox">
+        <div class="onlineSubTitle">Create / Join Room</div>
+        <input id="onlinePlayerName" class="onlineInput" maxlength="16" placeholder="Player Name" value="PLAYER">
+        <input id="onlineWager" class="onlineInput" type="number" min="0" placeholder="Cash Wager">
+        <input id="onlineRoomCode" class="onlineInput" maxlength="8" placeholder="Room Code">
+        <div class="onlineBtnGrid">
+          <button class="onlineBtn" onclick="createOnlineRoom()">Create Room</button>
+          <button class="onlineBtn dark" onclick="joinOnlineRoom()">Join Room</button>
+        </div>
+        <div class="onlineCashNote">Your Cash: <span id="onlineCash">0</span> | Wager cannot exceed your cash.</div>
+        <div id="onlineStatus" class="onlineStatus">Create a room, set a wager, then share the room code.</div>
+      </div>
+
+      <div class="onlineBox">
+        <div class="onlineSubTitle">Top 20 Online Records</div>
+        <div id="onlineLeaderboardRows" class="onlineLeaderboard">
+          <div class="onlineRankCol">
+            <div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div>
+          </div>
+          <div class="onlineRankCol">
+            <div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="onlineNotice" class="notice"></div>
+  </div>
+</section>
+<section id="career" class="screen"><div class="frame" id="fightFrame"><img id="ringScene" class="bg" alt="Ring"><img id="opponentScene" class="opponentLayer" alt="Opponent"><img id="gloveScene" class="gloveLayer" alt="Gloves"><div class="hud"><div class="round"><small>ROUND</small><span id="round">1</span></div><div class="panel player"><div class="title" id="youTitle">YOU</div><div class="hearts" id="youHearts"></div><div class="row">STREAK<strong id="streak">0</strong></div><div class="row">WINS<strong id="wins">0</strong></div></div><div class="panel enemy"><div class="title" id="enemyName">OPPONENT</div><div class="hearts" id="enemyHearts"></div><div class="row">FIGHT<strong id="fightNum">1 OF 6</strong></div></div><div class="status" id="status">Choose your move.</div><div class="actions"><button class="move jab" onclick="play('jab')">Jab</button><button class="move hook" onclick="play('hook')">Hook</button><button class="move uppercut" onclick="play('uppercut')">Uppercut</button><button class="move block" onclick="play('block')">Block</button><button class="move taunt" onclick="play('taunt')">Taunt</button></div><button class="sound" id="soundBtn" onclick="toggleSound()">🔊 Sound</button><button class="fight-menu" onclick="backToMenu()">MENU</button><div id="flash" class="flash"></div><div id="koOverlay" class="koOverlay"><div class="koText">K.O.</div><button id="nextFightBtn" class="nextBtn" onclick="continueAfterKO()">Next Fight</button></div>
+<div id="scoreOverlay" class="scoreOverlay">
+  <div class="scoreBox">
+    <div class="scoreTitle">Run Over</div>
+    <div id="scoreStats" class="scoreStats">Wins: 0 | Losses: 0 | Cash: 0 | Defenses: 0</div>
+    <input id="scoreName" class="scoreInput" maxlength="16" placeholder="ENTER NAME" value="PLAYER">
+    <div class="scoreActions">
+      <button class="scoreBtn" onclick="submitFinalScore()">Submit Score</button>
+      <button class="scoreBtn dark" onclick="skipFinalScore()">Skip</button>
+    </div>
+    <div id="scoreMessage" class="scoreMessage"></div>
+  </div>
+</div>
+</div></div></section>
+
+<div id="globalMusicWidget">
+  <div class="musicNow">MUSIC <span style="color:#fff">[NEXT TRACK]</span></div>
+  <div id="musicSong" class="musicSong">NOT FAMOUS | ONLY GOD CAN JUDGE ME</div>
+  <div class="musicControls">
+    <button class="musicSmallBtn" onclick="toggleMenuMusic();event.stopPropagation()">ON/OFF</button>
+    <button class="musicSmallBtn" onclick="nextMenuSong(true);event.stopPropagation()">SKIP</button>
+    <input class="musicMiniRange" id="musicMiniVolume" type="range" min="0" max="100" value="30" oninput="setMusicVolume(this.value);event.stopPropagation()">
+  </div>
+</div>
 
 <script>
+const ASSET_DIR='assets/';
+const EXTS=['png','jpg','jpeg','webp'];
 const MAX=8;
-const scenes={idle:"images/idle.png",counter:"images/counter.png",countered:"images/countered.png",playerBlock:"images/playerBlock.png",opponentBlock:"images/opponentBlock.png",playerTaunt:"images/playerTaunt.png",opponentTaunt:"images/opponentTaunt.png",draw:"images/draw.png"};
-let hp=MAX,ehp=MAX,round=1,fight=1,wins=0,losses=0,streak=0,titleDefenses=0;
-let champ=false,pPower=false,ePower=false,locked=false,soundOn=true,audioCtx=null,audioUnlocked=false,idleTimer=null,pendingContinue=false;
-function $(id){return document.getElementById(id)}
-function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");if(id==="locker"||id==="career")render()}
-function notice(text){const n=$("menuNotice");n.textContent=text;n.classList.add("show");setTimeout(()=>n.classList.remove("show"),1400)}
-function lockerNotice(text){const n=$("lockerNotice");if(!n)return; n.textContent=text;n.classList.add("show");setTimeout(()=>n.classList.remove("show"),1400)}
-function backToMenu(){
-  clearTimeout(idleTimer);
-  pendingContinue=false;
-  locked=false;
-  setButtons(false);
-  const ko=$("koOverlay");
-  if(ko) ko.classList.remove("show");
-  show("menu");
+const SAVE_KEY='counterBoxingFixedBuildSave';
+const FIGHTERS=[
+  {id:'GREEN', name:'GREEN'},
+  {id:'BLUE', name:'BLUE'},
+  {id:'RED', name:'RED'},
+  {id:'PURPLE', name:'PURPLE'},
+  {id:'WHITE', name:'WHITE'},
+  {id:'GOLD', name:'GOLD'}
+];
+const GLOVE_COLORS=['GREEN','BLUE','RED','PINK','BLACK','GOLD'];
+const STORE_ITEMS=[
+  {id:'GTS',type:'taunt',name:'Go To Sleep',price:5000,display:'GO TO SLEEP TAUNT DISPLAY',locker:'GO TO SLEEP LOCKER ROOM TAUNT GTS',active:true},
+  {id:'MOS',type:'taunt',name:'Man Of Steel',price:5000,display:'MAN OF STEEL TAUNT DISPLAY',locker:'MAN OF STEEL LOCKER ROOM TAUNT MOS',active:true},
+  {id:'AF',type:'gloveDisplay',name:'American Flag',price:2500,display:'AMERICAN FLAG DISPLAY',active:false},
+  {id:'FLAME',type:'gloveDisplay',name:'Flame On',price:2500,display:'FLAME ON DISPLAY',active:false}
+];
+const SCREEN_BASES={
+  start:['STARTING SCREEN','STARTINGSCREEN'],
+  menu:['MENU SCREEN','MENUSCREEN'],
+  locker:['LOCKERROOM SCREEN','LOCKERROOMSCREEN','LOCKER ROOM','LOCKERROOM','LOCKER ROOM SCREEN'],
+  howto:['HOWTOPLAY SCREEN','HOWTOPLAYSCREEN'],
+  careerStart:['CAREERMODESTARTINGSCREEN'],
+  ring4:['RING4'],
+  championRoom:['CHAMPION ROOM','CHAMPIONROOM','CHAMPION ROOM SCREEN','LOCKERROOM SCREEN','LOCKERROOMSCREEN','LOCKER ROOM SCREEN']
+};
+
+
+/* SAFE GLOBAL MENU MUSIC */
+const MENU_TRACKS = [
+  {artist:'Not Famous', title:'Only God Can Judge Me', file:'Not Famous -Only God Can Judge Me'},
+  {artist:'Not Famous', title:"I'm The Bad Guy", file:"Not Famous -I'm The Bad Guy"},
+  {artist:'Not Famous', title:"It's What I Love About You", file:"Not Famous -It's What I Love About You"},
+  {artist:'Not Famous', title:"Don’t Stop Now", file:"Not Famous -Don’t Stop Now"}
+];
+
+let menuMusicAudio = null;
+let menuMusicIndex = 0;
+let menuMusicOn = true;
+let menuMusicVolume = 0.30;
+
+function menuTrackCandidates(track){
+  const names = [
+    track.file,
+    track.file.replace(/[’]/g,"'"),
+    track.artist + ' - ' + track.title,
+    (track.artist + ' - ' + track.title).replace(/[’]/g,"'"),
+    track.artist + '-' + track.title,
+    (track.artist + '-' + track.title).replace(/[’]/g,"'")
+  ];
+  const files = [];
+  [...new Set(names)].forEach(base=>{
+    ['mp3','wav','ogg','m4a'].forEach(ext=>files.push(ASSET_DIR + base + '.' + ext));
+  });
+  return files;
 }
-function startCareer(){unlockAudio();$("koOverlay").classList.remove("show");pendingContinue=false;show("career");render()}
-function hearts(n){return "❤️".repeat(Math.max(0,n))+"🖤".repeat(Math.max(0,MAX-n))}
-function render(){
-  $("youHearts").textContent=hearts(hp);$("enemyHearts").textContent=hearts(ehp);$("round").textContent=round;$("streak").textContent=streak;$("wins").textContent=wins;$("fightNum").textContent=champ?"TITLE DEFENSE":`${fight} OF 6`;
-  const title=$("youTitle");title.textContent=champ?"CHAMPION":"YOU";title.classList.toggle("champGlow",champ);
-  if($("lockerWins")){$("lockerWins").textContent=wins;$("lockerLosses").textContent=losses;$("lockerDefenses").textContent=titleDefenses}
+
+function isMusicScreen(id){
+  return ['start','menu','careerStart','careerIntro','locker','fighters','gloves','store','options','howto','online','championRoom'].includes(id);
 }
-function setButtons(disabled){document.querySelectorAll(".move").forEach(b=>b.disabled=disabled)}
-function setScene(name,msg="",shake="",flash="",autoReturn=true){
-  clearTimeout(idleTimer);$("scene").src=scenes[name]||scenes.idle;if(msg)$("status").textContent=msg;
-  if(shake){const frame=$("fightFrame");frame.classList.remove("shake","bigShake");void frame.offsetWidth;frame.classList.add(shake);setTimeout(()=>frame.classList.remove(shake),520)}
-  if(flash){const fl=$("flash");fl.className="flash";void fl.offsetWidth;fl.classList.add(flash);setTimeout(()=>fl.className="flash",520)}
-  if(autoReturn){idleTimer=setTimeout(()=>{$("scene").src=scenes.idle;$("status").textContent=champ?"Champion mode. Defend the belt.":"Choose your move.";locked=false;setButtons(false)},2000)}
+
+function updateMusicUI(){
+  const track = MENU_TRACKS[menuMusicIndex] || MENU_TRACKS[0];
+  const label = $('musicSong');
+  if(label) label.textContent = `${track.artist} | ${track.title}`;
+  const mini = $('musicMiniVolume');
+  if(mini) mini.value = Math.round(menuMusicVolume * 100);
+  const vol = $('musicVolume');
+  if(vol) vol.value = Math.round(menuMusicVolume * 100);
+  const toggle = $('musicToggle');
+  if(toggle) toggle.textContent = menuMusicOn ? 'Music: On' : 'Music: Off';
+  const w = $('globalMusicWidget');
+  const active = document.querySelector('.screen.active');
+  if(w && active) w.style.display = isMusicScreen(active.id) ? 'block' : 'none';
 }
-function cpu(){return["jab","hook","uppercut","block","taunt"][Math.floor(Math.random()*5)]}
-function beats(a,b){return(a==="jab"&&b==="uppercut")||(a==="uppercut"&&b==="hook")||(a==="hook"&&b==="jab")}
-function pow(dmg,who){if(dmg<=0)return dmg;if(who==="p"&&pPower){pPower=false;return dmg*2}if(who==="e"&&ePower){ePower=false;return dmg*2}return dmg}
-async function play(p){
-  if(locked||pendingContinue)return;locked=true;setButtons(true);await unlockAudio();
-  const c=cpu();let pd=0,ed=0,sc="idle",msg="",sh="",fl="";bell();
-  if(p==="taunt"&&c==="block"){pPower=true;sc="playerTaunt";msg="Taunt success! Next hit does double.";cheer();fl="gold"}
-  else if(c==="taunt"&&p==="block"){ePower=true;sc="opponentTaunt";msg="Opponent taunt success.";cheer(false);fl="gold"}
-  else if(p==="taunt"){pd=4;sc="countered";msg="Bad taunt! You lose 4 hearts.";sh="bigShake";fl="red";punchSound()}
-  else if(c==="taunt"){ed=pow(2,"p");sc="counter";msg="You catch them taunting!";sh="shake";fl="white";punchSound()}
-  else if(p==="block"){sc="playerBlock";if(c==="jab"){msg="Perfect block. Jab stopped.";blockSound()}else{pd=pow(1,"e");msg="You block. Still lose 1 heart.";blockSound();sh="shake"}}
-  else if(c==="block"){sc="opponentBlock";if(p==="jab"){msg="Opponent blocks your Jab.";blockSound()}else{ed=pow(1,"p");msg="You hit their block. They lose 1 heart.";blockSound();sh="shake"}}
-  else if(p===c){pd=pow(1,"e");ed=pow(1,"p");sc="draw";msg="Same move. Both lose 1 heart.";blockSound();sh="shake"}
-  else if(beats(p,c)){ed=pow(2,"p");sc="counter";msg=`Counter lands! Opponent loses ${ed} hearts.`;sh="shake";fl="white";punchSound()}
-  else{pd=pow(2,"e");sc="countered";msg=`You got countered! Lose ${pd} hearts.`;sh="bigShake";fl="red";punchSound()}
-  hp=Math.max(0,hp-pd);ehp=Math.max(0,ehp-ed);
-  if(hp<=0&&ehp<=0){losses++;streak=0;champ=false;fight=1;msg="Double K.O. Ladder resets.";koSound();resetRoundState();render();setScene("draw",msg,"bigShake","white",false);showKO("Restart Ladder");return}
-  if(hp<=0){losses++;streak=0;champ=false;fight=1;msg="K.O. You lost. Ladder resets.";koSound();resetRoundState();render();setScene("countered",msg,"bigShake","red",false);showKO("Restart Ladder");return}
-  if(ehp<=0){
-    wins++;koSound();
-    if(champ){streak+=2;titleDefenses++;msg="K.O. Title defense won!";resetRoundState();render();setScene("counter",msg,"shake","white",false);showKO("Defend Belt");return}
-    if(fight===6){champ=true;streak+=2;msg="K.O. You are the Champion!";resetRoundState();render();setScene("counter",msg,"shake","gold",false);showKO("Defend Belt");return}
-    streak++;fight++;msg=fight===6?"K.O. Championship fight next!":"K.O. You climb the ladder!";resetRoundState();render();setScene("counter",msg,"shake","white",false);showKO("Next Fight");return
+
+function ensureMenuMusic(){
+  if(menuMusicAudio) return;
+  menuMusicAudio = new Audio();
+  menuMusicAudio.volume = menuMusicVolume;
+  menuMusicAudio.preload = 'auto';
+  menuMusicAudio.addEventListener('ended', ()=>nextMenuSong(false));
+  menuMusicAudio.addEventListener('error', ()=>{
+    if(menuMusicAudio._tries && menuMusicAudio._tries.length){
+      menuMusicAudio.src = menuMusicAudio._tries.shift();
+      menuMusicAudio.play().catch(()=>{});
+    } else {
+      nextMenuSong(false);
+    }
+  });
+}
+
+function loadMenuSong(index){
+  ensureMenuMusic();
+  menuMusicIndex = ((index % MENU_TRACKS.length) + MENU_TRACKS.length) % MENU_TRACKS.length;
+  const tries = menuTrackCandidates(MENU_TRACKS[menuMusicIndex]);
+  menuMusicAudio._tries = tries.slice(1);
+  menuMusicAudio.src = tries[0];
+  updateMusicUI();
+}
+
+function startMenuMusic(){
+  if(!menuMusicOn) return;
+  ensureMenuMusic();
+  if(!menuMusicAudio.src) loadMenuSong(menuMusicIndex);
+  menuMusicAudio.volume = menuMusicVolume;
+  menuMusicAudio.play().catch(()=>{});
+  updateMusicUI();
+}
+
+function nextMenuSong(manual=false){
+  ensureMenuMusic();
+  loadMenuSong(menuMusicIndex + 1);
+  if(menuMusicOn || manual){
+    menuMusicOn = true;
+    menuMusicAudio.play().catch(()=>{});
   }
-  round++;render();setScene(sc,msg,sh,fl,true)
+  updateMusicUI();
 }
+
+function stopMenuMusic(){
+  if(menuMusicAudio) menuMusicAudio.pause();
+  updateMusicUI();
+}
+
+function setMusicVolume(v){
+  menuMusicVolume = Math.max(0, Math.min(1, Number(v)/100));
+  if(menuMusicAudio) menuMusicAudio.volume = menuMusicVolume;
+  updateMusicUI();
+}
+
+function toggleMenuMusic(){
+  menuMusicOn = !menuMusicOn;
+  if(menuMusicOn) startMenuMusic();
+  else stopMenuMusic();
+  updateMusicUI();
+}
+
+let state=loadState();
+let hp=MAX,ehp=MAX,round=1,fight=1,wins=state.wins||0,losses=state.losses||0,streak=0,titleDefenses=state.titleDefenses||0;
+
+
+
+
+/* SAFE SAVE MIGRATION */
+if(!state.unlockedGloves.includes('BLACK')){
+  state.unlockedGloves.push('BLACK');
+  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+}
+
+let currentOpponent=0,champ=state.champ||false,pPower=false,ePower=false,locked=false,soundOn=true,audioCtx=null,audioUnlocked=false,idleTimer=null,pendingContinue=false,championChallenges=[],returnToChampionRoom=false;
+function $(id){return document.getElementById(id)}
+function candidateFiles(bases){const out=[];bases.forEach(base=>EXTS.forEach(ext=>out.push(ASSET_DIR+base+'.'+ext)));return out}
+function setImg(el, bases){const files=Array.isArray(bases)?candidateFiles(bases):candidateFiles([bases]);let i=0;el.onerror=()=>{i++;if(i<files.length)el.src=files[i];else el.onerror=null};el.src=files[0];}
+function defaultState(){return{cash:0,wins:0,losses:0,titleDefenses:0,champ:false,selectedFighter:'GREEN',selectedGloves:'GREEN',selectedTaunt:'DEFAULT',unlockedFighters:['GREEN'],unlockedGloves:['GREEN','BLACK'],ownedTaunts:[]}}
+function loadState(){try{return Object.assign(defaultState(),JSON.parse(localStorage.getItem(SAVE_KEY))||{})}catch{return defaultState()}}
+function saveState(){state.cash=Math.max(0,state.cash||0);state.wins=wins;state.losses=losses;state.titleDefenses=titleDefenses;state.champ=champ;localStorage.setItem(SAVE_KEY,JSON.stringify(state));render();}
+function selectedFighterData(){return FIGHTERS.find(f=>f.id===state.selectedFighter)||FIGHTERS[0]}
+function activeFighter(){return FIGHTERS[currentOpponent]||FIGHTERS[0]}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');render();if(typeof updateMusicUI==='function')updateMusicUI();if(id==='online') setTimeout(()=>loadOnlineLeaderboard(),100);}
+function showNotice(which,text){const id=which==='online'?'onlineNotice':'lockerNotice';const n=$(id);if(!n)return;n.textContent=text;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),1500)}
+function showLocker(){show('locker');renderLocker();}
+function renderLocker(){let bases=SCREEN_BASES.locker;const ownedTaunt=STORE_ITEMS.find(i=>i.id===state.selectedTaunt && state.ownedTaunts.includes(i.id));if(ownedTaunt) bases=[ownedTaunt.locker]; else if(state.unlockedFighters.includes(state.selectedFighter)) bases=[state.selectedFighter+' LOCKER ROOM']; setImg($('lockerBg'), bases); $('fighterLockText').textContent=champ?'Unlocked':'Win Belt';}
+function showFighters(){if(!champ){showNotice('locker','Fighters unlock after you win the belt!');return;}show('fighters');setImg($('fightersBg'), SCREEN_BASES.locker);const g=$('fightersGrid');g.innerHTML='';FIGHTERS.forEach(f=>{const unlocked=state.unlockedFighters.includes(f.id);const card=document.createElement('div');card.className='card '+(unlocked?'':'locked');card.innerHTML=`<img alt="${f.name}"><div class="cardLabel">${f.name}${unlocked?'':' 🔒'}</div>`;setImg(card.querySelector('img'), [f.id+' BOXER PROFILE']);card.onclick=()=>{if(!unlocked) return; state.selectedFighter=f.id; state.selectedTaunt='DEFAULT'; saveState(); showLocker();};g.appendChild(card);});}
+function showGloves(){show('gloves');setImg($('glovesBg'), SCREEN_BASES.locker);const g=$('glovesGrid');g.innerHTML='';GLOVE_COLORS.forEach(color=>{const unlocked=state.unlockedGloves.includes(color);const card=document.createElement('div');card.className='card '+(unlocked?'':'locked');card.innerHTML=`<img alt="${color} gloves"><div class="cardLabel">${color} GLOVES${unlocked?'':' 🔒'}</div>`;setImg(card.querySelector('img'), [color+' GLOVES IDLE']);card.onclick=()=>{if(!unlocked){showNotice('locker','Locked glove color.');return;}state.selectedGloves=color;saveState();showLocker();};g.appendChild(card);});}
+function showStore(){show('store');populateStoreScreen();}
+function buyItem(item){if(!item.active){showNotice('locker','Preview only today.');return;}if(item.type==='taunt'){if(state.ownedTaunts.includes(item.id)){state.selectedTaunt=item.id;saveState();showLocker();return;}if(state.cash<item.price){showNotice('locker','Not enough cash.');return;}state.cash-=item.price;state.ownedTaunts.push(item.id);state.selectedTaunt=item.id;saveState();showLocker();}}
+
+function nextDefensePurse(){
+  return 700 + (titleDefenses * 200);
+}
+
+function randomChampionChallenges(){
+  const pool = FIGHTERS.filter(f => f.id !== activeFighter().id);
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  championChallenges = shuffled.slice(0,2);
+  if(championChallenges.length < 2) championChallenges = [FIGHTERS[0], FIGHTERS[1]];
+}
+
+function showChampionRoom(){
+  champ = true;
+  pendingContinue = false;
+  locked = false;
+  setButtons(false);
+  $('koOverlay') && $('koOverlay').classList.remove('show');
+  randomChampionChallenges();
+  show('championRoom');
+  renderChampionRoom();
+}
+
+function renderChampionRoom(){
+  if(!$('championRoomBg')) return;
+  setImg($('championRoomBg'), SCREEN_BASES.championRoom);
+  $('champCash').textContent = state.cash || 0;
+  $('champWins').textContent = wins;
+  $('champLosses').textContent = losses;
+  $('champDefenses').textContent = titleDefenses;
+  $('champPurse').textContent = '$' + nextDefensePurse();
+
+  [0,1].forEach(i=>{
+    const card = $('champChallenge' + (i===0?'A':'B'));
+    const fighter = championChallenges[i] || FIGHTERS[i];
+    if(!card || !fighter) return;
+    card.querySelector('.challengeName').textContent = fighter.name;
+    card.querySelector('.challengePurse').textContent = '$' + nextDefensePurse() + ' PURSE';
+    setImg(card.querySelector('img'), [fighter.id + ' BOXER PROFILE', fighter.id + ' IDLE']);
+  });
+}
+
+function chooseChampionChallenge(index){
+  const fighter = championChallenges[index];
+  if(!fighter) return;
+  currentOpponent = FIGHTERS.findIndex(f => f.id === fighter.id);
+  if(currentOpponent < 0) currentOpponent = 0;
+  champ = true;
+  fight = FIGHTERS.length;
+  resetRoundState();
+  show('career');
+  loadFightIdle();
+  render();
+}
+
+function retireChampionRun(){
+  msg = 'Champion retired. Starting a new ladder.';
+  champ = false;
+  resetCareerLadder();
+  saveState();
+  show('menu');
+}
+
+
+function showChampionOrLocker(){
+  if(champ) show('championRoom');
+  else show('locker');
+}
+function populateStoreScreen(){
+  if($('storeBg')) setImg($('storeBg'), SCREEN_BASES.locker);
+  const active = activeFighter ? activeFighter() : null;
+  if($('storeHero') && active) setImg($('storeHero'), [active.id + ' PLAYER TAUNT', active.id + ' IDLE']);
+  if($('storeFlagImg')) setImg($('storeFlagImg'), ['AMERICAN FLAG DISPLAY','AMERICAN FLAG']);
+  if($('storeFlameImg')) setImg($('storeFlameImg'), ['FLAME ON DISPLAY','FLAME ON']);
+  if($('storeSleepImg')) setImg($('storeSleepImg'), ['GO TO SLEEP TAUNT DISPLAY','GO TO SLEEP LOCKER ROOM TAUNT GTS']);
+  if($('storeSteelImg')) setImg($('storeSteelImg'), ['MAN OF STEEL TAUNT DISPLAY','MAN OF STEEL LOCKER ROOM TAUNT MOS']);
+}
+
+function selectNewGame(){show('careerIntro');setImg($('careerIntroBg'), SCREEN_BASES.careerStart);typeCareerWords();}
+function continueCareer(){if(champ){showChampionRoom();return;}show('careerIntro');setImg($('careerIntroBg'), SCREEN_BASES.careerStart);typeCareerWords();}
+function typeCareerWords(){const text='Coach said "take my time and look for a counter", Seems easy enough!'; const el=$('careerIntroWords'); el.textContent=''; let i=0; const t=setInterval(()=>{el.textContent += text[i]||''; i++; if(i>text.length) clearInterval(t);}, 25);}
+function startCareerFight(){stopMenuMusic();show('career'); loadFightIdle(); render();}
+function backToMenu(){clearTimeout(idleTimer);pendingContinue=false;locked=false;setButtons(false);$('koOverlay').classList.remove('show');startMenuMusic();show('menu');}
+// All fight art is exact full-screen PNG art. Do not resize/crop fighter/glove/ring layers in CSS.
+function fighterImg(scene){const f=activeFighter().id;const map={idle:'IDLE',draw:'DRAW',playerBlock:'PLAYER BLOCK',opponentBlock:'CPU BLOCK',playerTaunt:'PLAYER TAUNT',opponentTaunt:'CPU TAUNT',playerHurt:'CPU COUNTER',opponentHurt:'PLAYER COUNTER',ko:'KO'};return [f+' '+(map[scene]||'IDLE')];}
+function gloveImg(scene){const g=state.selectedGloves;const map={idle:'IDLE',draw:'DRAW',playerBlock:'PLAYER BLOCK',opponentBlock:'CPU BLOCK',playerTaunt:'PLAYER TAUNT',opponentTaunt:'OPPONENT TAUNT',playerHurt:'CPU COUNTER',opponentHurt:'PLAYER COUNTER',ko:'IDLE'};return [g+' GLOVES '+(map[scene]||'IDLE')];}
+function ringImg(){return ['RING'+String(Math.min(currentOpponent+1,6))];}
+function loadFightIdle(){setImg($('ringScene'), ringImg()); setImg($('opponentScene'), fighterImg('idle')); setImg($('gloveScene'), gloveImg('idle')); $('status').textContent=champ?'Champion mode. Defend the belt.':`Fight ${fight}: ${activeFighter().name}. Choose your move.`;}
+function setScene(name,msg='',shake='',flash='',autoReturn=true){clearTimeout(idleTimer);setImg($('ringScene'), ringImg());setImg($('opponentScene'), fighterImg(name));setImg($('gloveScene'), gloveImg(name));if(msg)$('status').textContent=msg;if(shake){const frame=$('fightFrame');frame.classList.remove('shake','bigShake');void frame.offsetWidth;frame.classList.add(shake);setTimeout(()=>frame.classList.remove(shake),520)}if(flash){const fl=$('flash');fl.className='flash';void fl.offsetWidth;fl.classList.add(flash);setTimeout(()=>fl.className='flash',520)}if(autoReturn){idleTimer=setTimeout(()=>{loadFightIdle();locked=false;setButtons(false)},2000)}}
+function hearts(n){return '❤️'.repeat(Math.max(0,n))+'🖤'.repeat(Math.max(0,MAX-n))}
+function render(){ if($('championRoom')&&$('championRoom').classList.contains('active')) renderChampionRoom(); if($('store')&&$('store').classList.contains('active')) populateStoreScreen(); $('lockerCash')&&($('lockerCash').textContent=state.cash||0); $('lockerWins')&&($('lockerWins').textContent=wins); $('lockerLosses')&&($('lockerLosses').textContent=losses); $('lockerDefenses')&&($('lockerDefenses').textContent=titleDefenses); if(!$('youHearts')) return; $('youHearts').textContent=hearts(hp); $('enemyHearts').textContent=hearts(ehp); $('round').textContent=round; $('streak').textContent=streak; $('wins').textContent=wins; $('fightNum').textContent=champ?'TITLE DEFENSE':`${fight} OF ${FIGHTERS.length}`; $('enemyName').textContent=champ?'CHAMPION':activeFighter().name; const title=$('youTitle'); title.textContent=champ?'CHAMPION':'YOU'; title.classList.toggle('champGlow',champ); }
+function setButtons(disabled){document.querySelectorAll('.move').forEach(b=>b.disabled=disabled)}
+function cpu(){return ['jab','hook','uppercut','block','taunt'][Math.floor(Math.random()*5)]}
+function beats(a,b){return(a==='jab'&&b==='uppercut')||(a==='uppercut'&&b==='hook')||(a==='hook'&&b==='jab')}
+function pow(dmg,who){if(dmg<=0)return dmg;if(who==='p'&&pPower){pPower=false;return dmg*2}if(who==='e'&&ePower){ePower=false;return dmg*2}return dmg}
 function resetRoundState(){hp=MAX;ehp=MAX;round=1;pPower=false;ePower=false}
-function showKO(buttonText){pendingContinue=true;locked=true;setButtons(true);$("nextFightBtn").textContent=buttonText;setTimeout(()=>{$("koOverlay").classList.add("show")},650)}
-function continueAfterKO(){$("koOverlay").classList.remove("show");$("scene").src=scenes.idle;$("status").textContent=champ?"Champion mode. Defend the belt.":"Choose your move.";pendingContinue=false;locked=false;setButtons(false);render();bell()}
+function resetCareerLadder(){fight=1;currentOpponent=0;champ=false;streak=0;resetRoundState()}
+async function play(p){if(locked||pendingContinue)return;locked=true;setButtons(true);await unlockAudio();const c=cpu();let playerDamage=0,opponentDamage=0,sceneCard='idle',msg='',sh='',fl='';bell();if(p==='taunt'&&c==='taunt'){pPower=true;ePower=true;sceneCard='draw';msg='Double taunt! Both fighters get a power boost.';cheer();fl='gold'}else if(p==='block'&&c==='block'){sceneCard='draw';msg='Both fighters block. Reset.';blockSound()}else if(p==='taunt'&&c==='block'){pPower=true;sceneCard='playerTaunt';msg='Taunt success! Your next hit does double.';cheer();fl='gold'}else if(c==='taunt'&&p==='block'){ePower=true;sceneCard='opponentTaunt';msg=`${activeFighter().name} taunt success. Their next hit does double.`;cheer();fl='gold'}else if(p==='taunt'){playerDamage=4;sceneCard='playerHurt';msg='Bad taunt! You get punished for 4 hearts.';sh='bigShake';fl='red';punchSound()}else if(c==='taunt'){opponentDamage=pow(2,'p');sceneCard='opponentHurt';msg=`You catch ${activeFighter().name} taunting!`;sh='shake';fl='white';punchSound()}else if(p==='block'){sceneCard='playerBlock';if(c==='jab'){msg='Perfect block. Jab stopped.';blockSound()}else{playerDamage=pow(1,'e');msg='You block, but still take 1 heart from the heavier attack.';blockSound();sh='shake'}}else if(c==='block'){sceneCard='opponentBlock';if(p==='jab'){msg=`${activeFighter().name} blocks your Jab.`;blockSound()}else{opponentDamage=pow(1,'p');msg=`${activeFighter().name} blocks, but still takes 1 heart.`;blockSound();sh='shake'}}else if(p===c){playerDamage=pow(1,'e');opponentDamage=pow(1,'p');sceneCard='draw';msg='Same move. Both fighters take 1 heart.';blockSound();sh='shake'}else if(beats(p,c)){opponentDamage=pow(2,'p');sceneCard='opponentHurt';msg=`Counter lands! ${activeFighter().name} loses ${opponentDamage} hearts.`;sh='shake';fl='white';punchSound()}else{playerDamage=pow(2,'e');sceneCard='playerHurt';msg=`${activeFighter().name} counters you! You lose ${playerDamage} hearts.`;sh='bigShake';fl='red';punchSound()}hp=Math.max(0,hp-playerDamage);ehp=Math.max(0,ehp-opponentDamage);if(hp<=0&&ehp<=0){losses++;msg='Double K.O. Ladder resets.';koSound();setScene('draw',msg,'bigShake','white',false);resetCareerLadder();saveState();openScoreSubmit();return}if(hp<=0){const winnerName=activeFighter().name;losses++;msg=`K.O. ${winnerName} beat you. Ladder resets.`;koSound();setScene('playerHurt',msg,'bigShake','red',false);resetCareerLadder();saveState();openScoreSubmit();return}if(ehp<=0){const defeatedName=activeFighter().name;const defeatedIndex=currentOpponent;wins++;state.cash=(state.cash||0)+500;koSound();if(champ){streak+=2;const purse=nextDefensePurse();titleDefenses++;state.cash+=purse;if(titleDefenses>=6&&!state.unlockedGloves.includes('GOLD'))state.unlockedGloves.push('GOLD');msg=`K.O. ${defeatedName} defeated. Title defense won! +$${purse}`;setScene('ko',msg,'shake','white',false);resetRoundState();saveState();returnToChampionRoom=true;showKO('Champion Room');return}if(fight===FIGHTERS.length){champ=true;streak+=2;['GREEN','BLUE','RED','PURPLE','WHITE','GOLD'].forEach(f=>{if(!state.unlockedFighters.includes(f))state.unlockedFighters.push(f)});['GREEN','BLUE','RED','PINK'].forEach(g=>{if(!state.unlockedGloves.includes(g))state.unlockedGloves.push(g)});msg=`K.O. ${defeatedName} defeated. You are the Champion!`;setScene('ko',msg,'shake','gold',false);resetRoundState();saveState();returnToChampionRoom=true;showKO('Champion Room');renderLocker();return}streak++;const nextIndex=Math.min(defeatedIndex+1,FIGHTERS.length-1);const nextName=FIGHTERS[nextIndex].name;msg=`K.O. ${defeatedName} defeated! Next opponent: ${nextName}!`;setScene('ko',msg,'shake','white',false);fight++;currentOpponent=nextIndex;resetRoundState();saveState();showKO('Next Fight');return}round++;render();setScene(sceneCard,msg,sh,fl,true)}
+function showKO(buttonText){pendingContinue=true;locked=true;setButtons(true);$('nextFightBtn').textContent=buttonText;setTimeout(()=>$('koOverlay').classList.add('show'),650)}
+function continueAfterKO(){ $('koOverlay').classList.remove('show'); if(returnToChampionRoom){returnToChampionRoom=false; showChampionRoom(); bell(); return;} loadFightIdle(); pendingContinue=false; locked=false; setButtons(false); render(); bell(); }
+function continueCareer(){if(champ){showChampionRoom();return;}show('careerIntro');setImg($('careerIntroBg'), SCREEN_BASES.careerStart);typeCareerWords();}
 function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
-async function unlockAudio(){try{const ctx=getAudio();if(ctx.state==="suspended")await ctx.resume();if(!audioUnlocked){const o=ctx.createOscillator();const g=ctx.createGain();g.gain.value=.00001;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.01);audioUnlocked=true}}catch(e){}}
-function tone(f,d,t="sine",gv=.05,slide=null){if(!soundOn)return;const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(slide,ctx.currentTime+d);g.gain.setValueAtTime(.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(gv,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+d)}
-function noise(d=.1,gv=.04,f=900){if(!soundOn)return;const ctx=getAudio();const size=Math.floor(ctx.sampleRate*d);const buf=ctx.createBuffer(1,size,ctx.sampleRate);const data=buf.getChannelData(0);for(let i=0;i<size;i++)data[i]=(Math.random()*2-1)*(1-i/size);const s=ctx.createBufferSource();const filter=ctx.createBiquadFilter();const g=ctx.createGain();filter.type="bandpass";filter.frequency.value=f;g.gain.setValueAtTime(gv,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);s.buffer=buf;s.connect(filter);filter.connect(g);g.connect(ctx.destination);s.start();s.stop(ctx.currentTime+d)}
-function bell(){tone(760,.12,"sine",.045);setTimeout(()=>tone(980,.12,"sine",.035),80)}
-function punchSound(){noise(.09,.075,550);tone(120,.07,"square",.035,80)}
-function blockSound(){tone(210,.08,"square",.04,150);noise(.07,.035,700)}
-function koSound(){tone(180,.18,"square",.08,80);setTimeout(()=>tone(90,.24,"sawtooth",.08,45),110);setTimeout(()=>tone(55,.32,"sawtooth",.07,35),240)}
-function cheer(){noise(.45,.055,1400);setTimeout(()=>noise(.35,.045,1800),120);tone(520,.18,"triangle",.035);setTimeout(()=>tone(660,.18,"triangle",.03),120);setTimeout(()=>tone(780,.18,"triangle",.025),240)}
-function toggleSound(){soundOn=!soundOn;$("soundBtn").textContent=soundOn?"🔊 Sound":"🔇 Muted";if(soundOn){unlockAudio();bell()}}
+async function unlockAudio(){try{const ctx=getAudio();if(ctx.state==='suspended')await ctx.resume();if(!audioUnlocked){const o=ctx.createOscillator();const g=ctx.createGain();g.gain.value=.00001;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.01);audioUnlocked=true}}catch(e){}}
+function tone(f,d,t='sine',gv=.05,slide=null){if(!soundOn)return;const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(slide,ctx.currentTime+d);g.gain.setValueAtTime(.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(gv,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+d)}
+function noise(d=.1,gv=.04,f=900){if(!soundOn)return;const ctx=getAudio();const size=Math.floor(ctx.sampleRate*d);const buf=ctx.createBuffer(1,size,ctx.sampleRate);const data=buf.getChannelData(0);for(let i=0;i<size;i++)data[i]=(Math.random()*2-1)*(1-i/size);const s=ctx.createBufferSource();const filter=ctx.createBiquadFilter();const g=ctx.createGain();filter.type='bandpass';filter.frequency.value=f;g.gain.setValueAtTime(gv,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);s.buffer=buf;s.connect(filter);filter.connect(g);g.connect(ctx.destination);s.start();s.stop(ctx.currentTime+d)}
+function bell(){tone(760,.12,'sine',.045);setTimeout(()=>tone(980,.12,'sine',.035),80)}
+function punchSound(){noise(.09,.075,550);tone(120,.07,'square',.035,80)}
+function blockSound(){tone(210,.08,'square',.04,150);noise(.07,.035,700)}
+function koSound(){tone(180,.18,'square',.08,80);setTimeout(()=>tone(90,.24,'sawtooth',.08,45),110);setTimeout(()=>tone(55,.32,'sawtooth',.07,35),240)}
+function cheer(){noise(.45,.055,1400);setTimeout(()=>noise(.35,.045,1800),120);tone(520,.18,'triangle',.035);setTimeout(()=>tone(660,.18,'triangle',.03),120);setTimeout(()=>tone(780,.18,'triangle',.025),240)}
+function toggleSound(){soundOn=!soundOn;$('soundBtn').textContent=soundOn?'🔊 Sound':'🔇 Muted';if(soundOn){unlockAudio();bell()}}
+
+/* SAFE OVERRIDES */
+function renderLocker(){
+  let bases = [...SCREEN_BASES.locker];
+
+  const ownedTaunt = STORE_ITEMS.find(i => i.id === state.selectedTaunt && state.ownedTaunts.includes(i.id));
+  if(ownedTaunt && ownedTaunt.locker){
+    bases = [ownedTaunt.locker, ...SCREEN_BASES.locker];
+  } else if(state.selectedFighter){
+    bases = [
+      state.selectedFighter + ' LOCKER ROOM',
+      state.selectedFighter + ' LOCKERROOM',
+      state.selectedFighter + ' BOXER PROFILE',
+      ...SCREEN_BASES.locker
+    ];
+  }
+
+  setImg($('lockerBg'), bases);
+  $('fighterLockText').textContent = champ ? 'Unlocked' : 'Win Belt';
+}
+
+function showGloves(){
+  show('gloves');
+  setImg($('glovesBg'), SCREEN_BASES.locker);
+  const g=$('glovesGrid');
+  g.innerHTML='';
+  GLOVE_COLORS.forEach(color=>{
+    const unlocked=state.unlockedGloves.includes(color);
+    const card=document.createElement('div');
+    card.className='card '+(unlocked?'':'locked');
+    card.innerHTML=`<img alt="${color} gloves"><div class="cardLabel">${color} GLOVES${unlocked?'':' 🔒'}</div>`;
+    setImg(card.querySelector('img'), [
+      color+' GLOVES IDLE',
+      color+' GLOVES PLAYER TAUNT',
+      color+' GLOVES DRAW',
+      color+' GLOVES PLAYER BLOCK',
+      color+' GLOVES CPU BLOCK',
+      color+' GLOVES CPU COUNTER',
+      color+' GLOVES PLAYER COUNTER'
+    ]);
+    card.onclick=()=>{
+      if(!unlocked){showNotice('locker','Locked glove color.');return;}
+      state.selectedGloves=color;
+      saveState();
+      showLocker();
+    };
+    g.appendChild(card);
+  });
+}
+
+function showFighters(){
+  if(!champ){showNotice('locker','Fighters unlock after you win the belt!');return;}
+  show('fighters');
+  setImg($('fightersBg'), SCREEN_BASES.locker);
+  const g=$('fightersGrid');
+  g.innerHTML='';
+  FIGHTERS.forEach(f=>{
+    const unlocked=state.unlockedFighters.includes(f.id);
+    const card=document.createElement('div');
+    card.className='card '+(unlocked?'':'locked');
+    card.innerHTML=`<img alt="${f.name}"><div class="cardLabel">${f.name}${unlocked?'':' 🔒'}</div>`;
+    setImg(card.querySelector('img'), [f.id+' BOXER PROFILE', f.id+' IDLE', f.id+' PLAYER TAUNT']);
+    card.onclick=()=>{
+      if(!unlocked) return;
+      state.selectedFighter=f.id;
+      state.selectedTaunt='DEFAULT';
+      saveState();
+      showLocker();
+    };
+    g.appendChild(card);
+  });
+}
+
+function populateStoreScreen(){
+  if($('storeBg')) setImg($('storeBg'), SCREEN_BASES.locker);
+  const active = activeFighter ? activeFighter() : null;
+  if($('storeHero') && active) setImg($('storeHero'), [active.id + ' PLAYER TAUNT', active.id + ' IDLE', active.id + ' BOXER PROFILE']);
+  if($('storeFlagImg')) setImg($('storeFlagImg'), ['AMERICAN FLAG DISPLAY','AMERICAN FLAG','GOLD GLOVES PLAYER TAUNT','GOLD GLOVES DRAW']);
+  if($('storeFlameImg')) setImg($('storeFlameImg'), ['FLAME ON DISPLAY','FLAME ON','RED GLOVES PLAYER TAUNT','RED GLOVES DRAW']);
+  if($('storeSleepImg')) setImg($('storeSleepImg'), ['GO TO SLEEP TAUNT DISPLAY','GO TO SLEEP LOCKER ROOM TAUNT GTS','GREEN CPU TAUNT GTS','GREEN PLAYER TAUNT','GREEN IDLE']);
+  if($('storeSteelImg')) setImg($('storeSteelImg'), ['MAN OF STEEL TAUNT DISPLAY','MAN OF STEEL LOCKER ROOM TAUNT MOS','GREEN CPU TAUNT MOS','GREEN PLAYER TAUNT','GREEN IDLE']);
+}
+
+
+/* FINAL LOCKER ROOM DISPLAY OVERRIDE
+   The locker room is now two layers:
+   1. Background: LOCKERROOM SCREEN
+   2. Foreground display: selected fighter/taunt LOCKER ROOM DISPLAY image
+
+   New taunt asset convention:
+   - TAUNT DISPLAY image for store/card preview
+   - LOCKER ROOM DISPLAY image for locker room foreground
+*/
+function lockerDisplayBases(){
+  const bases = [];
+
+  const ownedTaunt = STORE_ITEMS.find(i => i.id === state.selectedTaunt && state.ownedTaunts.includes(i.id));
+
+  if(ownedTaunt){
+    const name = (ownedTaunt.name || ownedTaunt.id || '').toUpperCase();
+    bases.push(
+      name + ' LOCKER ROOM DISPLAY',
+      name.replace(/\s+/g,'') + ' LOCKER ROOM DISPLAY',
+      ownedTaunt.id + ' LOCKER ROOM DISPLAY'
+    );
+    if(ownedTaunt.locker) bases.push(ownedTaunt.locker);
+  }
+
+  if(state.selectedFighter){
+    bases.push(
+      state.selectedFighter + ' LOCKER ROOM DISPLAY',
+      state.selectedFighter + ' LOCKER ROOM',
+      state.selectedFighter + ' LOCKERROOM',
+      state.selectedFighter + ' CPU TAUNT MOS',
+      state.selectedFighter + ' CPU TAUNT GTS',
+      state.selectedFighter + ' PLAYER TAUNT',
+      state.selectedFighter + ' IDLE'
+    );
+  }
+
+  bases.push('GREEN LOCKER ROOM DISPLAY','GREEN LOCKER ROOM','GREEN IDLE');
+
+  return [...new Set(bases)];
+}
+
+function renderLocker(){
+  // Background always stays the locker room itself.
+  setImg($('lockerBg'), ['LOCKERROOM SCREEN','LOCKERROOMSCREEN','LOCKER ROOM SCREEN','LOCKER ROOM','LOCKERROOM']);
+
+  // Foreground is the chosen boxer or chosen locker-room taunt display.
+  if($('lockerDisplay')){
+    setImg($('lockerDisplay'), lockerDisplayBases());
+  }
+
+  $('fighterLockText').textContent = champ ? 'Unlocked' : 'Win Belt';
+}
+
+function showLocker(){
+  show('locker');
+  renderLocker();
+}
+
+/* FINAL BUY ITEM OVERRIDE */
+
+function buyItem(item){
+  if(!item || !item.active){
+    showNotice('locker','Preview only today.');
+    return;
+  }
+
+  if(item.type === 'taunt'){
+    if(state.ownedTaunts.includes(item.id)){
+      state.selectedTaunt = item.id;
+      saveState();
+      showLocker();
+      return;
+    }
+
+    if((state.cash||0) < item.price){
+      showNotice('locker','Not enough cash.');
+      return;
+    }
+
+    state.cash -= item.price;
+    state.ownedTaunts.push(item.id);
+    state.selectedTaunt = item.id;
+    saveState();
+    showLocker();
+  }
+}
+
+
+/* FINAL STORE BACK OVERRIDE */
+function backFromStore(){
+  showLocker();
+}
+
+
+/* FINAL GLOVE DISPLAY OVERRIDE */
+function showGloves(){
+  show('gloves');
+  setImg($('glovesBg'), SCREEN_BASES.locker);
+  const g=$('glovesGrid');
+  g.innerHTML='';
+  GLOVE_COLORS.forEach(color=>{
+    const unlocked=state.unlockedGloves.includes(color);
+    const card=document.createElement('div');
+    card.className='card '+(unlocked?'':'locked');
+    card.innerHTML=`<img alt="${color} gloves"><div class="cardLabel">${color} GLOVES${unlocked?'':' 🔒'}</div>`;
+    setImg(card.querySelector('img'), [
+      color+' GLOVES DISPLAY',
+      color+' GLOVES IDLE',
+      color+' GLOVES PLAYER TAUNT',
+      color+' GLOVES DRAW',
+      color+' GLOVES PLAYER BLOCK',
+      color+' GLOVES CPU BLOCK',
+      color+' GLOVES CPU COUNTER',
+      color+' GLOVES PLAYER COUNTER'
+    ]);
+    card.onclick=()=>{
+      if(!unlocked){
+        showNotice('locker','Locked glove color.');
+        return;
+      }
+      state.selectedGloves=color;
+      saveState();
+      showLocker();
+    };
+    g.appendChild(card);
+  });
+}
+
+
+/* FIREBASE LEADERBOARD HELPERS */
+let pendingScore = null;
+let scoreAlreadySubmitted = false;
+
+function currentScorePayload(){
+  return {
+    wins: Number(wins || 0),
+    losses: Number(losses || 0),
+    cash: Number(state.cash || 0),
+    titleDefenses: Number(titleDefenses || 0)
+  };
+}
+
+function openScoreSubmit(){
+  pendingScore = currentScorePayload();
+  scoreAlreadySubmitted = false;
+  const stats = $('scoreStats');
+  if(stats){
+    stats.textContent = `Wins: ${pendingScore.wins} | Losses: ${pendingScore.losses} | Cash: ${pendingScore.cash} | Defenses: ${pendingScore.titleDefenses}`;
+  }
+  const msg = $('scoreMessage');
+  if(msg) msg.textContent = '';
+  const input = $('scoreName');
+  if(input){
+    input.value = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+    setTimeout(()=>input.focus(), 100);
+  }
+  $('scoreOverlay').classList.add('show');
+}
+
+async function submitFinalScore(){
+  if(scoreAlreadySubmitted) return;
+  const msg = $('scoreMessage');
+  const input = $('scoreName');
+  const name = String((input && input.value) || 'PLAYER').trim().slice(0,16).toUpperCase() || 'PLAYER';
+  localStorage.setItem('counterBoxingPlayerName', name);
+
+  if(!pendingScore) pendingScore = currentScorePayload();
+
+  if(typeof window.saveCounterBoxingScore !== 'function'){
+    if(msg) msg.textContent = 'Firebase is not ready yet. Try again in a second.';
+    return;
+  }
+
+  try{
+    scoreAlreadySubmitted = true;
+    if(msg) msg.textContent = 'Submitting score...';
+    await window.saveCounterBoxingScore({
+      name,
+      wins: pendingScore.wins,
+      losses: pendingScore.losses,
+      cash: pendingScore.cash,
+      titleDefenses: pendingScore.titleDefenses
+    });
+    if(msg) msg.textContent = 'Score saved!';
+    setTimeout(()=>{
+      $('scoreOverlay').classList.remove('show');
+      showKO('Restart Ladder');
+    }, 700);
+  }catch(err){
+    console.error(err);
+    scoreAlreadySubmitted = false;
+    if(msg) msg.textContent = 'Score failed. Check Firebase rules/database.';
+  }
+}
+
+function skipFinalScore(){
+  $('scoreOverlay').classList.remove('show');
+  showKO('Restart Ladder');
+}
+
+async function loadLeaderboard(sortBy='wins'){
+  const rows = $('leaderboardRows');
+  if(!rows) return;
+
+  rows.innerHTML = '<div class="leaderboardRow header"><div>#</div><div>Name</div><div>Wins</div><div>Cash</div><div>Defs</div></div><div class="leaderboardRow"><div>-</div><div>Loading...</div><div>-</div><div>-</div><div>-</div></div>';
+
+  if(typeof window.loadCounterBoxingScores !== 'function'){
+    rows.innerHTML = '<div class="leaderboardRow header"><div>#</div><div>Name</div><div>Wins</div><div>Cash</div><div>Defs</div></div><div class="leaderboardRow"><div>!</div><div>Firebase not ready</div><div>-</div><div>-</div><div>-</div></div>';
+    return;
+  }
+
+  try{
+    const scores = await window.loadCounterBoxingScores(sortBy);
+    rows.innerHTML = '<div class="leaderboardRow header"><div>#</div><div>Name</div><div>Wins</div><div>Cash</div><div>Defs</div></div>';
+
+    if(!scores.length){
+      rows.innerHTML += '<div class="leaderboardRow"><div>-</div><div>No scores yet</div><div>-</div><div>-</div><div>-</div></div>';
+      return;
+    }
+
+    scores.slice(0,20).forEach((s,i)=>{
+      rows.innerHTML += `<div class="leaderboardRow">
+        <div>${i+1}</div>
+        <div>${String(s.name || 'PLAYER').slice(0,16)}</div>
+        <div>${Number(s.wins || 0)}</div>
+        <div>${Number(s.cash || 0)}</div>
+        <div>${Number(s.titleDefenses || 0)}</div>
+      </div>`;
+    });
+  }catch(err){
+    console.error(err);
+    rows.innerHTML = '<div class="leaderboardRow header"><div>#</div><div>Name</div><div>Wins</div><div>Cash</div><div>Defs</div></div><div class="leaderboardRow"><div>!</div><div>Could not load scores</div><div>-</div><div>-</div><div>-</div></div>';
+  }
+}
+
+
+/* ONLINE MODE ROOM + WIN PERCENT LEADERBOARD */
+function randomRoomCode(){
+  return Math.random().toString(36).slice(2,8).toUpperCase();
+}
+
+function onlineName(){
+  const input = $('onlinePlayerName');
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+  const name = String((input && input.value) || saved || 'PLAYER').trim().slice(0,16).toUpperCase() || 'PLAYER';
+  localStorage.setItem('counterBoxingPlayerName', name);
+  return name;
+}
+
+function onlineWager(){
+  const wager = Math.max(0, Math.floor(Number(($('onlineWager') && $('onlineWager').value) || 0)));
+  const cash = Number(state.cash || 0);
+  return Math.min(wager, cash);
+}
+
+function setOnlineStatus(text){
+  const el = $('onlineStatus');
+  if(el) el.textContent = text;
+}
+
+function renderOnlineCash(){
+  if($('onlineCash')) $('onlineCash').textContent = state.cash || 0;
+  if($('onlinePlayerName')) $('onlinePlayerName').value = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+}
+
+async function createOnlineRoom(){
+  const name = onlineName();
+  const wager = onlineWager();
+  const code = randomRoomCode();
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+
+  if(typeof window.createCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Creating room...');
+    await window.createCounterBoxingRoom({
+      code,
+      hostName:name,
+      wager,
+      hostCash:Number(state.cash || 0)
+    });
+    setOnlineStatus(`Room ${code} created. Wager: $${wager}. Share this code.`);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not create room. Check Firebase rules.');
+  }
+}
+
+async function joinOnlineRoom(){
+  const name = onlineName();
+  const code = String(($('onlineRoomCode') && $('onlineRoomCode').value) || '').trim().toUpperCase();
+  if(!code){
+    setOnlineStatus('Enter a room code first.');
+    return;
+  }
+
+  if(typeof window.joinCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Joining room...');
+    const room = await window.joinCounterBoxingRoom({
+      code,
+      guestName:name,
+      guestCash:Number(state.cash || 0)
+    });
+    if(!room){
+      setOnlineStatus('Room not found.');
+      return;
+    }
+    setOnlineStatus(`Joined room ${code}. Wager: $${room.wager || 0}. Match handshake ready.`);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
+  }
+}
+
+function renderOnlineLeaderboardRows(records){
+  const wrap = $('onlineLeaderboardRows');
+  if(!wrap) return;
+
+  const top = (records || []).slice(0,20);
+  const left = top.slice(0,10);
+  const right = top.slice(10,20);
+
+  function col(items, offset){
+    let html = '<div class="onlineRankCol">';
+    html += '<div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div>';
+    if(!items.length){
+      html += '<div class="onlineRankRow"><div>-</div><div>No records</div><div>-</div><div>-</div><div>-</div></div>';
+    } else {
+      items.forEach((r,i)=>{
+        const wins = Number(r.onlineWins || r.wins || 0);
+        const losses = Number(r.onlineLosses || r.losses || 0);
+        const total = wins + losses;
+        const pct = total ? Math.round((wins / total) * 100) : 0;
+        html += `<div class="onlineRankRow">
+          <div>${offset+i+1}</div>
+          <div>${String(r.name || 'PLAYER').slice(0,16)}</div>
+          <div>${wins}</div>
+          <div>${losses}</div>
+          <div>${pct}%</div>
+        </div>`;
+      });
+    }
+    html += '</div>';
+    return html;
+  }
+
+  wrap.innerHTML = col(left,0) + col(right,10);
+}
+
+async function loadOnlineLeaderboard(){
+  renderOnlineCash();
+  const wrap = $('onlineLeaderboardRows');
+  if(wrap){
+    wrap.innerHTML = '<div class="onlineRankCol"><div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div><div class="onlineRankRow"><div>-</div><div>Loading...</div><div>-</div><div>-</div><div>-</div></div></div><div class="onlineRankCol"><div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div></div>';
+  }
+
+  if(typeof window.loadCounterBoxingOnlineRecords !== 'function'){
+    renderOnlineLeaderboardRows([]);
+    return;
+  }
+
+  try{
+    const records = await window.loadCounterBoxingOnlineRecords();
+    renderOnlineLeaderboardRows(records);
+  }catch(err){
+    console.error(err);
+    renderOnlineLeaderboardRows([]);
+  }
+}
+
+/* TEMP TEST HELPER:
+   Later, real online matches should call this after the match ends.
+   result should be "win" or "loss".
+*/
+async function recordOnlineResultForTest(result){
+  const name = onlineName();
+  if(typeof window.saveCounterBoxingOnlineRecord !== 'function') return;
+  await window.saveCounterBoxingOnlineRecord({
+    name,
+    result,
+    wager: onlineWager(),
+    timestamp: Date.now()
+  });
+  await loadOnlineLeaderboard();
+}
+
+// initial asset load
+setImg($('startBg'), SCREEN_BASES.start);
+setImg($('menuBg'), SCREEN_BASES.menu);
+setImg($('careerStartBg'), SCREEN_BASES.careerStart);
+setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+setImg($('lockerBg'), SCREEN_BASES.locker);
+setImg($('fightersBg'), SCREEN_BASES.locker);
+setImg($('glovesBg'), SCREEN_BASES.locker);
+setImg($('storeBg'), SCREEN_BASES.locker);
+setImg($('optionsBg'), SCREEN_BASES.menu);
+setImg($('howtoBg'), SCREEN_BASES.howto);
+setImg($('onlineBg'), SCREEN_BASES.ring4);
+loadFightIdle();
 render();
+updateMusicUI();
 </script>
+
+<!-- FIREBASE LEADERBOARD CODE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getDatabase, ref, push, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD5zcZHmGEWu3Yzqq2I1qvK3HneNLlPOCQ",
+  authDomain: "counter-boxing.firebaseapp.com",
+  databaseURL: "https://counter-boxing-default-rtdb.firebaseio.com",
+  projectId: "counter-boxing",
+  storageBucket: "counter-boxing.firebasestorage.app",
+  messagingSenderId: "948721085173",
+  appId: "1:948721085173:web:d1d42c9a43349a9de7f3bc",
+  measurementId: "G-YWMNS2Z4L0"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+window.saveCounterBoxingScore = async function(score) {
+  const cleanScore = {
+    name: String(score.name || "PLAYER").slice(0, 16).toUpperCase(),
+    wins: Number(score.wins || 0),
+    losses: Number(score.losses || 0),
+    cash: Number(score.cash || 0),
+    titleDefenses: Number(score.titleDefenses || 0),
+    timestamp: Date.now()
+  };
+
+  await push(ref(db, "counterBoxingScores"), cleanScore);
+};
+
+window.loadCounterBoxingScores = async function(sortBy = "wins") {
+  const scoresRef = query(
+    ref(db, "counterBoxingScores"),
+    orderByChild(sortBy),
+    limitToLast(20)
+  );
+
+  const snapshot = await get(scoresRef);
+  const scores = [];
+
+  snapshot.forEach(child => {
+    scores.push(child.val());
+  });
+
+  return scores.reverse();
+};
+
+window.counterBoxingFirebaseReady = true;
+</script>
+
 </body>
 </html>
