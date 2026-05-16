@@ -706,8 +706,8 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
 </head>
 <body>
 <section id="start" class="screen active"><div class="frame"><img id="startBg" class="bg" alt="Counter Boxing"><button class="start-btn" onclick="startMenuMusic();show('menu')">Start</button></div></section>
-<section id="menu" class="screen"><div class="frame"><img id="menuBg" class="bg" alt="Main menu"><div class="clean-menu"><button class="ui-btn" onclick="show('careerStart')">Career Mode</button><button class="ui-btn" onclick="show('online')">Online Mode</button><button class="ui-btn" onclick="showLocker()">Locker Room</button><button class="ui-btn" onclick="show('options')">Options</button></div></div></section>
-<section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="selectNewGame()">New Run</button><button class="ui-btn" onclick="continueCareer()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
+<section id="menu" class="screen"><div class="frame"><img id="menuBg" class="bg" alt="Main menu"><div class="clean-menu"><button class="ui-btn" onclick="exitOnlineMode();show('careerStart')">Career Mode</button><button class="ui-btn" onclick="show('online')">Online Mode</button><button class="ui-btn" onclick="showLocker()">Locker Room</button><button class="ui-btn" onclick="show('options')">Options</button></div></div></section>
+<section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="exitOnlineMode();selectNewGame()">New Run</button><button class="ui-btn" onclick="exitOnlineMode();continueCareer()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
 <section id="careerIntro" class="screen"><div class="frame"><img id="careerIntroBg" class="bg" alt="Career intro"><img id="careerIntroFrame" class="careerIntroFrame" alt="CB Frame"><div id="careerIntroWords" class="careerIntroText">Coach said \"take my time and look for a counter\", Seems easy enough!</div><button class="start-btn careerIntroBtn" onclick="startCareerFight()">Continue</button></div></section>
 <section id="locker" class="screen"><div class="frame"><img id="lockerBg" class="bg" alt="Locker Room"><img id="lockerDisplay" class="lockerDisplay" alt="Locker Room Display"><button class="top-back" onclick="show('menu')">BACK</button><div class="record-box"><div class="record-title">Fight Record</div><div class="record-row"><span>Cash</span><span id="lockerCash">0</span></div><div class="record-row"><span>Wins</span><span id="lockerWins">0</span></div><div class="record-row"><span>Losses</span><span id="lockerLosses">0</span></div><div class="record-row"><span>Title Defenses</span><span id="lockerDefenses">0</span></div></div><div class="locker-tabs"><div class="locker-tab" onclick="showFighters()"><div>Fighters<small id="fighterLockText">Win Belt</small></div><div class="lock">🔒</div></div><div class="locker-tab" onclick="showGloves()"><div>Gloves<small>Select Color</small></div><div class="lock">🥊</div></div><div class="locker-tab" onclick="showStore()"><div>Store<small>Taunts + Gloves</small></div><div class="lock">💰</div></div></div><div id="lockerNotice" class="notice"></div></div></section>
 <section id="championRoom" class="screen">
@@ -804,7 +804,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
 <section id="online" class="screen">
   <div class="frame">
     <img id="onlineBg" class="bg" alt="Online Mode">
-    <button class="top-back" onclick="show('menu')">BACK</button>
+    <button class="top-back" onclick="exitOnlineMode();show('menu')">BACK</button>
 
     <div class="onlinePanel">
       <div class="onlineTitle">Online Mode</div>
@@ -863,9 +863,9 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">ONLINE PHASE 1 FINAL OVERRIDE v3</div>
+<div id="buildStamp">ONLINE PHASE 1 STABILITY v4</div>
 <script>
-console.log('COUNTER BOXING ONLINE PHASE 1 FINAL OVERRIDE v3 LOADED');
+console.log('COUNTER BOXING ONLINE PHASE 1 STABILITY v4 LOADED');
 /* ============================================================
    QUICK EDIT ZONE
    ------------------------------------------------------------
@@ -2300,6 +2300,282 @@ function handleOnlineRoomUpdate(room){
   }
 }
 
+
+/* ============================================================
+   ONLINE PHASE 1 STABILITY v4 - FINAL OVERRIDES
+   ------------------------------------------------------------
+   Fixes career leak, host stuck state, online visual feedback,
+   and finished-match flow.
+   ============================================================ */
+
+let onlineFinished = false;
+let onlineLastVisualRound = 0;
+
+function forceOfflineCareerMode(){
+  if(typeof onlineUnsubscribe !== 'undefined' && onlineUnsubscribe){
+    try{ onlineUnsubscribe(); }catch(e){}
+    onlineUnsubscribe = null;
+  }
+  onlineMode = false;
+  onlineRole = null;
+  onlineRoomCode = null;
+  onlineRoomData = null;
+  onlineFinished = false;
+  onlineLastVisualRound = 0;
+  pendingContinue = false;
+  locked = false;
+  setButtons(false);
+}
+
+function selectNewGame(){
+  forceOfflineCareerMode();
+  show('careerIntro');
+  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+  typeCareerWords();
+}
+
+function continueCareer(){
+  forceOfflineCareerMode();
+  if(champ){
+    showChampionRoom();
+    return;
+  }
+  show('careerIntro');
+  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+  typeCareerWords();
+}
+
+function startCareerFight(){
+  forceOfflineCareerMode();
+  stopMenuMusic();
+  show('career');
+  loadFightIdle();
+  render();
+}
+
+function backToMenu(){
+  forceOfflineCareerMode();
+  clearTimeout(idleTimer);
+  pendingContinue=false;
+  locked=false;
+  setButtons(false);
+  if($('koOverlay')) $('koOverlay').classList.remove('show');
+  startMenuMusic();
+  show('menu');
+}
+
+function exitOnlineMode(){
+  if(typeof onlineUnsubscribe !== 'undefined' && onlineUnsubscribe){
+    try{ onlineUnsubscribe(); }catch(e){}
+    onlineUnsubscribe = null;
+  }
+  onlineMode = false;
+  onlineRole = null;
+  onlineRoomCode = null;
+  onlineRoomData = null;
+  onlineFinished = false;
+  onlineLastVisualRound = 0;
+  pendingContinue = false;
+  locked = false;
+  setButtons(false);
+}
+
+function setOnlineFightHud(room){
+  hp = onlineMyHp(room);
+  ehp = onlineTheirHp(room);
+  round = onlineRound(room);
+  if($('youHearts')) $('youHearts').textContent = hearts(hp);
+  if($('enemyHearts')) $('enemyHearts').textContent = hearts(ehp);
+  if($('round')) $('round').textContent = round;
+  if($('fightNum')) $('fightNum').textContent = 'ONLINE';
+  if($('enemyName')) $('enemyName').textContent = onlineRole === 'host' ? (room.guestName || 'GUEST') : (room.hostName || 'HOST');
+  if($('streak')) $('streak').textContent = '-';
+  if($('wins')) $('wins').textContent = wins;
+  if($('youTitle')){
+    $('youTitle').textContent = onlineRole === 'host' ? 'HOST' : 'GUEST';
+    $('youTitle').classList.remove('champGlow');
+  }
+  if($('status')) $('status').textContent = room.lastMessage || `Online Room ${onlineRoomCode}. Choose your move.`;
+}
+
+function onlineSceneForResult(room){
+  const msg = room.lastMessage || '';
+  const mine = onlineRole;
+  if(room.status === 'finished'){
+    if(room.winnerRole === 'draw') return {scene:'draw', shake:'bigShake', flash:'white'};
+    return room.winnerRole === mine
+      ? {scene:'opponentHurt', shake:'shake', flash:'white'}
+      : {scene:'playerHurt', shake:'bigShake', flash:'red'};
+  }
+  if(msg.includes('Same move') || msg.includes('Both fighters take')) return {scene:'draw', shake:'shake', flash:'white'};
+  if(msg.includes('Host lands')) return mine === 'host' ? {scene:'opponentHurt',shake:'shake',flash:'white'} : {scene:'playerHurt',shake:'bigShake',flash:'red'};
+  if(msg.includes('Guest lands')) return mine === 'guest' ? {scene:'opponentHurt',shake:'shake',flash:'white'} : {scene:'playerHurt',shake:'bigShake',flash:'red'};
+  if(msg.includes('Host blocks')) return mine === 'host' ? {scene:'playerBlock',shake:'',flash:''} : {scene:'opponentBlock',shake:'',flash:''};
+  if(msg.includes('Guest blocks')) return mine === 'guest' ? {scene:'playerBlock',shake:'',flash:''} : {scene:'opponentBlock',shake:'',flash:''};
+  if(msg.includes('Host taunt')) return mine === 'host' ? {scene:'playerTaunt',shake:'',flash:'gold'} : {scene:'opponentTaunt',shake:'',flash:'gold'};
+  if(msg.includes('Guest taunt')) return mine === 'guest' ? {scene:'playerTaunt',shake:'',flash:'gold'} : {scene:'opponentTaunt',shake:'',flash:'gold'};
+  if(msg.includes('Double taunt')) return {scene:'draw',shake:'',flash:'gold'};
+  if(msg.includes('Host taunted')) return mine === 'host' ? {scene:'playerHurt',shake:'bigShake',flash:'red'} : {scene:'opponentHurt',shake:'shake',flash:'white'};
+  if(msg.includes('Guest taunted')) return mine === 'guest' ? {scene:'playerHurt',shake:'bigShake',flash:'red'} : {scene:'opponentHurt',shake:'shake',flash:'white'};
+  return {scene:'draw', shake:'', flash:''};
+}
+
+function applyOnlineVisualIfNew(room){
+  const resolved = Number(room.resolvedRound || 0);
+  if(!resolved || resolved <= onlineLastVisualRound) return;
+  onlineLastVisualRound = resolved;
+  const vis = onlineSceneForResult(room);
+  setScene(vis.scene, room.lastMessage || '', vis.shake, vis.flash, room.status !== 'finished');
+}
+
+function handleOnlineRoomUpdate(room){
+  onlineRoomData = room;
+  if(!room){
+    if(onlineMode && $('status')) $('status').textContent = 'Room closed or missing.';
+    return;
+  }
+
+  if(!onlineMode && onlineRole === 'host'){
+    if(room.status === 'matched' || room.status === 'playing') startOnlineMatch('host', onlineRoomCode, room);
+    else setOnlineStatus(`Room ${onlineRoomCode} created. Waiting for challenger...`);
+    return;
+  }
+
+  if(!onlineMode && onlineRole === 'guest'){
+    if(room.status === 'matched' || room.status === 'playing') startOnlineMatch('guest', onlineRoomCode, room);
+    return;
+  }
+
+  if(!onlineMode) return;
+
+  setOnlineFightHud(room);
+  applyOnlineVisualIfNew(room);
+
+  if(room.status === 'finished'){
+    setButtons(true);
+    locked = true;
+    onlineFinished = true;
+
+    const didWin = room.winnerRole === onlineRole;
+    const isDraw = room.winnerRole === 'draw';
+    const wager = Number(room.wager || 0);
+
+    if($('status')){
+      $('status').textContent = isDraw ? 'Double K.O. Online draw.' : didWin ? `You won the online match! +$${wager}` : `You lost the online match. -$${wager}`;
+    }
+
+    if(!onlineResultSaved && !isDraw){
+      onlineResultSaved = true;
+      applyOnlineWagerResult(didWin, wager);
+      saveOnlineResult(didWin ? 'win' : 'loss', wager);
+    }
+
+    showKO(isDraw ? 'Online Draw' : didWin ? 'Online Win' : 'Online Loss');
+    $('nextFightBtn').textContent = 'Online Menu';
+    return;
+  }
+
+  if(onlineRole === 'host') maybeResolveOnlineRound(room);
+
+  const myMove = onlineMyMove(room);
+  const theirMove = onlineTheirMove(room);
+  const currentRound = onlineRound(room);
+
+  if(myMove && Number(myMove.round) === currentRound){
+    setButtons(true);
+    locked = true;
+    if($('status')) $('status').textContent = theirMove ? 'Both moves are in. Resolving...' : 'Move locked. Waiting for opponent...';
+  }else{
+    setButtons(false);
+    locked = false;
+    if($('status')) $('status').textContent = room.lastMessage || `Round ${currentRound}. Choose your move.`;
+  }
+}
+
+function continueAfterKO(){
+  if(onlineMode && onlineFinished){
+    if($('koOverlay')) $('koOverlay').classList.remove('show');
+    exitOnlineMode();
+    startMenuMusic();
+    show('online');
+    return;
+  }
+
+  $('koOverlay').classList.remove('show');
+  if(returnToChampionRoom){
+    returnToChampionRoom=false;
+    showChampionRoom();
+    bell();
+    return;
+  }
+  loadFightIdle();
+  pendingContinue=false;
+  locked=false;
+  setButtons(false);
+  render();
+  bell();
+}
+
+async function createOnlineRoom(){
+  forceOfflineCareerMode();
+  const name = onlineName();
+  const wager = onlineWager();
+  const code = randomRoomCode();
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+
+  if(typeof window.createCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Creating room...');
+    await window.createCounterBoxingRoom({code,hostName:name,wager,hostCash:Number(state.cash || 0)});
+    onlineRole = 'host';
+    onlineRoomCode = code;
+    await startOnlineRoomWatcher('host', code);
+    setOnlineStatus(`Room ${code} created. Waiting for challenger...`);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not create room. Check Firebase rules.');
+  }
+}
+
+async function joinOnlineRoom(){
+  forceOfflineCareerMode();
+  const name = onlineName();
+  const code = String(($('onlineRoomCode') && $('onlineRoomCode').value) || '').trim().toUpperCase();
+
+  if(!code){
+    setOnlineStatus('Enter a room code first.');
+    return;
+  }
+
+  if(typeof window.joinCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Joining room...');
+    const room = await window.joinCounterBoxingRoom({code,guestName:name,guestCash:Number(state.cash || 0)});
+
+    if(!room){
+      setOnlineStatus('Room not found.');
+      return;
+    }
+
+    setOnlineStatus(`Joined room ${code}. Starting online fight...`);
+    onlineRole = 'guest';
+    onlineRoomCode = code;
+    await startOnlineRoomWatcher('guest', code);
+    startOnlineMatch('guest', code, room);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
+  }
+}
+
 /* ============================================================
    INITIAL LOAD
    ============================================================ */
@@ -2328,7 +2604,7 @@ updateMusicUI();
      If Firebase breaks, the main offline game should still load.
      ========================================================== -->
 <script type="module">
-console.log("FIREBASE MODULE ONLINE PHASE 1 FINAL OVERRIDE v3 LOADED");
+console.log("FIREBASE MODULE ONLINE PHASE 1 STABILITY v4 LOADED");
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
   getDatabase,
