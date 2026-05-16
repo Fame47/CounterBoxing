@@ -1753,16 +1753,18 @@ render();
 updateMusicUI();
 </script>
 
-<!-- ==========================================================
-     FIREBASE MODULE
-     ----------------------------------------------------------
-     This script connects to Firebase.
-     Keep this separate from the main game script.
-     If Firebase breaks, the main offline game should still load.
-     ========================================================== -->
+<!-- FIREBASE MODULE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
-import { getDatabase, ref, push, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
+import {
+  getDatabase,
+  ref,
+  push,
+  query,
+  orderByChild,
+  limitToLast,
+  get
+} from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD5zcZHmGEWu3Yzqq2I1qvK3HneNLlPOCQ",
@@ -1778,6 +1780,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+/* -------------------------
+   CAREER SCORE LEADERBOARD
+------------------------- */
 window.saveCounterBoxingScore = async function(score) {
   const cleanScore = {
     name: String(score.name || "PLAYER").slice(0, 16).toUpperCase(),
@@ -1806,6 +1811,132 @@ window.loadCounterBoxingScores = async function(sortBy = "wins") {
   });
 
   return scores.reverse();
+};
+
+/* -------------------------
+   ONLINE ROOM SYSTEM
+------------------------- */
+window.createCounterBoxingRoom = async function(room) {
+  const code = String(room.code || "").slice(0, 8).toUpperCase();
+
+  if (!code) {
+    throw new Error("Missing room code");
+  }
+
+  const cleanRoom = {
+    code,
+    hostName: String(room.hostName || "PLAYER").slice(0, 16).toUpperCase(),
+    guestName: "",
+    wager: Number(room.wager || 0),
+    hostCash: Number(room.hostCash || 0),
+    guestCash: 0,
+    status: "waiting",
+    createdAt: Date.now()
+  };
+
+  await push(ref(db, "counterBoxingRooms/" + code), cleanRoom);
+
+  return cleanRoom;
+};
+
+window.joinCounterBoxingRoom = async function(join) {
+  const code = String(join.code || "").slice(0, 8).toUpperCase();
+
+  if (!code) {
+    throw new Error("Missing room code");
+  }
+
+  const roomsSnap = await get(ref(db, "counterBoxingRooms/" + code));
+
+  if (!roomsSnap.exists()) {
+    return null;
+  }
+
+  let firstKey = null;
+  let room = null;
+
+  roomsSnap.forEach(child => {
+    if (!firstKey) {
+      firstKey = child.key;
+      room = child.val();
+    }
+  });
+
+  if (!room) {
+    return null;
+  }
+
+  if (room.guestName && room.status !== "waiting") {
+    throw new Error("Room full");
+  }
+
+  const updatedRoom = {
+    ...room,
+    guestName: String(join.guestName || "PLAYER").slice(0, 16).toUpperCase(),
+    guestCash: Number(join.guestCash || 0),
+    status: "matched",
+    joinedAt: Date.now()
+  };
+
+  await push(ref(db, "counterBoxingRooms/" + code + "/joins"), updatedRoom);
+
+  return updatedRoom;
+};
+
+/* -------------------------
+   ONLINE WIN % LEADERBOARD
+------------------------- */
+window.saveCounterBoxingOnlineRecord = async function(record) {
+  const cleanRecord = {
+    name: String(record.name || "PLAYER").slice(0, 16).toUpperCase(),
+    result: record.result === "loss" ? "loss" : "win",
+    wager: Number(record.wager || 0),
+    timestamp: Date.now()
+  };
+
+  await push(ref(db, "counterBoxingOnlineMatches"), cleanRecord);
+};
+
+window.loadCounterBoxingOnlineRecords = async function() {
+  const snapshot = await get(ref(db, "counterBoxingOnlineMatches"));
+  const recordsByName = {};
+
+  snapshot.forEach(child => {
+    const record = child.val() || {};
+    const name = String(record.name || "PLAYER").slice(0, 16).toUpperCase();
+
+    if (!recordsByName[name]) {
+      recordsByName[name] = {
+        name,
+        onlineWins: 0,
+        onlineLosses: 0,
+        wagerTotal: 0
+      };
+    }
+
+    if (record.result === "loss") {
+      recordsByName[name].onlineLosses++;
+    } else {
+      recordsByName[name].onlineWins++;
+    }
+
+    recordsByName[name].wagerTotal += Number(record.wager || 0);
+  });
+
+  return Object.values(recordsByName)
+    .sort((a, b) => {
+      const aTotal = a.onlineWins + a.onlineLosses;
+      const bTotal = b.onlineWins + b.onlineLosses;
+
+      const aPercent = aTotal ? a.onlineWins / aTotal : 0;
+      const bPercent = bTotal ? b.onlineWins / bTotal : 0;
+
+      if (bPercent !== aPercent) return bPercent - aPercent;
+      if (b.onlineWins !== a.onlineWins) return b.onlineWins - a.onlineWins;
+
+      return bTotal - aTotal;
+    })
+    .slice(0, 20);
 };
 
 window.counterBoxingFirebaseReady = true;
