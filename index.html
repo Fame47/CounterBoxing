@@ -863,9 +863,9 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">ONLINE PHASE 1 STABILITY v4</div>
+<div id="buildStamp">CAREER RESTORE v5</div>
 <script>
-console.log('COUNTER BOXING ONLINE PHASE 1 STABILITY v4 LOADED');
+console.log('COUNTER BOXING CAREER RESTORE v5 LOADED');
 /* ============================================================
    QUICK EDIT ZONE
    ------------------------------------------------------------
@@ -2302,7 +2302,7 @@ function handleOnlineRoomUpdate(room){
 
 
 /* ============================================================
-   ONLINE PHASE 1 STABILITY v4 - FINAL OVERRIDES
+   CAREER RESTORE v5 - FINAL OVERRIDES
    ------------------------------------------------------------
    Fixes career leak, host stuck state, online visual feedback,
    and finished-match flow.
@@ -2576,6 +2576,110 @@ async function joinOnlineRoom(){
   }
 }
 
+
+/* ============================================================
+   FINAL CAREER RESTORE v5 - DO NOT REMOVE
+   ------------------------------------------------------------
+   This makes Career Mode fully independent from Online Mode again.
+   It forces offline state, loads ring/opponent/gloves after the
+   career screen becomes active, unlocks buttons, and resets text.
+   ============================================================ */
+
+function forceOfflineCareerMode(){
+  if(typeof onlineUnsubscribe !== 'undefined' && onlineUnsubscribe){
+    try{ onlineUnsubscribe(); }catch(e){}
+    onlineUnsubscribe = null;
+  }
+
+  onlineMode = false;
+  onlineRole = null;
+  onlineRoomCode = null;
+  onlineRoomData = null;
+  onlineFinished = false;
+  onlineLastVisualRound = 0;
+
+  pendingContinue = false;
+  locked = false;
+  clearTimeout(idleTimer);
+
+  if($('koOverlay')) $('koOverlay').classList.remove('show');
+  if($('scoreOverlay')) $('scoreOverlay').classList.remove('show');
+
+  setButtons(false);
+}
+
+function selectNewGame(){
+  forceOfflineCareerMode();
+  champ = false;
+  resetCareerLadder();
+  saveState();
+  show('careerIntro');
+  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+  typeCareerWords();
+}
+
+function continueCareer(){
+  forceOfflineCareerMode();
+
+  if(champ){
+    showChampionRoom();
+    return;
+  }
+
+  show('careerIntro');
+  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+  typeCareerWords();
+}
+
+function startCareerFight(){
+  forceOfflineCareerMode();
+  stopMenuMusic();
+
+  // Make sure career starts on the correct opponent and the screen is active first.
+  if(!champ){
+    currentOpponent = Math.max(0, Math.min(currentOpponent || 0, FIGHTERS.length - 1));
+  }
+
+  show('career');
+
+  // Load images after the screen is visible. This helps browsers that skipped image paint.
+  setTimeout(()=>{
+    loadFightIdle();
+    locked = false;
+    pendingContinue = false;
+    setButtons(false);
+    render();
+    if($('status')) $('status').textContent = champ ? 'Champion mode. Defend the belt.' : `Fight ${fight}: ${activeFighter().name}. Choose your move.`;
+  }, 30);
+}
+
+function loadFightIdle(){
+  // Offline career must never show online room text.
+  setImg($('ringScene'), ringImg());
+  setImg($('opponentScene'), fighterImg('idle'));
+  setImg($('gloveScene'), gloveImg('idle'));
+
+  if($('status')){
+    $('status').textContent = champ ? 'Champion mode. Defend the belt.' : `Fight ${fight}: ${activeFighter().name}. Choose your move.`;
+  }
+}
+
+function playMove(move){
+  if(onlineMode) return submitOnlineMove(move);
+  return play(move);
+}
+
+function backToMenu(){
+  forceOfflineCareerMode();
+  clearTimeout(idleTimer);
+  pendingContinue=false;
+  locked=false;
+  setButtons(false);
+  if($('koOverlay')) $('koOverlay').classList.remove('show');
+  startMenuMusic();
+  show('menu');
+}
+
 /* ============================================================
    INITIAL LOAD
    ============================================================ */
@@ -2604,7 +2708,7 @@ updateMusicUI();
      If Firebase breaks, the main offline game should still load.
      ========================================================== -->
 <script type="module">
-console.log("FIREBASE MODULE ONLINE PHASE 1 STABILITY v4 LOADED");
+console.log("FIREBASE MODULE CAREER RESTORE v5 LOADED");
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
   getDatabase,
