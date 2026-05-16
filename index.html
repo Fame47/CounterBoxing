@@ -1,10 +1,77 @@
 <!DOCTYPE html>
+<!--
+============================================================
+COUNTER BOXING - ORGANIZED / ANNOTATED BUILD
+============================================================
+
+IMPORTANT GITHUB FOLDER NOTE:
+- This build is set to load images and music from the /images folder.
+- Put every PNG/JPG/WEBP and every MP3/WAV/OGG/M4A inside:
+  images/
+
+FAST EDIT GUIDE:
+1. Add fighters:
+   Find FIGHTERS near the top of the script.
+   Add {id:'ORANGE', name:'ORANGE'}
+   Then create the matching PNG files:
+   ORANGE IDLE.png
+   ORANGE DRAW.png
+   ORANGE PLAYER BLOCK.png
+   ORANGE CPU BLOCK.png
+   ORANGE PLAYER TAUNT.png
+   ORANGE CPU TAUNT.png
+   ORANGE PLAYER COUNTER.png
+   ORANGE CPU COUNTER.png
+   ORANGE KO.png
+   ORANGE BOXER PROFILE.png
+   ORANGE LOCKER ROOM DISPLAY.png
+
+2. Add glove colors:
+   Find GLOVE_COLORS.
+   Add the color name, then create:
+   COLOR GLOVES DISPLAY.png
+   COLOR GLOVES IDLE.png
+   COLOR GLOVES DRAW.png
+   COLOR GLOVES PLAYER BLOCK.png
+   COLOR GLOVES CPU BLOCK.png
+   COLOR GLOVES PLAYER TAUNT.png
+   COLOR GLOVES OPPONENT TAUNT.png
+   COLOR GLOVES PLAYER COUNTER.png
+   COLOR GLOVES CPU COUNTER.png
+
+3. Add rings:
+   The fight loads RING1.png, RING2.png, etc.
+   Add RING7.png and update RING_COUNT if you expand beyond 6.
+
+4. Add store items:
+   Find STORE_ITEMS.
+   For taunts, create:
+   TAUNT NAME TAUNT DISPLAY.png
+   TAUNT NAME LOCKER ROOM DISPLAY.png
+
+5. Add menu music:
+   Find MENU_TRACKS.
+   Add the track and put the song file in /images.
+   Example:
+   images/Not Famous -Only God Can Judge Me.mp3
+
+6. Firebase:
+   The Firebase code stays at the bottom in its own <script type="module">.
+   Do not mix it into the main game script.
+============================================================
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Counter Boxing - Fixed Asset Test Build</title>
+<title>Counter Boxing - Organized Build</title>
 <style>
+/* ============================================================
+   COUNTER BOXING CSS
+   Keep layout changes here.
+   Do not resize the fighter/ring/glove PNG layers unless you are
+   intentionally changing the entire art pipeline.
+   ============================================================ */
 *{box-sizing:border-box}
 html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow-x:hidden}
 .screen{display:none;min-height:100vh;width:100%;align-items:center;justify-content:center;background:#000}
@@ -780,10 +847,43 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
 </div>
 
 <script>
-const ASSET_DIR='assets/';
+/* ============================================================
+   QUICK EDIT ZONE
+   ------------------------------------------------------------
+   This is the safest place to make content changes.
+   Asset files are loaded from the GitHub folder below.
+   ============================================================ */
+
+/* Asset folder:
+   You named your GitHub folder "images", so keep this as images/.
+   If you ever rename the folder to assets, change this to 'assets/'.
+*/
+const ASSET_DIR='images/';
+
+/* Image extensions the loader will try automatically. */
 const EXTS=['png','jpg','jpeg','webp'];
 const MAX=8;
 const SAVE_KEY='counterBoxingFixedBuildSave';
+/* ------------------------------------------------------------
+   FIGHTERS
+   ------------------------------------------------------------
+   To add a new fighter:
+   1. Add a new line here, for example:
+      {id:'ORANGE', name:'ORANGE'}
+
+   2. Add matching PNGs in /images using the same ID:
+      ORANGE IDLE.png
+      ORANGE DRAW.png
+      ORANGE PLAYER BLOCK.png
+      ORANGE CPU BLOCK.png
+      ORANGE PLAYER TAUNT.png
+      ORANGE CPU TAUNT.png
+      ORANGE PLAYER COUNTER.png
+      ORANGE CPU COUNTER.png
+      ORANGE KO.png
+      ORANGE BOXER PROFILE.png
+      ORANGE LOCKER ROOM DISPLAY.png
+   ------------------------------------------------------------ */
 const FIGHTERS=[
   {id:'GREEN', name:'GREEN'},
   {id:'BLUE', name:'BLUE'},
@@ -792,13 +892,63 @@ const FIGHTERS=[
   {id:'WHITE', name:'WHITE'},
   {id:'GOLD', name:'GOLD'}
 ];
+/* ------------------------------------------------------------
+   GLOVE COLORS
+   ------------------------------------------------------------
+   To add a glove color:
+   1. Add the color here, for example 'ORANGE'
+   2. Add matching PNGs in /images:
+      ORANGE GLOVES DISPLAY.png
+      ORANGE GLOVES IDLE.png
+      ORANGE GLOVES DRAW.png
+      ORANGE GLOVES PLAYER BLOCK.png
+      ORANGE GLOVES CPU BLOCK.png
+      ORANGE GLOVES PLAYER TAUNT.png
+      ORANGE GLOVES OPPONENT TAUNT.png
+      ORANGE GLOVES PLAYER COUNTER.png
+      ORANGE GLOVES CPU COUNTER.png
+   ------------------------------------------------------------ */
 const GLOVE_COLORS=['GREEN','BLUE','RED','PINK','BLACK','GOLD'];
+/* ------------------------------------------------------------
+   STORE ITEMS
+   ------------------------------------------------------------
+   type:'taunt'
+   - Purchasable/equippable taunt.
+   - Create:
+     GO TO SLEEP TAUNT DISPLAY.png
+     GO TO SLEEP LOCKER ROOM DISPLAY.png
+
+   type:'gloveDisplay'
+   - Store preview for future/premium glove designs.
+   - Create:
+     AMERICAN FLAG DISPLAY.png
+
+   active:true means it can be bought.
+   active:false means preview/coming soon.
+   ------------------------------------------------------------ */
 const STORE_ITEMS=[
   {id:'GTS',type:'taunt',name:'Go To Sleep',price:5000,display:'GO TO SLEEP TAUNT DISPLAY',locker:'GO TO SLEEP LOCKER ROOM TAUNT GTS',active:true},
   {id:'MOS',type:'taunt',name:'Man Of Steel',price:5000,display:'MAN OF STEEL TAUNT DISPLAY',locker:'MAN OF STEEL LOCKER ROOM TAUNT MOS',active:true},
   {id:'AF',type:'gloveDisplay',name:'American Flag',price:2500,display:'AMERICAN FLAG DISPLAY',active:false},
   {id:'FLAME',type:'gloveDisplay',name:'Flame On',price:2500,display:'FLAME ON DISPLAY',active:false}
 ];
+/* ------------------------------------------------------------
+   SCREEN AND RING IMAGE NAMES
+   ------------------------------------------------------------
+   Screen examples:
+   STARTING SCREEN.png
+   MENU SCREEN.png
+   LOCKERROOM SCREEN.png
+   CAREERMODESTARTINGSCREEN.png
+   HOWTOPLAY SCREEN.png
+   CHAMPION ROOM.png
+
+   Rings:
+   RING1.png
+   RING2.png
+   RING3.png
+   etc.
+   ------------------------------------------------------------ */
 const SCREEN_BASES={
   start:['STARTING SCREEN','STARTINGSCREEN'],
   menu:['MENU SCREEN','MENUSCREEN'],
@@ -806,11 +956,20 @@ const SCREEN_BASES={
   howto:['HOWTOPLAY SCREEN','HOWTOPLAYSCREEN'],
   careerStart:['CAREERMODESTARTINGSCREEN'],
   ring4:['RING4'],
+  online:['RING4','MENU SCREEN','MENUSCREEN'],
   championRoom:['CHAMPION ROOM','CHAMPIONROOM','CHAMPION ROOM SCREEN','LOCKERROOM SCREEN','LOCKERROOMSCREEN','LOCKER ROOM SCREEN']
 };
 
 
-/* SAFE GLOBAL MENU MUSIC */
+/* ------------------------------------------------------------
+   MENU MUSIC PLAYLIST
+   ------------------------------------------------------------
+   Put each song file inside /images.
+   Example:
+   images/Not Famous -Only God Can Judge Me.mp3
+
+   The loader tries mp3, wav, ogg, and m4a.
+   ------------------------------------------------------------ */
 const MENU_TRACKS = [
   {artist:'Not Famous', title:'Only God Can Judge Me', file:'Not Famous -Only God Can Judge Me'},
   {artist:'Not Famous', title:"I'm The Bad Guy", file:"Not Famous -I'm The Bad Guy"},
@@ -934,15 +1093,33 @@ if(!state.unlockedGloves.includes('BLACK')){
 
 let currentOpponent=0,champ=state.champ||false,pPower=false,ePower=false,locked=false,soundOn=true,audioCtx=null,audioUnlocked=false,idleTimer=null,pendingContinue=false,championChallenges=[],returnToChampionRoom=false;
 function $(id){return document.getElementById(id)}
-function candidateFiles(bases){const out=[];bases.forEach(base=>EXTS.forEach(ext=>out.push(ASSET_DIR+base+'.'+ext)));return out}
+/* ============================================================
+   ASSET LOADER
+   ============================================================ */
+function candidateFiles(bases){
+  const out=[];
+  const folders=[ASSET_DIR,''];
+  bases.forEach(base=>{
+    folders.forEach(folder=>{
+      EXTS.forEach(ext=>out.push(folder+base+'.'+ext));
+    });
+  });
+  return [...new Set(out)];
+}
 function setImg(el, bases){const files=Array.isArray(bases)?candidateFiles(bases):candidateFiles([bases]);let i=0;el.onerror=()=>{i++;if(i<files.length)el.src=files[i];else el.onerror=null};el.src=files[0];}
 function defaultState(){return{cash:0,wins:0,losses:0,titleDefenses:0,champ:false,selectedFighter:'GREEN',selectedGloves:'GREEN',selectedTaunt:'DEFAULT',unlockedFighters:['GREEN'],unlockedGloves:['GREEN','BLACK'],ownedTaunts:[]}}
 function loadState(){try{return Object.assign(defaultState(),JSON.parse(localStorage.getItem(SAVE_KEY))||{})}catch{return defaultState()}}
 function saveState(){state.cash=Math.max(0,state.cash||0);state.wins=wins;state.losses=losses;state.titleDefenses=titleDefenses;state.champ=champ;localStorage.setItem(SAVE_KEY,JSON.stringify(state));render();}
 function selectedFighterData(){return FIGHTERS.find(f=>f.id===state.selectedFighter)||FIGHTERS[0]}
 function activeFighter(){return FIGHTERS[currentOpponent]||FIGHTERS[0]}
+/* ============================================================
+   SCREEN NAVIGATION
+   ============================================================ */
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');render();if(typeof updateMusicUI==='function')updateMusicUI();if(id==='online') setTimeout(()=>loadOnlineLeaderboard(),100);}
 function showNotice(which,text){const id=which==='online'?'onlineNotice':'lockerNotice';const n=$(id);if(!n)return;n.textContent=text;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),1500)}
+/* ============================================================
+   LOCKER ROOM / STORE / CUSTOMIZATION
+   ============================================================ */
 function showLocker(){show('locker');renderLocker();}
 function renderLocker(){let bases=SCREEN_BASES.locker;const ownedTaunt=STORE_ITEMS.find(i=>i.id===state.selectedTaunt && state.ownedTaunts.includes(i.id));if(ownedTaunt) bases=[ownedTaunt.locker]; else if(state.unlockedFighters.includes(state.selectedFighter)) bases=[state.selectedFighter+' LOCKER ROOM']; setImg($('lockerBg'), bases); $('fighterLockText').textContent=champ?'Unlocked':'Win Belt';}
 function showFighters(){if(!champ){showNotice('locker','Fighters unlock after you win the belt!');return;}show('fighters');setImg($('fightersBg'), SCREEN_BASES.locker);const g=$('fightersGrid');g.innerHTML='';FIGHTERS.forEach(f=>{const unlocked=state.unlockedFighters.includes(f.id);const card=document.createElement('div');card.className='card '+(unlocked?'':'locked');card.innerHTML=`<img alt="${f.name}"><div class="cardLabel">${f.name}${unlocked?'':' 🔒'}</div>`;setImg(card.querySelector('img'), [f.id+' BOXER PROFILE']);card.onclick=()=>{if(!unlocked) return; state.selectedFighter=f.id; state.selectedTaunt='DEFAULT'; saveState(); showLocker();};g.appendChild(card);});}
@@ -950,6 +1127,9 @@ function showGloves(){show('gloves');setImg($('glovesBg'), SCREEN_BASES.locker);
 function showStore(){show('store');populateStoreScreen();}
 function buyItem(item){if(!item.active){showNotice('locker','Preview only today.');return;}if(item.type==='taunt'){if(state.ownedTaunts.includes(item.id)){state.selectedTaunt=item.id;saveState();showLocker();return;}if(state.cash<item.price){showNotice('locker','Not enough cash.');return;}state.cash-=item.price;state.ownedTaunts.push(item.id);state.selectedTaunt=item.id;saveState();showLocker();}}
 
+/* ============================================================
+   CHAMPION ROOM / CAREER FLOW
+   ============================================================ */
 function nextDefensePurse(){
   return 700 + (titleDefenses * 200);
 }
@@ -1033,9 +1213,12 @@ function typeCareerWords(){const text='Coach said "take my time and look for a c
 function startCareerFight(){stopMenuMusic();show('career'); loadFightIdle(); render();}
 function backToMenu(){clearTimeout(idleTimer);pendingContinue=false;locked=false;setButtons(false);$('koOverlay').classList.remove('show');startMenuMusic();show('menu');}
 // All fight art is exact full-screen PNG art. Do not resize/crop fighter/glove/ring layers in CSS.
+/* ============================================================
+   FIGHT ART MAPPING
+   ============================================================ */
 function fighterImg(scene){const f=activeFighter().id;const map={idle:'IDLE',draw:'DRAW',playerBlock:'PLAYER BLOCK',opponentBlock:'CPU BLOCK',playerTaunt:'PLAYER TAUNT',opponentTaunt:'CPU TAUNT',playerHurt:'CPU COUNTER',opponentHurt:'PLAYER COUNTER',ko:'KO'};return [f+' '+(map[scene]||'IDLE')];}
 function gloveImg(scene){const g=state.selectedGloves;const map={idle:'IDLE',draw:'DRAW',playerBlock:'PLAYER BLOCK',opponentBlock:'CPU BLOCK',playerTaunt:'PLAYER TAUNT',opponentTaunt:'OPPONENT TAUNT',playerHurt:'CPU COUNTER',opponentHurt:'PLAYER COUNTER',ko:'IDLE'};return [g+' GLOVES '+(map[scene]||'IDLE')];}
-function ringImg(){return ['RING'+String(Math.min(currentOpponent+1,6))];}
+function ringImg(){return ['RING'+String(Math.min(currentOpponent+1,RING_COUNT))];}
 function loadFightIdle(){setImg($('ringScene'), ringImg()); setImg($('opponentScene'), fighterImg('idle')); setImg($('gloveScene'), gloveImg('idle')); $('status').textContent=champ?'Champion mode. Defend the belt.':`Fight ${fight}: ${activeFighter().name}. Choose your move.`;}
 function setScene(name,msg='',shake='',flash='',autoReturn=true){clearTimeout(idleTimer);setImg($('ringScene'), ringImg());setImg($('opponentScene'), fighterImg(name));setImg($('gloveScene'), gloveImg(name));if(msg)$('status').textContent=msg;if(shake){const frame=$('fightFrame');frame.classList.remove('shake','bigShake');void frame.offsetWidth;frame.classList.add(shake);setTimeout(()=>frame.classList.remove(shake),520)}if(flash){const fl=$('flash');fl.className='flash';void fl.offsetWidth;fl.classList.add(flash);setTimeout(()=>fl.className='flash',520)}if(autoReturn){idleTimer=setTimeout(()=>{loadFightIdle();locked=false;setButtons(false)},2000)}}
 function hearts(n){return '❤️'.repeat(Math.max(0,n))+'🖤'.repeat(Math.max(0,MAX-n))}
@@ -1046,10 +1229,16 @@ function beats(a,b){return(a==='jab'&&b==='uppercut')||(a==='uppercut'&&b==='hoo
 function pow(dmg,who){if(dmg<=0)return dmg;if(who==='p'&&pPower){pPower=false;return dmg*2}if(who==='e'&&ePower){ePower=false;return dmg*2}return dmg}
 function resetRoundState(){hp=MAX;ehp=MAX;round=1;pPower=false;ePower=false}
 function resetCareerLadder(){fight=1;currentOpponent=0;champ=false;streak=0;resetRoundState()}
+/* ============================================================
+   MAIN COMBAT LOOP
+   ============================================================ */
 async function play(p){if(locked||pendingContinue)return;locked=true;setButtons(true);await unlockAudio();const c=cpu();let playerDamage=0,opponentDamage=0,sceneCard='idle',msg='',sh='',fl='';bell();if(p==='taunt'&&c==='taunt'){pPower=true;ePower=true;sceneCard='draw';msg='Double taunt! Both fighters get a power boost.';cheer();fl='gold'}else if(p==='block'&&c==='block'){sceneCard='draw';msg='Both fighters block. Reset.';blockSound()}else if(p==='taunt'&&c==='block'){pPower=true;sceneCard='playerTaunt';msg='Taunt success! Your next hit does double.';cheer();fl='gold'}else if(c==='taunt'&&p==='block'){ePower=true;sceneCard='opponentTaunt';msg=`${activeFighter().name} taunt success. Their next hit does double.`;cheer();fl='gold'}else if(p==='taunt'){playerDamage=4;sceneCard='playerHurt';msg='Bad taunt! You get punished for 4 hearts.';sh='bigShake';fl='red';punchSound()}else if(c==='taunt'){opponentDamage=pow(2,'p');sceneCard='opponentHurt';msg=`You catch ${activeFighter().name} taunting!`;sh='shake';fl='white';punchSound()}else if(p==='block'){sceneCard='playerBlock';if(c==='jab'){msg='Perfect block. Jab stopped.';blockSound()}else{playerDamage=pow(1,'e');msg='You block, but still take 1 heart from the heavier attack.';blockSound();sh='shake'}}else if(c==='block'){sceneCard='opponentBlock';if(p==='jab'){msg=`${activeFighter().name} blocks your Jab.`;blockSound()}else{opponentDamage=pow(1,'p');msg=`${activeFighter().name} blocks, but still takes 1 heart.`;blockSound();sh='shake'}}else if(p===c){playerDamage=pow(1,'e');opponentDamage=pow(1,'p');sceneCard='draw';msg='Same move. Both fighters take 1 heart.';blockSound();sh='shake'}else if(beats(p,c)){opponentDamage=pow(2,'p');sceneCard='opponentHurt';msg=`Counter lands! ${activeFighter().name} loses ${opponentDamage} hearts.`;sh='shake';fl='white';punchSound()}else{playerDamage=pow(2,'e');sceneCard='playerHurt';msg=`${activeFighter().name} counters you! You lose ${playerDamage} hearts.`;sh='bigShake';fl='red';punchSound()}hp=Math.max(0,hp-playerDamage);ehp=Math.max(0,ehp-opponentDamage);if(hp<=0&&ehp<=0){losses++;msg='Double K.O. Ladder resets.';koSound();setScene('draw',msg,'bigShake','white',false);resetCareerLadder();saveState();openScoreSubmit();return}if(hp<=0){const winnerName=activeFighter().name;losses++;msg=`K.O. ${winnerName} beat you. Ladder resets.`;koSound();setScene('playerHurt',msg,'bigShake','red',false);resetCareerLadder();saveState();openScoreSubmit();return}if(ehp<=0){const defeatedName=activeFighter().name;const defeatedIndex=currentOpponent;wins++;state.cash=(state.cash||0)+500;koSound();if(champ){streak+=2;const purse=nextDefensePurse();titleDefenses++;state.cash+=purse;if(titleDefenses>=6&&!state.unlockedGloves.includes('GOLD'))state.unlockedGloves.push('GOLD');msg=`K.O. ${defeatedName} defeated. Title defense won! +$${purse}`;setScene('ko',msg,'shake','white',false);resetRoundState();saveState();returnToChampionRoom=true;showKO('Champion Room');return}if(fight===FIGHTERS.length){champ=true;streak+=2;['GREEN','BLUE','RED','PURPLE','WHITE','GOLD'].forEach(f=>{if(!state.unlockedFighters.includes(f))state.unlockedFighters.push(f)});['GREEN','BLUE','RED','PINK'].forEach(g=>{if(!state.unlockedGloves.includes(g))state.unlockedGloves.push(g)});msg=`K.O. ${defeatedName} defeated. You are the Champion!`;setScene('ko',msg,'shake','gold',false);resetRoundState();saveState();returnToChampionRoom=true;showKO('Champion Room');renderLocker();return}streak++;const nextIndex=Math.min(defeatedIndex+1,FIGHTERS.length-1);const nextName=FIGHTERS[nextIndex].name;msg=`K.O. ${defeatedName} defeated! Next opponent: ${nextName}!`;setScene('ko',msg,'shake','white',false);fight++;currentOpponent=nextIndex;resetRoundState();saveState();showKO('Next Fight');return}round++;render();setScene(sceneCard,msg,sh,fl,true)}
 function showKO(buttonText){pendingContinue=true;locked=true;setButtons(true);$('nextFightBtn').textContent=buttonText;setTimeout(()=>$('koOverlay').classList.add('show'),650)}
 function continueAfterKO(){ $('koOverlay').classList.remove('show'); if(returnToChampionRoom){returnToChampionRoom=false; showChampionRoom(); bell(); return;} loadFightIdle(); pendingContinue=false; locked=false; setButtons(false); render(); bell(); }
 function continueCareer(){if(champ){showChampionRoom();return;}show('careerIntro');setImg($('careerIntroBg'), SCREEN_BASES.careerStart);typeCareerWords();}
+/* ============================================================
+   SOUND EFFECTS
+   ============================================================ */
 function getAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx}
 async function unlockAudio(){try{const ctx=getAudio();if(ctx.state==='suspended')await ctx.resume();if(!audioUnlocked){const o=ctx.createOscillator();const g=ctx.createGain();g.gain.value=.00001;o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+.01);audioUnlocked=true}}catch(e){}}
 function tone(f,d,t='sine',gv=.05,slide=null){if(!soundOn)return;const ctx=getAudio();const o=ctx.createOscillator();const g=ctx.createGain();o.type=t;o.frequency.setValueAtTime(f,ctx.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(slide,ctx.currentTime+d);g.gain.setValueAtTime(.0001,ctx.currentTime);g.gain.exponentialRampToValueAtTime(gv,ctx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+d);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+d)}
@@ -1277,6 +1466,9 @@ function showGloves(){
 let pendingScore = null;
 let scoreAlreadySubmitted = false;
 
+/* ============================================================
+   FIREBASE SCORE SUBMISSION
+   ============================================================ */
 function currentScorePayload(){
   return {
     wins: Number(wins || 0),
@@ -1381,6 +1573,9 @@ async function loadLeaderboard(sortBy='wins'){
 
 
 /* ONLINE MODE ROOM + WIN PERCENT LEADERBOARD */
+/* ============================================================
+   ONLINE MODE / WAGER ROOMS
+   ============================================================ */
 function randomRoomCode(){
   return Math.random().toString(36).slice(2,8).toUpperCase();
 }
@@ -1538,6 +1733,9 @@ async function recordOnlineResultForTest(result){
   await loadOnlineLeaderboard();
 }
 
+/* ============================================================
+   INITIAL LOAD
+   ============================================================ */
 // initial asset load
 setImg($('startBg'), SCREEN_BASES.start);
 setImg($('menuBg'), SCREEN_BASES.menu);
@@ -1549,13 +1747,19 @@ setImg($('glovesBg'), SCREEN_BASES.locker);
 setImg($('storeBg'), SCREEN_BASES.locker);
 setImg($('optionsBg'), SCREEN_BASES.menu);
 setImg($('howtoBg'), SCREEN_BASES.howto);
-setImg($('onlineBg'), SCREEN_BASES.ring4);
+setImg($('onlineBg'), SCREEN_BASES.online || SCREEN_BASES.ring4);
 loadFightIdle();
 render();
 updateMusicUI();
 </script>
 
-<!-- FIREBASE LEADERBOARD CODE -->
+<!-- ==========================================================
+     FIREBASE MODULE
+     ----------------------------------------------------------
+     This script connects to Firebase.
+     Keep this separate from the main game script.
+     If Firebase breaks, the main offline game should still load.
+     ========================================================== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getDatabase, ref, push, query, orderByChild, limitToLast, get } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js";
