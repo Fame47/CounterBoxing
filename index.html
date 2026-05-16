@@ -685,6 +685,23 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   }
 }
 
+
+/* BUILD STAMP */
+#buildStamp{
+  position:absolute;
+  left:1%;
+  bottom:1%;
+  z-index:999;
+  color:#ffd032;
+  background:rgba(0,0,0,.65);
+  border:1px solid rgba(255,210,60,.45);
+  border-radius:6px;
+  padding:4px 8px;
+  font-size:11px;
+  font-weight:900;
+  pointer-events:none;
+}
+
 </style>
 </head>
 <body>
@@ -846,7 +863,9 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
+<div id="buildStamp">ONLINE PHASE 1 FIXED v2</div>
 <script>
+console.log('COUNTER BOXING ONLINE PHASE 1 FIXED v2 LOADED');
 /* ============================================================
    QUICK EDIT ZONE
    ------------------------------------------------------------
@@ -2058,7 +2077,7 @@ async function joinOnlineRoom(){
       setOnlineStatus('Room not found.');
       return;
     }
-    setOnlineStatus(`Joined room ${code}. Wager: $${room.wager || 0}. Match handshake ready.`);
+    setOnlineStatus(`Joined room ${code}. Starting online fight...`);
   }catch(err){
     console.error(err);
     setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
@@ -2165,6 +2184,7 @@ updateMusicUI();
      If Firebase breaks, the main offline game should still load.
      ========================================================== -->
 <script type="module">
+console.log("FIREBASE MODULE ONLINE PHASE 1 FIXED v2 LOADED");
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import {
   getDatabase,
