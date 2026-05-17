@@ -809,7 +809,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">ONLINE FIGHT PHASE 1 CLEAN</div>
+<div id="buildStamp">ONLINE FIGHT PHASE 1 CLEAN v2</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -1490,7 +1490,7 @@ async function joinOnlineRoom(){
       setOnlineStatus('Room not found.');
       return;
     }
-    setOnlineStatus(`Joined room ${code}. Wager: $${room.wager || 0}. Room handshake ready.`);
+    setOnlineStatus(`Joined room ${code}. Starting online fight...`);
   }catch(err){
     console.error(err);
     setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
@@ -1607,6 +1607,425 @@ function getOnlineLocalRecord(){
     onlineLosses:Number(state.onlineLosses || 0),
     cash:Number(state.cash || 0)
   };
+}
+
+
+/* ============================================================
+   ONLINE FIGHT PHASE 1 CLEAN JS v2
+   ------------------------------------------------------------
+   Fight/images only. No leaderboard tracking, no taunt choice,
+   no wager payout yet.
+   ============================================================ */
+
+let onlineMode = false;
+let onlineRole = null;
+let onlineRoomCode = null;
+let onlineRoomData = null;
+let onlineUnsubscribe = null;
+let onlineFinished = false;
+let onlineLastVisualRound = 0;
+const ONLINE_MOVES = ['jab','hook','uppercut','block','taunt'];
+
+function setFightButtonsForCareer(){
+  ONLINE_MOVES.forEach(move=>{
+    const btn = document.querySelector('.move.' + move);
+    if(btn) btn.onclick = () => play(move);
+  });
+}
+
+function setFightButtonsForOnline(){
+  ONLINE_MOVES.forEach(move=>{
+    const btn = document.querySelector('.move.' + move);
+    if(btn) btn.onclick = () => submitOnlineMove(move);
+  });
+}
+
+function clearOnlineMode(){
+  if(onlineUnsubscribe){
+    try{ onlineUnsubscribe(); }catch(e){}
+    onlineUnsubscribe = null;
+  }
+  onlineMode = false;
+  onlineRole = null;
+  onlineRoomCode = null;
+  onlineRoomData = null;
+  onlineFinished = false;
+  onlineLastVisualRound = 0;
+  setFightButtonsForCareer();
+  locked = false;
+  pendingContinue = false;
+  setButtons(false);
+}
+
+function onlineRound(room){ return Number(room.round || 1); }
+function onlineMyHp(room){ return onlineRole === 'host' ? Number(room.hostHp || MAX) : Number(room.guestHp || MAX); }
+function onlineTheirHp(room){ return onlineRole === 'host' ? Number(room.guestHp || MAX) : Number(room.hostHp || MAX); }
+function onlineMyMove(room){ return onlineRole === 'host' ? room.hostMove : room.guestMove; }
+function onlineTheirMove(room){ return onlineRole === 'host' ? room.guestMove : room.hostMove; }
+function onlineOpponentName(room){ return onlineRole === 'host' ? (room.guestName || 'GUEST') : (room.hostName || 'HOST'); }
+
+function setOnlineFightHud(room){
+  hp = onlineMyHp(room);
+  ehp = onlineTheirHp(room);
+  round = onlineRound(room);
+  if($('youHearts')) $('youHearts').textContent = hearts(hp);
+  if($('enemyHearts')) $('enemyHearts').textContent = hearts(ehp);
+  if($('round')) $('round').textContent = round;
+  if($('fightNum')) $('fightNum').textContent = 'ONLINE';
+  if($('enemyName')) $('enemyName').textContent = onlineOpponentName(room);
+  if($('streak')) $('streak').textContent = '-';
+  if($('wins')) $('wins').textContent = '-';
+  if($('youTitle')){
+    $('youTitle').textContent = onlineRole === 'host' ? 'HOST' : 'GUEST';
+    $('youTitle').classList.remove('champGlow');
+  }
+  if($('status')) $('status').textContent = room.lastMessage || `Room ${onlineRoomCode}. Choose your move.`;
+}
+
+function loadOnlineFightIdle(room){
+  setImg($('ringScene'), ['RING4','RING1']);
+  setImg($('opponentScene'), onlineRole === 'host' ? ['BLUE IDLE','GREEN IDLE'] : ['GREEN IDLE','BLUE IDLE']);
+  setImg($('gloveScene'), gloveImg('idle'));
+  setOnlineFightHud(room);
+}
+
+function startOnlineMatch(role, code, room){
+  onlineMode = true;
+  onlineRole = role;
+  onlineRoomCode = code;
+  onlineRoomData = room;
+  onlineFinished = false;
+  onlineLastVisualRound = Number(room.resolvedRound || 0);
+  pendingContinue = false;
+  locked = false;
+  setButtons(false);
+  setFightButtonsForOnline();
+  currentOpponent = role === 'host' ? 1 : 0;
+  stopMenuMusic();
+  show('career');
+  setTimeout(()=>{
+    loadOnlineFightIdle(room);
+    setOnlineFightHud(room);
+    setButtons(false);
+  }, 25);
+}
+
+async function startOnlineRoomWatcher(role, code){
+  if(typeof window.listenCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase listener is not ready yet.');
+    return;
+  }
+  if(onlineUnsubscribe){
+    try{ onlineUnsubscribe(); }catch(e){}
+    onlineUnsubscribe = null;
+  }
+  onlineRole = role;
+  onlineRoomCode = code;
+  onlineUnsubscribe = window.listenCounterBoxingRoom(code, room=>handleOnlineRoomUpdate(room));
+}
+
+function handleOnlineRoomUpdate(room){
+  if(!room){
+    if(onlineMode && $('status')) $('status').textContent = 'Room closed or missing.';
+    return;
+  }
+  onlineRoomData = room;
+
+  if(!onlineMode && onlineRole === 'host'){
+    if(room.status === 'playing') startOnlineMatch('host', onlineRoomCode, room);
+    else setOnlineStatus(`Room ${onlineRoomCode} created. Waiting for challenger...`);
+    return;
+  }
+
+  if(!onlineMode && onlineRole === 'guest'){
+    if(room.status === 'playing') startOnlineMatch('guest', onlineRoomCode, room);
+    return;
+  }
+
+  if(!onlineMode) return;
+  setOnlineFightHud(room);
+  applyOnlineVisualIfNew(room);
+
+  if(room.status === 'finished'){
+    handleOnlineFinished(room);
+    return;
+  }
+
+  if(onlineRole === 'host') maybeResolveOnlineRound(room);
+
+  const myMove = onlineMyMove(room);
+  const theirMove = onlineTheirMove(room);
+  const r = onlineRound(room);
+
+  if(myMove && Number(myMove.round) === r){
+    setButtons(true);
+    locked = true;
+    if($('status')) $('status').textContent = theirMove ? 'Both moves are in. Resolving...' : 'Move locked. Waiting for opponent...';
+  }else{
+    setButtons(false);
+    locked = false;
+    if($('status')) $('status').textContent = room.lastMessage || `Round ${r}. Choose your move.`;
+  }
+}
+
+async function submitOnlineMove(move){
+  if(!onlineMode || !onlineRoomCode || !onlineRole || !onlineRoomData) return;
+  if(onlineFinished || onlineRoomData.status === 'finished') return;
+
+  const r = onlineRound(onlineRoomData);
+  const existing = onlineMyMove(onlineRoomData);
+
+  if(existing && Number(existing.round) === r){
+    if($('status')) $('status').textContent = 'Move already locked. Waiting for opponent...';
+    return;
+  }
+
+  if(typeof window.submitCounterBoxingMove !== 'function'){
+    if($('status')) $('status').textContent = 'Firebase move tool is not ready.';
+    return;
+  }
+
+  setButtons(true);
+  locked = true;
+  if($('status')) $('status').textContent = 'Sending move...';
+
+  try{
+    await window.submitCounterBoxingMove(onlineRoomCode, onlineRole, move, r);
+    if($('status')) $('status').textContent = 'Move locked. Waiting for opponent...';
+  }catch(err){
+    console.error(err);
+    setButtons(false);
+    locked = false;
+    if($('status')) $('status').textContent = 'Move failed. Check Firebase rules.';
+  }
+}
+
+function resolveOnlineMoves(hostMove, guestMove, room){
+  let hostHp = Number(room.hostHp || MAX);
+  let guestHp = Number(room.guestHp || MAX);
+  let hostPower = !!room.hostPower;
+  let guestPower = !!room.guestPower;
+  let hostDamage = 0;
+  let guestDamage = 0;
+  let message = '';
+
+  function usePower(dmg, who){
+    if(dmg <= 0) return dmg;
+    if(who === 'host' && hostPower){ hostPower = false; return dmg * 2; }
+    if(who === 'guest' && guestPower){ guestPower = false; return dmg * 2; }
+    return dmg;
+  }
+
+  const h = hostMove;
+  const g = guestMove;
+
+  if(h === 'taunt' && g === 'taunt'){
+    hostPower = true; guestPower = true; message = 'Double taunt! Both fighters power up.';
+  }else if(h === 'block' && g === 'block'){
+    message = 'Both fighters block. Reset.';
+  }else if(h === 'taunt' && g === 'block'){
+    hostPower = true; message = 'Host taunt succeeds. Host powers up.';
+  }else if(g === 'taunt' && h === 'block'){
+    guestPower = true; message = 'Guest taunt succeeds. Guest powers up.';
+  }else if(h === 'taunt'){
+    hostDamage = 4; message = 'Host taunted at the wrong time and got punished.';
+  }else if(g === 'taunt'){
+    guestDamage = 4; message = 'Guest taunted at the wrong time and got punished.';
+  }else if(h === 'block'){
+    if(g === 'jab') message = 'Host blocks the jab.';
+    else { hostDamage = usePower(1,'guest'); message = 'Host blocks but takes chip damage.'; }
+  }else if(g === 'block'){
+    if(h === 'jab') message = 'Guest blocks the jab.';
+    else { guestDamage = usePower(1,'host'); message = 'Guest blocks but takes chip damage.'; }
+  }else if(h === g){
+    hostDamage = usePower(1,'guest');
+    guestDamage = usePower(1,'host');
+    message = 'Same move. Both fighters take damage.';
+  }else if(beats(h,g)){
+    guestDamage = usePower(2,'host');
+    message = 'Host lands the counter.';
+  }else{
+    hostDamage = usePower(2,'guest');
+    message = 'Guest lands the counter.';
+  }
+
+  hostHp = Math.max(0, hostHp - hostDamage);
+  guestHp = Math.max(0, guestHp - guestDamage);
+
+  let status = 'playing';
+  let winnerRole = '';
+
+  if(hostHp <= 0 && guestHp <= 0){
+    status = 'finished'; winnerRole = 'draw'; message = 'Double K.O. Online draw.';
+  }else if(hostHp <= 0){
+    status = 'finished'; winnerRole = 'guest'; message = 'Guest wins by K.O.';
+  }else if(guestHp <= 0){
+    status = 'finished'; winnerRole = 'host'; message = 'Host wins by K.O.';
+  }
+
+  return {hostHp, guestHp, hostPower, guestPower, status, winnerRole, lastMessage:message};
+}
+
+async function maybeResolveOnlineRound(room){
+  if(!room.hostMove || !room.guestMove) return;
+  const r = onlineRound(room);
+  if(Number(room.hostMove.round) !== r || Number(room.guestMove.round) !== r) return;
+  if(Number(room.resolvedRound || 0) >= r) return;
+  if(typeof window.resolveCounterBoxingRound !== 'function') return;
+
+  const result = resolveOnlineMoves(room.hostMove.move, room.guestMove.move, room);
+
+  try{
+    await window.resolveCounterBoxingRound(onlineRoomCode, {
+      ...result,
+      round: result.status === 'finished' ? r : r + 1,
+      resolvedRound: r,
+      hostMove: null,
+      guestMove: null,
+      updatedAt: Date.now()
+    });
+  }catch(err){
+    console.error(err);
+    if($('status')) $('status').textContent = 'Round resolve failed. Check Firebase rules.';
+  }
+}
+
+function onlineVisualFor(room){
+  const msg = room.lastMessage || '';
+  const me = onlineRole;
+
+  if(room.status === 'finished'){
+    if(room.winnerRole === 'draw') return {scene:'draw', shake:'bigShake', flash:'white'};
+    return room.winnerRole === me ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
+  }
+  if(msg.includes('Same move') || msg.includes('Both fighters take')) return {scene:'draw', shake:'shake', flash:'white'};
+  if(msg.includes('Host lands')) return me === 'host' ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
+  if(msg.includes('Guest lands')) return me === 'guest' ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
+  if(msg.includes('Host blocks')) return me === 'host' ? {scene:'playerBlock', shake:'', flash:''} : {scene:'opponentBlock', shake:'', flash:''};
+  if(msg.includes('Guest blocks')) return me === 'guest' ? {scene:'playerBlock', shake:'', flash:''} : {scene:'opponentBlock', shake:'', flash:''};
+  if(msg.includes('Host taunt')) return me === 'host' ? {scene:'playerTaunt', shake:'', flash:'gold'} : {scene:'opponentTaunt', shake:'', flash:'gold'};
+  if(msg.includes('Guest taunt')) return me === 'guest' ? {scene:'playerTaunt', shake:'', flash:'gold'} : {scene:'opponentTaunt', shake:'', flash:'gold'};
+  if(msg.includes('Double taunt')) return {scene:'draw', shake:'', flash:'gold'};
+  if(msg.includes('Host taunted')) return me === 'host' ? {scene:'playerHurt', shake:'bigShake', flash:'red'} : {scene:'opponentHurt', shake:'shake', flash:'white'};
+  if(msg.includes('Guest taunted')) return me === 'guest' ? {scene:'playerHurt', shake:'bigShake', flash:'red'} : {scene:'opponentHurt', shake:'shake', flash:'white'};
+  return {scene:'draw', shake:'', flash:''};
+}
+
+function applyOnlineVisualIfNew(room){
+  const resolved = Number(room.resolvedRound || 0);
+  if(!resolved || resolved <= onlineLastVisualRound) return;
+
+  onlineLastVisualRound = resolved;
+  const vis = onlineVisualFor(room);
+  setScene(vis.scene, room.lastMessage || '', vis.shake, vis.flash, room.status !== 'finished');
+}
+
+function handleOnlineFinished(room){
+  if(onlineFinished) return;
+  onlineFinished = true;
+  locked = true;
+  setButtons(true);
+
+  const isDraw = room.winnerRole === 'draw';
+  const didWin = room.winnerRole === onlineRole;
+
+  if($('status')) $('status').textContent = isDraw ? 'Online draw.' : didWin ? 'You win the online match!' : 'You lose the online match.';
+  showKO(isDraw ? 'Online Draw' : didWin ? 'Online Win' : 'Online Loss');
+  if($('nextFightBtn')) $('nextFightBtn').textContent = 'Online Menu';
+}
+
+const careerContinueAfterKO = continueAfterKO;
+function continueAfterKO(){
+  if(onlineMode && onlineFinished){
+    if($('koOverlay')) $('koOverlay').classList.remove('show');
+    clearOnlineMode();
+    startMenuMusic();
+    show('online');
+    return;
+  }
+  careerContinueAfterKO();
+}
+
+const careerStartCareerFight = startCareerFight;
+function startCareerFight(){
+  clearOnlineMode();
+  careerStartCareerFight();
+}
+
+const careerSelectNewGame = selectNewGame;
+function selectNewGame(){
+  clearOnlineMode();
+  careerSelectNewGame();
+}
+
+const careerContinueCareer = continueCareer;
+function continueCareer(){
+  clearOnlineMode();
+  careerContinueCareer();
+}
+
+const careerBackToMenu = backToMenu;
+function backToMenu(){
+  if(onlineMode) clearOnlineMode();
+  careerBackToMenu();
+}
+
+async function createOnlineRoom(){
+  clearOnlineMode();
+
+  const name = onlineName();
+  const code = randomRoomCode();
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+
+  if(typeof window.createCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Creating room...');
+    await window.createCounterBoxingRoom({code, hostName:name});
+    onlineRole = 'host';
+    onlineRoomCode = code;
+    await startOnlineRoomWatcher('host', code);
+    setOnlineStatus(`Room ${code} created. Waiting for challenger...`);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not create room. Check Firebase rules.');
+  }
+}
+
+async function joinOnlineRoom(){
+  clearOnlineMode();
+
+  const name = onlineName();
+  const code = String(($('onlineRoomCode') && $('onlineRoomCode').value) || '').trim().toUpperCase();
+
+  if(!code){
+    setOnlineStatus('Enter a room code first.');
+    return;
+  }
+
+  if(typeof window.joinCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Joining room...');
+    const room = await window.joinCounterBoxingRoom({code, guestName:name});
+    if(!room){
+      setOnlineStatus('Room not found.');
+      return;
+    }
+    onlineRole = 'guest';
+    onlineRoomCode = code;
+    await startOnlineRoomWatcher('guest', code);
+    startOnlineMatch('guest', code, room);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
+  }
 }
 
 // initial asset load
