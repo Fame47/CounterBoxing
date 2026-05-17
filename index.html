@@ -809,7 +809,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">ONLINE FIGHT PHASE 1 CLEAN v2</div>
+<div id="buildStamp">ONLINE PVP RULES FIXED</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -1822,7 +1822,7 @@ function resolveOnlineMoves(hostMove, guestMove, room){
   if(h === 'taunt' && g === 'taunt'){
     hostPower = true; guestPower = true; message = 'Double taunt! Both fighters power up.';
   }else if(h === 'block' && g === 'block'){
-    message = 'Both fighters block. Reset.';
+    message = 'Both fighters block. Draw.';
   }else if(h === 'taunt' && g === 'block'){
     hostPower = true; message = 'Host taunt succeeds. Host powers up.';
   }else if(g === 'taunt' && h === 'block'){
@@ -1890,26 +1890,82 @@ async function maybeResolveOnlineRound(room){
   }
 }
 
+
+/* ONLINE ONLY PVP VISUAL MAPPING */
 function onlineVisualFor(room){
   const msg = room.lastMessage || '';
-  const me = onlineRole;
+  const me = onlineRole; // host or guest
+  const winner = room.winnerRole || '';
 
   if(room.status === 'finished'){
-    if(room.winnerRole === 'draw') return {scene:'draw', shake:'bigShake', flash:'white'};
-    return room.winnerRole === me ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
+    if(winner === 'draw') return {scene:'draw', shake:'bigShake', flash:'white'};
+    return winner === me
+      ? {scene:'opponentHurt', shake:'shake', flash:'white'}
+      : {scene:'playerHurt', shake:'bigShake', flash:'red'};
   }
-  if(msg.includes('Same move') || msg.includes('Both fighters take')) return {scene:'draw', shake:'shake', flash:'white'};
-  if(msg.includes('Host lands')) return me === 'host' ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
-  if(msg.includes('Guest lands')) return me === 'guest' ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
-  if(msg.includes('Host blocks')) return me === 'host' ? {scene:'playerBlock', shake:'', flash:''} : {scene:'opponentBlock', shake:'', flash:''};
-  if(msg.includes('Guest blocks')) return me === 'guest' ? {scene:'playerBlock', shake:'', flash:''} : {scene:'opponentBlock', shake:'', flash:''};
-  if(msg.includes('Host taunt')) return me === 'host' ? {scene:'playerTaunt', shake:'', flash:'gold'} : {scene:'opponentTaunt', shake:'', flash:'gold'};
-  if(msg.includes('Guest taunt')) return me === 'guest' ? {scene:'playerTaunt', shake:'', flash:'gold'} : {scene:'opponentTaunt', shake:'', flash:'gold'};
-  if(msg.includes('Double taunt')) return {scene:'draw', shake:'', flash:'gold'};
-  if(msg.includes('Host taunted')) return me === 'host' ? {scene:'playerHurt', shake:'bigShake', flash:'red'} : {scene:'opponentHurt', shake:'shake', flash:'white'};
-  if(msg.includes('Guest taunted')) return me === 'guest' ? {scene:'playerHurt', shake:'bigShake', flash:'red'} : {scene:'opponentHurt', shake:'shake', flash:'white'};
+
+  // Clean P1/P2 mirror logic using room state text, not CPU labels.
+  if(msg.includes('Same move') || msg.includes('Both fighters take')) {
+    return {scene:'draw', shake:'shake', flash:'white'};
+  }
+  if(msg.includes('Both fighters block')) {
+    return {scene:'draw', shake:'', flash:''};
+  }
+  if(msg.includes('Double taunt')) {
+    return {scene:'draw', shake:'', flash:'gold'};
+  }
+
+  // Successful counters / landed attacks
+  if(msg.includes('Host lands the counter')) {
+    return me === 'host'
+      ? {scene:'playerCounter', shake:'shake', flash:'white'}
+      : {scene:'opponentCounter', shake:'bigShake', flash:'red'};
+  }
+  if(msg.includes('Guest lands the counter')) {
+    return me === 'guest'
+      ? {scene:'playerCounter', shake:'shake', flash:'white'}
+      : {scene:'opponentCounter', shake:'bigShake', flash:'red'};
+  }
+
+  // Blocks
+  if(msg.includes('Host blocks the jab') || msg.includes('Host blocks but takes chip damage')) {
+    return me === 'host'
+      ? {scene:'playerBlock', shake:'', flash:''}
+      : {scene:'opponentBlock', shake:'', flash:''};
+  }
+  if(msg.includes('Guest blocks the jab') || msg.includes('Guest blocks but takes chip damage')) {
+    return me === 'guest'
+      ? {scene:'playerBlock', shake:'', flash:''}
+      : {scene:'opponentBlock', shake:'', flash:''};
+  }
+
+  // Taunt success (taunt vs block)
+  if(msg.includes('Host taunt succeeds')) {
+    return me === 'host'
+      ? {scene:'playerTaunt', shake:'', flash:'gold'}
+      : {scene:'opponentTaunt', shake:'', flash:'gold'};
+  }
+  if(msg.includes('Guest taunt succeeds')) {
+    return me === 'guest'
+      ? {scene:'playerTaunt', shake:'', flash:'gold'}
+      : {scene:'opponentTaunt', shake:'', flash:'gold'};
+  }
+
+  // Taunt punished
+  if(msg.includes('Host taunted at the wrong time')) {
+    return me === 'host'
+      ? {scene:'opponentCounter', shake:'bigShake', flash:'red'}
+      : {scene:'playerCounter', shake:'shake', flash:'white'};
+  }
+  if(msg.includes('Guest taunted at the wrong time')) {
+    return me === 'guest'
+      ? {scene:'opponentCounter', shake:'bigShake', flash:'red'}
+      : {scene:'playerCounter', shake:'shake', flash:'white'};
+  }
+
   return {scene:'draw', shake:'', flash:''};
 }
+
 
 function applyOnlineVisualIfNew(room){
   const resolved = Number(room.resolvedRound || 0);
