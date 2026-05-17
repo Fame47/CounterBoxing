@@ -660,8 +660,8 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
 <body>
 <section id="start" class="screen active"><div class="frame"><img id="startBg" class="bg" alt="Counter Boxing"><button class="start-btn" onclick="startMenuMusic();show('menu')">Start</button></div></section>
 <section id="menu" class="screen"><div class="frame"><img id="menuBg" class="bg" alt="Main menu"><div class="clean-menu"><button class="ui-btn" onclick="show('careerStart')">Career Mode</button><button class="ui-btn" onclick="show('online')">Online Mode</button><button class="ui-btn" onclick="showLocker()">Locker Room</button><button class="ui-btn" onclick="show('options')">Options</button></div></div></section>
-<section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="selectNewGame()">New Run</button><button class="ui-btn" onclick="continueCareer()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
-<section id="careerIntro" class="screen"><div class="frame"><img id="careerIntroBg" class="bg" alt="Career intro"><img id="careerIntroFrame" class="careerIntroFrame" alt="CB Frame"><div id="careerIntroWords" class="careerIntroText">Coach said \"take my time and look for a counter\", Seems easy enough!</div><button class="start-btn careerIntroBtn" onclick="startCareerFight()">Continue</button></div></section>
+<section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="cbCareerNewRun()">New Run</button><button class="ui-btn" onclick="cbCareerContinue()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
+<section id="careerIntro" class="screen"><div class="frame"><img id="careerIntroBg" class="bg" alt="Career intro"><img id="careerIntroFrame" class="careerIntroFrame" alt="CB Frame"><div id="careerIntroWords" class="careerIntroText">Coach said \"take my time and look for a counter\", Seems easy enough!</div><button class="start-btn careerIntroBtn" onclick="cbCareerStartFight()">Continue</button></div></section>
 <section id="locker" class="screen"><div class="frame"><img id="lockerBg" class="bg" alt="Locker Room"><img id="lockerDisplay" class="lockerDisplay" alt="Locker Room Display"><button class="top-back" onclick="show('menu')">BACK</button><div class="record-box"><div class="record-title">Fight Record</div><div class="record-row"><span>Cash</span><span id="lockerCash">0</span></div><div class="record-row"><span>Wins</span><span id="lockerWins">0</span></div><div class="record-row"><span>Losses</span><span id="lockerLosses">0</span></div><div class="record-row"><span>Title Defenses</span><span id="lockerDefenses">0</span></div></div><div class="locker-tabs"><div class="locker-tab" onclick="showFighters()"><div>Fighters<small id="fighterLockText">Win Belt</small></div><div class="lock">🔒</div></div><div class="locker-tab" onclick="showGloves()"><div>Gloves<small>Select Color</small></div><div class="lock">🥊</div></div><div class="locker-tab" onclick="showStore()"><div>Store<small>Taunts + Gloves</small></div><div class="lock">💰</div></div></div><div id="lockerNotice" class="notice"></div></div></section>
 <section id="championRoom" class="screen">
   <div class="frame">
@@ -816,7 +816,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">CAREER BUTTON FIX v8</div>
+<div id="buildStamp">DIRECT CAREER BUTTON FIX v9</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
