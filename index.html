@@ -809,7 +809,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">ONLINE POV IMAGE MAP v3</div>
+<div id="buildStamp">ONLINE ANIMATION FIX v4</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -2244,6 +2244,181 @@ async function joinOnlineRoom(){
   }
 }
 
+
+/* ============================================================
+   ONLINE ANIMATION FIX v4 - FINAL OVERRIDE
+   ------------------------------------------------------------
+   The damage/move logic was working, but visuals were not showing
+   because hostMove/guestMove were cleared during round resolve.
+
+   This stores lastHostMove/lastGuestMove and uses those for the
+   image lookup after Firebase updates both players.
+   ============================================================ */
+
+function onlineMyMove(room){
+  if(onlineRole === 'host') return room.hostMove || room.lastHostMove || null;
+  return room.guestMove || room.lastGuestMove || null;
+}
+
+function onlineTheirMove(room){
+  if(onlineRole === 'host') return room.guestMove || room.lastGuestMove || null;
+  return room.hostMove || room.lastHostMove || null;
+}
+
+function onlineCurrentMyMoveOnly(room){
+  return onlineRole === 'host' ? room.hostMove : room.guestMove;
+}
+
+function onlineCurrentTheirMoveOnly(room){
+  return onlineRole === 'host' ? room.guestMove : room.hostMove;
+}
+
+async function maybeResolveOnlineRound(room){
+  if(!room.hostMove || !room.guestMove) return;
+  const r = onlineRound(room);
+  if(Number(room.hostMove.round) !== r || Number(room.guestMove.round) !== r) return;
+  if(Number(room.resolvedRound || 0) >= r) return;
+  if(typeof window.resolveCounterBoxingRound !== 'function') return;
+
+  const lastHostMove = room.hostMove;
+  const lastGuestMove = room.guestMove;
+  const result = resolveOnlineMoves(lastHostMove.move, lastGuestMove.move, room);
+
+  try{
+    await window.resolveCounterBoxingRound(onlineRoomCode, {
+      ...result,
+      round: result.status === 'finished' ? r : r + 1,
+      resolvedRound: r,
+      lastHostMove,
+      lastGuestMove,
+      hostMove: null,
+      guestMove: null,
+      updatedAt: Date.now()
+    });
+  }catch(err){
+    console.error(err);
+    if($('status')) $('status').textContent = 'Round resolve failed. Check Firebase rules.';
+  }
+}
+
+function onlineDisplayFor(room){
+  const my = onlineMyMove(room);
+  const them = onlineTheirMove(room);
+  if(!my || !them) return null;
+  const key = `${String(my.move || '').toLowerCase()}|${String(them.move || '').toLowerCase()}`;
+  return ONLINE_POV_DISPLAY_MAP[key] || {gloves:"GLOVES PLAYER DRAW", opponent:"CPU DRAW"};
+}
+
+function handleOnlineRoomUpdate(room){
+  if(!room){
+    if(onlineMode && $('status')) $('status').textContent = 'Room closed or missing.';
+    return;
+  }
+
+  onlineRoomData = room;
+
+  if(!onlineMode && onlineRole === 'host'){
+    if(room.status === 'playing') startOnlineMatch('host', onlineRoomCode, room);
+    else setOnlineStatus(`Room ${onlineRoomCode} created. Waiting for challenger...`);
+    return;
+  }
+
+  if(!onlineMode && onlineRole === 'guest'){
+    if(room.status === 'playing') startOnlineMatch('guest', onlineRoomCode, room);
+    return;
+  }
+
+  if(!onlineMode) return;
+
+  // Host resolves first if both fresh current moves are in.
+  if(onlineRole === 'host'){
+    maybeResolveOnlineRound(room);
+  }
+
+  // If this update contains a newly resolved round, show the mapped images.
+  const resolved = Number(room.resolvedRound || 0);
+  const hasNewVisual = resolved && resolved > onlineLastVisualRound;
+
+  if(hasNewVisual){
+    setOnlineFightHud(room);
+    applyOnlineVisualIfNew(room);
+  }else{
+    setOnlineFightHud(room);
+  }
+
+  if(room.status === 'finished'){
+    handleOnlineFinished(room);
+    return;
+  }
+
+  // Button lock must only use CURRENT moves, not last resolved moves.
+  const myMove = onlineCurrentMyMoveOnly(room);
+  const theirMove = onlineCurrentTheirMoveOnly(room);
+  const r = onlineRound(room);
+
+  if(myMove && Number(myMove.round) === r){
+    setButtons(true);
+    locked = true;
+    if($('status')) $('status').textContent = theirMove ? 'Both moves are in. Resolving...' : 'Move locked. Waiting for opponent...';
+  }else{
+    setButtons(false);
+    locked = false;
+    if(!hasNewVisual && $('status')) $('status').textContent = room.lastMessage || `Round ${r}. Choose your move.`;
+  }
+}
+
+function setOnlineMappedScene(display, room, autoReturn=true){
+  clearTimeout(idleTimer);
+
+  const gloveColor = onlineMyGloveColor(room);
+  const opponentColor = onlineOpponentFighterColor(room);
+
+  setImg($('ringScene'), ['RING4','RING1']);
+  setImg($('gloveScene'), [
+    onlineImageBase(gloveColor, display.gloves),
+    onlineImageBase(gloveColor, 'GLOVES IDLE')
+  ]);
+  setImg($('opponentScene'), [
+    onlineImageBase(opponentColor, display.opponent),
+    onlineImageBase(opponentColor, 'IDLE')
+  ]);
+
+  if($('status')) $('status').textContent = room.lastMessage || 'Round resolved.';
+
+  const msg = room.lastMessage || '';
+  let shake = '';
+  let flash = '';
+
+  if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) shake = 'shake';
+  if(msg.includes('Double taunt') || msg.includes('powers up') || msg.includes('taunt succeeds')) flash = 'gold';
+  else if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) flash = 'white';
+
+  if(shake){
+    const frame=$('fightFrame');
+    frame.classList.remove('shake','bigShake');
+    void frame.offsetWidth;
+    frame.classList.add(shake);
+    setTimeout(()=>frame.classList.remove(shake),520);
+  }
+
+  if(flash){
+    const fl=$('flash');
+    fl.className='flash';
+    void fl.offsetWidth;
+    fl.classList.add(flash);
+    setTimeout(()=>fl.className='flash',520);
+  }
+
+  if(autoReturn && room.status !== 'finished'){
+    idleTimer=setTimeout(()=>{
+      if(onlineMode && onlineRoomData) {
+        loadOnlineFightIdle(onlineRoomData);
+        if($('status')) $('status').textContent = `Round ${onlineRound(onlineRoomData)}. Choose your move.`;
+      }
+    },2000);
+  }
+}
+
 // initial asset load
 setImg($('startBg'), SCREEN_BASES.start);
 setImg($('menuBg'), SCREEN_BASES.menu);
@@ -2318,6 +2493,8 @@ window.createCounterBoxingRoom = async function(room) {
     guestHp: 8,
     hostMove: null,
     guestMove: null,
+    lastHostMove: null,
+    lastGuestMove: null,
     hostPower: false,
     guestPower: false,
     winnerRole: "",
