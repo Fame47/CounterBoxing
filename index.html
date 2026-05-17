@@ -648,10 +648,240 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
 /* ONLINE FIGHT PHASE 1 CLEAN */
 .onlinePhaseNote{color:#ffd032}
 
+
+/* FINAL TOP 10 ONLINE LEADERBOARD */
+.onlineLeaderboard{
+  grid-template-columns:1fr !important;
+  max-width:720px;
+  margin:0 auto;
+}
+.onlineRankRow{
+  grid-template-columns:42px 1fr 64px 64px 74px !important;
+}
+
+
+/* V10 MUSIC + ONLINE POPUP UPDATE */
+#buildStamp{
+  font-size:10px !important;
+  padding:3px 7px !important;
+  text-transform:none !important;
+}
+
+#globalMusicWidget{
+  right:2% !important;
+  bottom:7% !important;
+  min-width:15% !important;
+  max-width:22% !important;
+  padding:.42% .7% !important;
+  border-radius:8px !important;
+}
+.musicNow{font-size:clamp(10px,.9vw,18px) !important}
+.musicSong{font-size:clamp(8px,.72vw,14px) !important}
+.musicControls{margin-top:4px !important;gap:5px !important}
+.musicSmallBtn{font-size:clamp(8px,.7vw,13px) !important;padding:3px 6px !important}
+.musicMiniRange{width:62px !important}
+
+.fightMusic{
+  position:absolute;
+  right:10.5%;
+  bottom:2%;
+  z-index:35;
+  pointer-events:auto;
+  border:2px solid rgba(255,210,60,.75);
+  border-radius:999px;
+  background:rgba(0,0,0,.55);
+  color:#fff;
+  padding:.5% 1%;
+  font-weight:900;
+  font-size:clamp(10px,1vw,18px);
+  cursor:pointer;
+}
+
+/* Online Mode v10 tabs and black popout panels */
+.onlinePanel.v10{
+  grid-template-columns:1fr 1.25fr !important;
+  background:rgba(0,0,0,.70) !important;
+}
+.onlineTabs{
+  display:flex;
+  gap:2%;
+  justify-content:center;
+  margin-bottom:3%;
+}
+.onlineTab{
+  flex:1;
+  border:2px solid rgba(255,210,60,.85);
+  border-radius:10px;
+  background:rgba(0,0,0,.78);
+  color:#fff;
+  padding:clamp(10px,1vw,18px);
+  font-size:clamp(13px,1.25vw,24px);
+  font-weight:1000;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.onlineTab.active{
+  background:linear-gradient(180deg,#e0a21f,#9e6500);
+  color:#111;
+}
+.onlinePopup{
+  display:none;
+  background:#000;
+  border:2px solid rgba(255,210,60,.92);
+  border-radius:14px;
+  padding:3%;
+  box-shadow:0 0 28px rgba(255,210,60,.18),0 14px 36px rgba(0,0,0,.8);
+}
+.onlinePopup.active{display:block}
+.onlinePopupTitle{
+  color:#ffd032;
+  text-align:center;
+  font-size:clamp(18px,1.65vw,34px);
+  font-weight:1000;
+  text-transform:uppercase;
+  margin-bottom:2%;
+}
+.onlineHint{
+  color:#aaa;
+  font-size:clamp(10px,.9vw,17px);
+  font-weight:850;
+  text-align:center;
+  line-height:1.25;
+  margin-top:2%;
+}
+.onlineHint strong{color:#ffd032}
+.onlineInputLabel{
+  color:#ffd032;
+  display:block;
+  font-size:clamp(10px,.9vw,17px);
+  font-weight:950;
+  text-transform:uppercase;
+  margin-top:2%;
+}
+.onlineSelect{
+  width:100%;
+  margin:1.3% 0;
+  padding:1.55%;
+  background:#111;
+  color:#fff;
+  border:2px solid #ffd032;
+  border-radius:10px;
+  font-size:clamp(16px,1.6vw,30px);
+  font-weight:1000;
+  text-align:center;
+  text-transform:uppercase;
+}
+@media(max-width:760px){
+  #globalMusicWidget{right:2% !important;bottom:15% !important;min-width:30% !important;max-width:40% !important}
+  .fightMusic{right:28%;bottom:2%;font-size:10px}
+  .onlinePanel.v10{grid-template-columns:1fr !important}
+}
+
+
+/* V10.2 START SCREEN CLEANUP */
+#start #globalMusicWidget,
+#start + #globalMusicWidget{
+  display:none !important;
+}
+
+
+/* ============================================================
+   V10.5 SURGICAL UI FIX
+   Keeps original full-size game frame intact.
+   ============================================================ */
+
+#buildStamp{font-size:10px!important;padding:3px 7px!important;text-transform:none!important;max-width:280px!important}
+
+/* Smaller global music player */
+#globalMusicWidget{
+  right:2%!important;bottom:7.5%!important;width:240px!important;min-width:190px!important;max-width:240px!important;
+  padding:7px 10px!important;border-radius:8px!important;transform:none!important;
+}
+.musicNow{font-size:15px!important;line-height:1!important}
+.musicSong{font-size:11px!important;line-height:1.1!important}
+.musicControls{margin-top:4px!important;gap:5px!important}
+.musicSmallBtn{font-size:10px!important;padding:3px 6px!important}
+.musicMiniRange{width:64px!important}
+
+/* In-match music button next to sound */
+.fightMusic{
+  position:absolute!important;right:10.7%!important;bottom:2%!important;z-index:55!important;pointer-events:auto!important;
+  border:2px solid rgba(255,210,60,.8)!important;border-radius:999px!important;background:rgba(0,0,0,.7)!important;
+  color:#fff!important;padding:6px 13px!important;font-weight:1000!important;font-size:clamp(10px,.9vw,16px)!important;cursor:pointer!important;
+}
+
+/* Battle screen HUD cleanup */
+#career .hudBox,#career .enemyBox{
+  background:transparent!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;
+}
+#career .hudBox{width:14.5%!important;left:6.2%!important;top:11.8%!important;padding:0!important}
+#career .enemyBox{width:14.5%!important;right:6.2%!important;top:12.1%!important;padding:0!important}
+#career .hudBox h2,#career .enemyBox h2{font-size:clamp(22px,2.1vw,40px)!important;margin:0 0 10px!important}
+#career .hearts{font-size:clamp(16px,1.35vw,28px)!important;line-height:1.15!important}
+#career .hudStats{margin-top:12px!important;padding-top:10px!important;border-top:1px solid rgba(255,255,255,.18)!important}
+#career .hudStats .label{font-size:clamp(12px,1vw,20px)!important}
+#career .hudStats .value{font-size:clamp(24px,2vw,40px)!important}
+
+/* Round badge square */
+#career .roundBadge,.roundBadge{
+  width:74px!important;height:74px!important;aspect-ratio:1/1!important;right:8.2%!important;top:2.7%!important;
+  border-radius:4px!important;padding:5px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
+}
+.roundBadge .roundLabel{font-size:13px!important;line-height:1!important}
+.roundBadge #round{font-size:48px!important;line-height:.9!important}
+
+/* Online screen layout, do not resize full game */
+#online .onlinePanel,#online .onlinePanel.v10{
+  width:72%!important;top:5%!important;left:50%!important;transform:translateX(-50%)!important;
+  display:grid!important;grid-template-columns:38% 1fr!important;gap:1.4%!important;padding:1.2%!important;
+  background:rgba(0,0,0,.72)!important;border:2px solid rgba(255,210,60,.86)!important;border-radius:14px!important;overflow:visible!important;
+}
+#online .onlineTitle{
+  grid-column:1/-1!important;font-size:clamp(38px,4.2vw,78px)!important;line-height:.92!important;margin:0 0 .8%!important;text-align:center!important;
+}
+#online .onlineBox{
+  background:rgba(0,0,0,.42)!important;border:1px solid rgba(255,255,255,.15)!important;border-radius:10px!important;
+  padding:2%!important;min-height:470px!important;max-height:570px!important;overflow:hidden!important;
+}
+#online .onlineBox:first-of-type{display:flex!important;flex-direction:column!important}
+#online .onlineSubTitle{font-size:clamp(22px,2vw,38px)!important;line-height:1!important;margin:0 0 10px!important;text-align:center!important}
+
+#online .onlineTabs{display:flex!important;gap:8px!important;margin:0 0 9px!important;width:100%!important;flex-shrink:0!important}
+#online .onlineTab{
+  flex:1!important;border:2px solid #ffd032!important;border-radius:7px!important;background:#050505!important;color:#fff!important;
+  padding:10px 6px!important;font-size:clamp(12px,1.05vw,21px)!important;line-height:1!important;font-weight:1000!important;text-transform:uppercase!important;
+}
+#online .onlineTab.active{background:linear-gradient(180deg,#efbf32,#b67500)!important;color:#111!important}
+
+#online .onlinePopup{
+  display:none!important;position:relative!important;background:#000!important;border:2px solid #ffd032!important;border-radius:0!important;
+  box-shadow:none!important;padding:12px!important;min-height:0!important;height:355px!important;overflow:hidden!important;
+}
+#online .onlinePopup.active{display:block!important}
+#online .onlinePopupTitle{color:#fff!important;font-size:clamp(22px,2.05vw,40px)!important;line-height:1!important;margin:0 0 7px!important;text-align:center!important;text-shadow:2px 2px #000!important}
+#online .onlineInputLabel{display:block!important;color:#ffd032!important;font-size:clamp(9px,.72vw,14px)!important;line-height:1!important;font-weight:1000!important;text-transform:uppercase!important;margin:5px 0 3px!important}
+#online .onlineInput,#online .onlineSelect{
+  width:100%!important;box-sizing:border-box!important;margin:0!important;padding:6px 10px!important;height:42px!important;min-height:0!important;
+  border:2px solid #ffd032!important;border-radius:5px!important;background:#090909!important;color:#fff!important;
+  font-size:clamp(18px,1.75vw,32px)!important;line-height:1!important;font-weight:1000!important;text-transform:uppercase!important;text-align:left!important;
+}
+#online .onlineSelect{appearance:auto!important}
+#online .onlineBtn{
+  width:100%!important;margin-top:8px!important;padding:9px 8px!important;height:40px!important;min-height:0!important;
+  line-height:1!important;border-radius:7px!important;font-size:clamp(12px,1vw,20px)!important;
+}
+#online .onlineHint{font-size:clamp(9px,.68vw,12px)!important;line-height:1.12!important;color:#ddd!important;text-align:left!important;margin-top:6px!important}
+#online .onlineStatus{font-size:clamp(9px,.68vw,12px)!important;line-height:1.12!important;min-height:16px!important;margin-top:7px!important;overflow:hidden!important}
+
+#onlineLeaderboardTitle{font-size:clamp(23px,2.1vw,40px)!important;line-height:1.15!important;margin-bottom:14px!important}
+#online .onlineLeaderboard{grid-template-columns:1fr!important;max-width:100%!important}
+#online .onlineRankRow{grid-template-columns:40px 1fr 54px 54px 72px!important;font-size:clamp(10px,.86vw,16px)!important;min-height:32px!important}
+#online .top-back{left:50%!important;top:auto!important;bottom:3%!important;transform:translateX(-50%)!important;width:230px!important}
+
 </style>
 </head>
 <body>
-<section id="start" class="screen active"><div class="frame"><img id="startBg" class="bg" alt="Counter Boxing"><button class="start-btn" onclick="startMenuMusic();show('menu')">Start</button></div></section>
+<section id="start" class="screen active"><div class="frame"><img id="startBg" class="bg" alt="Counter Boxing"><button class="start-btn" onclick="cbStartGame()">Start</button></div></section>
 <section id="menu" class="screen"><div class="frame"><img id="menuBg" class="bg" alt="Main menu"><div class="clean-menu"><button class="ui-btn" onclick="show('careerStart')">Career Mode</button><button class="ui-btn" onclick="show('online')">Online Mode</button><button class="ui-btn" onclick="showLocker()">Locker Room</button><button class="ui-btn" onclick="show('options')">Options</button></div></div></section>
 <section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="selectNewGame()">New Run</button><button class="ui-btn" onclick="continueCareer()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
 <section id="careerIntro" class="screen"><div class="frame"><img id="careerIntroBg" class="bg" alt="Career intro"><img id="careerIntroFrame" class="careerIntroFrame" alt="CB Frame"><div id="careerIntroWords" class="careerIntroText">Coach said \"take my time and look for a counter\", Seems easy enough!</div><button class="start-btn careerIntroBtn" onclick="startCareerFight()">Continue</button></div></section>
@@ -752,28 +982,72 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
     <img id="onlineBg" class="bg" alt="Online Mode">
     <button class="top-back" onclick="show('menu')">BACK</button>
 
-    <div class="onlinePanel">
+    <div class="onlinePanel v10">
       <div class="onlineTitle">Online Mode</div>
 
       <div class="onlineBox">
-        <div class="onlineSubTitle">Create / Join Room</div>
-        <input id="onlinePlayerName" class="onlineInput" maxlength="16" placeholder="Player Name" value="PLAYER">
-        <input id="onlineWager" class="onlineInput" type="number" min="0" placeholder="Cash Wager">
-        <input id="onlineRoomCode" class="onlineInput" maxlength="8" placeholder="Room Code">
-        <div class="onlineBtnGrid">
-          <button class="onlineBtn" onclick="createOnlineRoom()">Create Room</button>
-          <button class="onlineBtn dark" onclick="joinOnlineRoom()">Join Room</button>
+        <div class="onlineSubTitle">Room Setup</div>
+
+        <div class="onlineTabs">
+          <button id="onlineCreateTab" class="onlineTab active" onclick="showOnlineTab('create')">Create</button>
+          <button id="onlineJoinTab" class="onlineTab" onclick="showOnlineTab('join')">Join Room</button>
         </div>
-        <div class="onlineCashNote">Your Cash: <span id="onlineCash">0</span> | Wager cannot exceed your cash.</div>
+
+        <div id="onlineCreatePopup" class="onlinePopup active">
+          <div class="onlinePopupTitle">Create Room</div>
+
+          <label class="onlineInputLabel">Player Name</label>
+          <input id="onlineCreatePlayerName" class="onlineInput" maxlength="16" placeholder="Player Name" value="PLAYER">
+
+          <label class="onlineInputLabel">Select Ring</label>
+          <select id="onlineRingSelect" class="onlineSelect">
+            <option value="RING1">Ring 1</option>
+            <option value="RING2">Ring 2</option>
+            <option value="RING3">Ring 3</option>
+            <option value="RING4" selected>Ring 4</option>
+            <option value="RING5">Ring 5</option>
+            <option value="RING6">Ring 6</option>
+          </select>
+
+          <label class="onlineInputLabel">Cash Wager</label>
+          <input id="onlineCreateWager" class="onlineInput" type="number" min="0" max="1000" placeholder="Cash Wager">
+
+          <label class="onlineInputLabel">Room Code</label>
+          <input id="onlineCreateRoomCode" class="onlineInput" maxlength="8" placeholder="GENERATE CODE" readonly>
+
+          <button class="onlineBtn" style="width:100%;margin-top:2%" onclick="createOnlineRoom()">Create Room</button>
+
+          <div class="onlineHint">Your Cash: <strong><span id="onlineCash">0</span></strong> | Max wager: <strong>$1000</strong> | Wager cannot exceed your cash.</div>
+        </div>
+
+        <div id="onlineJoinPopup" class="onlinePopup">
+          <div class="onlinePopupTitle">Join Room</div>
+
+          <label class="onlineInputLabel">Player Name</label>
+          <input id="onlineJoinPlayerName" class="onlineInput" maxlength="16" placeholder="Player Name" value="PLAYER">
+
+          <label class="onlineInputLabel">Cash Wager</label>
+          <input id="onlineJoinWager" class="onlineInput" type="number" min="0" max="1000" placeholder="Cash Wager">
+
+          <label class="onlineInputLabel">ENTER CODE</label>
+          <input id="onlineJoinRoomCode" class="onlineInput" maxlength="8" placeholder="ENTER CODE">
+
+          <button class="onlineBtn dark" style="width:100%;margin-top:2%" onclick="joinOnlineRoom()">Join Room</button>
+
+          <div class="onlineHint">Your Cash: <strong><span id="onlineCashJoin">0</span></strong> | Max wager: <strong>$1000</strong> | Wager cannot exceed your cash.</div>
+        </div>
+
+        <!-- Hidden compatibility inputs used by existing online functions -->
+        <input id="onlinePlayerName" type="hidden" value="PLAYER">
+        <input id="onlineWager" type="hidden" value="0">
+        <input id="onlineRoomCode" type="hidden" value="">
+
         <div id="onlineStatus" class="onlineStatus">Create or join a room. Max wager: $1000. Winner collects the full purse.</div>
       </div>
 
       <div class="onlineBox">
-        <div class="onlineSubTitle" id="onlineLeaderboardTitle">Top 20 Online Records</div>
+        <div class="onlineSubTitle" id="onlineLeaderboardTitle">Top 10 Online Records</div>
         <div id="onlineLeaderboardRows" class="onlineLeaderboard">
-          <div class="onlineRankCol">
-            <div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div>
-          </div>
           <div class="onlineRankCol">
             <div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div>
           </div>
@@ -784,7 +1058,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
     <div id="onlineNotice" class="notice"></div>
   </div>
 </section>
-<section id="career" class="screen"><div class="frame" id="fightFrame"><img id="ringScene" class="bg" alt="Ring"><img id="opponentScene" class="opponentLayer" alt="Opponent"><img id="gloveScene" class="gloveLayer" alt="Gloves"><div class="hud"><div class="round"><small>ROUND</small><span id="round">1</span></div><div class="panel player"><div class="title" id="youTitle">YOU</div><div class="hearts" id="youHearts"></div><div class="row">STREAK<strong id="streak">0</strong></div><div class="row">WINS<strong id="wins">0</strong></div></div><div class="panel enemy"><div class="title" id="enemyName">OPPONENT</div><div class="hearts" id="enemyHearts"></div><div class="row">FIGHT<strong id="fightNum">1 OF 6</strong></div></div><div class="status" id="status">Choose your move.</div><div class="actions"><button class="move jab" onclick="play('jab')">Jab</button><button class="move hook" onclick="play('hook')">Hook</button><button class="move uppercut" onclick="play('uppercut')">Uppercut</button><button class="move block" onclick="play('block')">Block</button><button class="move taunt" onclick="play('taunt')">Taunt</button></div><button class="sound" id="soundBtn" onclick="toggleSound()">🔊 Sound</button><button class="fight-menu" onclick="backToMenu()">MENU</button><div id="flash" class="flash"></div><div id="koOverlay" class="koOverlay"><div class="koText">K.O.</div><button id="nextFightBtn" class="nextBtn" onclick="continueAfterKO()">Next Fight</button></div>
+<section id="career" class="screen"><div class="frame" id="fightFrame"><img id="ringScene" class="bg" alt="Ring"><img id="opponentScene" class="opponentLayer" alt="Opponent"><img id="gloveScene" class="gloveLayer" alt="Gloves"><div class="hud"><div class="round"><small>ROUND</small><span id="round">1</span></div><div class="panel player"><div class="title" id="youTitle">YOU</div><div class="hearts" id="youHearts"></div><div class="row">STREAK<strong id="streak">0</strong></div><div class="row">WINS<strong id="wins">0</strong></div></div><div class="panel enemy"><div class="title" id="enemyName">OPPONENT</div><div class="hearts" id="enemyHearts"></div><div class="row">FIGHT<strong id="fightNum">1 OF 6</strong></div></div><div class="status" id="status">Choose your move.</div><div class="actions"><button class="move jab" onclick="play('jab')">Jab</button><button class="move hook" onclick="play('hook')">Hook</button><button class="move uppercut" onclick="play('uppercut')">Uppercut</button><button class="move block" onclick="play('block')">Block</button><button class="move taunt" onclick="play('taunt')">Taunt</button></div><button class="sound" id="soundBtn" onclick="toggleSound()">🔊 Sound</button><button class="fightMusic" id="fightMusicBtn" onclick="toggleFightMusic()">🎵 Music</button><button class="fight-menu" onclick="backToMenu()">MENU</button><div id="flash" class="flash"></div><div id="koOverlay" class="koOverlay"><div class="koText">K.O.</div><button id="nextFightBtn" class="nextBtn" onclick="continueAfterKO()">Next Fight</button></div>
 <div id="scoreOverlay" class="scoreOverlay">
   <div class="scoreBox">
     <div class="scoreTitle">Career Run Over</div>
@@ -809,7 +1083,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">MERGED CAREER+ONLINE SAFE v8</div>
+<div id="buildStamp">Created by gamingwitfame [v10.5]</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -871,7 +1145,7 @@ function menuTrackCandidates(track){
 }
 
 function isMusicScreen(id){
-  return ['start','menu','careerStart','careerIntro','locker','fighters','gloves','store','options','howto','online','championRoom'].includes(id);
+  return ['menu','careerStart','careerIntro','locker','fighters','gloves','store','options','howto','online','championRoom'].includes(id);
 }
 
 function updateMusicUI(){
@@ -972,7 +1246,7 @@ function loadState(){try{return Object.assign(defaultState(),JSON.parse(localSto
 function saveState(){state.cash=Math.max(0,state.cash||0);state.wins=wins;state.losses=losses;state.titleDefenses=titleDefenses;state.champ=champ;localStorage.setItem(SAVE_KEY,JSON.stringify(state));render();}
 function selectedFighterData(){return FIGHTERS.find(f=>f.id===state.selectedFighter)||FIGHTERS[0]}
 function activeFighter(){return FIGHTERS[currentOpponent]||FIGHTERS[0]}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');render();if(typeof updateMusicUI==='function')updateMusicUI();if(id==='online') setTimeout(()=>loadOnlineLeaderboard(),100);}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');render();if(typeof updateMusicUI==='function')updateMusicUI();if(typeof updateFightMusicButton==='function')updateFightMusicButton();if(id==='online') setTimeout(()=>loadOnlineLeaderboard(),100);}
 function showNotice(which,text){const id=which==='online'?'onlineNotice':'lockerNotice';const n=$(id);if(!n)return;n.textContent=text;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),1500)}
 function showLocker(){show('locker');renderLocker();}
 function renderLocker(){let bases=SCREEN_BASES.locker;const ownedTaunt=STORE_ITEMS.find(i=>i.id===state.selectedTaunt && state.ownedTaunts.includes(i.id));if(ownedTaunt) bases=[ownedTaunt.locker]; else if(state.unlockedFighters.includes(state.selectedFighter)) bases=[state.selectedFighter+' LOCKER ROOM']; setImg($('lockerBg'), bases); $('fighterLockText').textContent=champ?'Unlocked':'Win Belt';}
@@ -1395,7 +1669,7 @@ async function loadLeaderboard(sortBy='wins'){
       return;
     }
 
-    scores.slice(0,20).forEach((s,i)=>{
+    scores.slice(0,10).forEach((s,i)=>{
       rows.innerHTML += `<div class="leaderboardRow">
         <div>${i+1}</div>
         <div>${String(s.name || 'PLAYER').slice(0,16)}</div>
@@ -1501,9 +1775,9 @@ function renderOnlineLeaderboardRows(records){
   const wrap = $('onlineLeaderboardRows');
   if(!wrap) return;
 
-  const top = (records || []).slice(0,20);
+  const top = (records || []).slice(0,10);
   const left = top.slice(0,10);
-  const right = top.slice(10,20);
+  const right = [];
 
   function col(items, offset){
     let html = '<div class="onlineRankCol">';
@@ -1529,7 +1803,7 @@ function renderOnlineLeaderboardRows(records){
     return html;
   }
 
-  wrap.innerHTML = col(left,0) + col(right,10);
+  wrap.innerHTML = col(left,0);
 }
 
 async function loadOnlineLeaderboard(){
@@ -2718,11 +2992,11 @@ function renderOnlineLeaderboardRows(payload){
   const totalPurse = Array.isArray(payload) ? 0 : Number((payload && payload.totalPurse) || 0);
 
   const title = $('onlineLeaderboardTitle');
-  if(title) title.textContent = `Top 20 Online Records | Total Wager Purse: $${totalPurse}`;
+  if(title) title.textContent = `Top 10 Online Records | Total Wager Purse: $${totalPurse}`;
 
-  const top = records.slice(0,20);
+  const top = records.slice(0,10);
   const left = top.slice(0,10);
-  const right = top.slice(10,20);
+  const right = [];
 
   function col(items, offset){
     let out = '<div class="onlineRankCol">';
@@ -2748,7 +3022,7 @@ function renderOnlineLeaderboardRows(payload){
     return out;
   }
 
-  wrap.innerHTML = col(left,0) + col(right,10);
+  wrap.innerHTML = col(left,0);
 }
 
 async function loadOnlineLeaderboard(){
@@ -2795,7 +3069,8 @@ async function createOnlineRoom(){
       hostName:name,
       hostGloves:state.selectedGloves || 'GREEN',
       hostFighter:state.selectedFighter || 'GREEN',
-      hostWager:paid
+      hostWager:paid,
+      ring:onlineSelectedRing()
     });
 
     onlineRole = 'host';
@@ -3068,6 +3343,243 @@ continueAfterKO = function(){
   CB_ORIGINAL_CAREER_CONTINUE_AFTER_KO();
 };
 
+
+/* ============================================================
+   V10 MUSIC BUTTON + ONLINE TWO TAB FORM
+   ============================================================ */
+
+function updateFightMusicButton(){
+  const btn = $('fightMusicBtn');
+  if(!btn) return;
+  const playing = !!(menuMusicAudio && !menuMusicAudio.paused);
+  btn.textContent = playing ? '🎵 Music' : '🎵 Muted';
+}
+
+function toggleFightMusic(){
+  ensureMenuMusic();
+  if(menuMusicAudio && !menuMusicAudio.paused){
+    menuMusicAudio.pause();
+    menuMusicOn = false;
+  }else{
+    menuMusicOn = true;
+    startMenuMusic();
+  }
+  updateMusicUI();
+  updateFightMusicButton();
+}
+
+
+function showOnlineTab(tab){
+  const isCreate = tab === 'create';
+  if($('onlineCreateTab')) $('onlineCreateTab').classList.toggle('active', isCreate);
+  if($('onlineJoinTab')) $('onlineJoinTab').classList.toggle('active', !isCreate);
+  if($('onlineCreatePopup')) $('onlineCreatePopup').classList.toggle('active', isCreate);
+  if($('onlineJoinPopup')) $('onlineJoinPopup').classList.toggle('active', !isCreate);
+  syncOnlineCashDisplays();
+  setOnlineStatus(isCreate ? 'Create a room and share the code.' : 'Enter a room code to join.');
+}
+
+function syncOnlineCashDisplays(){
+  const cash = Number(state.cash || 0);
+  if($('onlineCash')) $('onlineCash').textContent = cash;
+  if($('onlineCashJoin')) $('onlineCashJoin').textContent = cash;
+  ['onlineCreateWager','onlineJoinWager'].forEach(id=>{
+    const input = $(id);
+    if(input){
+      input.max = String(Math.min(1000, cash));
+      input.min = '0';
+    }
+  });
+}
+
+function syncOnlineHiddenFromCreate(code=''){
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+  const name = String(($('onlineCreatePlayerName') && $('onlineCreatePlayerName').value) || saved || 'PLAYER').trim().slice(0,16).toUpperCase() || 'PLAYER';
+  const wager = Math.max(0, Math.floor(Number(($('onlineCreateWager') && $('onlineCreateWager').value) || 0)));
+
+  if($('onlinePlayerName')) $('onlinePlayerName').value = name;
+  if($('onlineWager')) $('onlineWager').value = String(wager);
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code || (($('onlineCreateRoomCode') && $('onlineCreateRoomCode').value) || '');
+  localStorage.setItem('counterBoxingPlayerName', name);
+}
+
+function syncOnlineHiddenFromJoin(){
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+  const name = String(($('onlineJoinPlayerName') && $('onlineJoinPlayerName').value) || saved || 'PLAYER').trim().slice(0,16).toUpperCase() || 'PLAYER';
+  const wager = Math.max(0, Math.floor(Number(($('onlineJoinWager') && $('onlineJoinWager').value) || 0)));
+  const code = String(($('onlineJoinRoomCode') && $('onlineJoinRoomCode').value) || '').trim().toUpperCase();
+
+  if($('onlinePlayerName')) $('onlinePlayerName').value = name;
+  if($('onlineWager')) $('onlineWager').value = String(wager);
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+  localStorage.setItem('counterBoxingPlayerName', name);
+}
+
+const renderOnlineCash_v10 = renderOnlineCash;
+function renderOnlineCash(){
+  renderOnlineCash_v10();
+  syncOnlineCashDisplays();
+
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+  if($('onlineCreatePlayerName')) $('onlineCreatePlayerName').value = saved;
+  if($('onlineJoinPlayerName')) $('onlineJoinPlayerName').value = saved;
+}
+
+const createOnlineRoom_v10_base = createOnlineRoom;
+async function createOnlineRoom(){
+  const code = randomRoomCode();
+  if($('onlineCreateRoomCode')) $('onlineCreateRoomCode').value = code;
+  syncOnlineHiddenFromCreate(code);
+  await createOnlineRoom_v10_base();
+
+  // Keep visible room code matching the generated code after base function runs.
+  if($('onlineCreateRoomCode') && $('onlineRoomCode')) $('onlineCreateRoomCode').value = $('onlineRoomCode').value || code;
+}
+
+const joinOnlineRoom_v10_base = joinOnlineRoom;
+async function joinOnlineRoom(){
+  syncOnlineHiddenFromJoin();
+  await joinOnlineRoom_v10_base();
+}
+
+const startOnlineMatch_v10_base = startOnlineMatch;
+function startOnlineMatch(role, code, room){
+  startOnlineMatch_v10_base(role, code, room);
+  updateFightMusicButton();
+}
+
+const clearOnlineMode_v10_base = clearOnlineMode;
+function clearOnlineMode(){
+  clearOnlineMode_v10_base();
+  syncOnlineCashDisplays();
+}
+
+/* Host-selected ring support */
+function onlineSelectedRing(){
+  const sel = $('onlineRingSelect');
+  return String((sel && sel.value) || 'RING4').toUpperCase();
+}
+
+const loadOnlineFightIdle_v10_base = loadOnlineFightIdle;
+function loadOnlineFightIdle(room){
+  const ring = String((room && room.ring) || 'RING4').toUpperCase();
+  setImg($('ringScene'), [ring, 'RING4', 'RING1']);
+
+  setImg($('opponentScene'), [
+    onlineImageBase(onlineOpponentFighterColor(room), 'IDLE'),
+    onlineImageBase(onlineOpponentFighterColor(room), 'CPU TAUNT'),
+    'BLUE IDLE',
+    'GREEN IDLE'
+  ]);
+
+  setImg($('gloveScene'), [
+    onlineImageBase(onlineMyGloveColor(room), 'GLOVES IDLE'),
+    onlineImageBase(onlineMyGloveColor(room), 'GLOVES PLAYER TAUNT'),
+    'GREEN GLOVES IDLE'
+  ]);
+
+  setOnlineFightHud(room);
+}
+
+const setOnlineMappedScene_v10_base = setOnlineMappedScene;
+function setOnlineMappedScene(display, room, autoReturn=true){
+  clearTimeout(idleTimer);
+
+  const role = onlineRole || 'host';
+  const gloveColor = onlineGloveColorForRole(room, role);
+  const opponentColor = onlineOpponentColorForRole(room, role);
+  const ring = String((room && room.ring) || 'RING4').toUpperCase();
+
+  setImg($('ringScene'), [ring, 'RING4', 'RING1']);
+
+  setImg($('gloveScene'), [
+    onlineImageBase(gloveColor, display.gloves),
+    onlineImageBase(gloveColor, 'GLOVES IDLE')
+  ]);
+
+  setImg($('opponentScene'), [
+    onlineImageBase(opponentColor, display.opponent),
+    onlineImageBase(opponentColor, 'IDLE')
+  ]);
+
+  if($('status')) $('status').textContent = room.lastMessage || 'Round resolved.';
+
+  const msg = room.lastMessage || '';
+  let shake = '';
+  let flash = '';
+
+  if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) shake = 'shake';
+  if(msg.includes('Double taunt') || msg.includes('powers up') || msg.includes('taunt succeeds')) flash = 'gold';
+  else if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) flash = 'white';
+
+  if(shake){
+    const frame=$('fightFrame');
+    frame.classList.remove('shake','bigShake');
+    void frame.offsetWidth;
+    frame.classList.add(shake);
+    setTimeout(()=>frame.classList.remove(shake),520);
+  }
+
+  if(flash){
+    const fl=$('flash');
+    fl.className='flash';
+    void fl.offsetWidth;
+    fl.classList.add(flash);
+    setTimeout(()=>fl.className='flash',520);
+  }
+
+  if(autoReturn && room.status !== 'finished'){
+    idleTimer=setTimeout(()=>{
+      if(onlineMode && onlineRoomData) {
+        loadOnlineFightIdle(onlineRoomData);
+        if($('status')) $('status').textContent = `Round ${onlineRound(onlineRoomData)}. Choose your move.`;
+      }
+    },2500);
+  }
+}
+
+
+
+
+/* V10.2 TRUE START FIX
+   No wrappers around startMenuMusic.
+   Start button calls this direct function.
+*/
+window.cbStartGame = function(){
+  try{
+    menuMusicOn = true;
+    ensureMenuMusic();
+    if(menuMusicAudio && !menuMusicAudio.src){
+      loadMenuSong(menuMusicIndex);
+    }
+    if(menuMusicAudio){
+      menuMusicAudio.volume = menuMusicVolume;
+      menuMusicAudio.play().catch(()=>{});
+    }
+  }catch(e){
+    console.warn('Music start skipped:', e);
+  }
+
+  show('menu');
+
+  if(typeof updateMusicUI === 'function') updateMusicUI();
+  if(typeof updateFightMusicButton === 'function') updateFightMusicButton();
+};
+
+
+/* V10.5 TAB PANEL BEHAVIOR */
+function showOnlineTab(tab){
+  const isCreate = tab === 'create';
+  if($('onlineCreateTab')) $('onlineCreateTab').classList.toggle('active', isCreate);
+  if($('onlineJoinTab')) $('onlineJoinTab').classList.toggle('active', !isCreate);
+  if($('onlineCreatePopup')) $('onlineCreatePopup').classList.toggle('active', isCreate);
+  if($('onlineJoinPopup')) $('onlineJoinPopup').classList.toggle('active', !isCreate);
+  if(typeof syncOnlineCashDisplays === 'function') syncOnlineCashDisplays();
+  if(typeof setOnlineStatus === 'function'){
+    setOnlineStatus(isCreate ? 'Create a room, then share the generated code.' : 'Enter a room code to join the match.');
+  }
+}
+
 // initial asset load
 setImg($('startBg'), SCREEN_BASES.start);
 setImg($('menuBg'), SCREEN_BASES.menu);
@@ -3130,6 +3642,7 @@ window.createCounterBoxingRoom = async function(room) {
 
   const cleanRoom = {
     code,
+    ring: String(room.ring || 'RING4').toUpperCase(),
     hostName: String(room.hostName || "PLAYER").slice(0, 16).toUpperCase(),
     hostGloves: String(room.hostGloves || "GREEN").toUpperCase(),
     hostFighter: String(room.hostFighter || "GREEN").toUpperCase(),
@@ -3270,7 +3783,7 @@ window.loadCounterBoxingOnlineRecords = async function(){
     if(bp !== ap) return bp - ap;
     if(b.onlineWins !== a.onlineWins) return b.onlineWins - a.onlineWins;
     return bt - at;
-  }).slice(0,20);
+  }).slice(0,10);
 
   return {records, totalPurse};
 };
