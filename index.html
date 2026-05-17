@@ -816,7 +816,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">ONLINE WAGER + LEADERBOARD v7</div>
+<div id="buildStamp">CAREER BUTTON FIX v8</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -3041,6 +3041,142 @@ function clearOnlineMode(){
   locked = false;
   pendingContinue = false;
   setButtons(false);
+}
+
+
+/* ============================================================
+   CAREER BUTTON FIX v8 - FINAL OVERRIDE
+   ------------------------------------------------------------
+   Fixes the New Run / Continue Run tabs.
+
+   The earlier online patches used wrapper functions that captured
+   other function names. Because JavaScript hoists function
+   declarations, that could make the career buttons call the wrong
+   wrapper chain.
+
+   These final functions do NOT wrap older functions.
+   They directly perform the career actions.
+   ============================================================ */
+
+function safeClearOnlineForCareer(){
+  try{
+    if(typeof onlineUnsubscribe !== 'undefined' && onlineUnsubscribe){
+      try{ onlineUnsubscribe(); }catch(e){}
+      onlineUnsubscribe = null;
+    }
+  }catch(e){}
+
+  try{ onlineMode = false; }catch(e){}
+  try{ onlineRole = null; }catch(e){}
+  try{ onlineRoomCode = null; }catch(e){}
+  try{ onlineRoomData = null; }catch(e){}
+  try{ onlineFinished = false; }catch(e){}
+  try{ onlineLastVisualRound = 0; }catch(e){}
+  try{ onlineLastAnimId = 0; }catch(e){}
+  try{ onlineLocalWagerPaid = false; }catch(e){}
+  try{ onlineCurrentWager = 0; }catch(e){}
+  try{ onlineResultRecorded = false; }catch(e){}
+
+  try{ setFightButtonsForCareer(); }catch(e){}
+  locked = false;
+  pendingContinue = false;
+  clearTimeout(idleTimer);
+  setButtons(false);
+
+  if($('koOverlay')) $('koOverlay').classList.remove('show');
+  if($('scoreOverlay')) $('scoreOverlay').classList.remove('show');
+
+  const koText = document.querySelector('#koOverlay .koText');
+  if(koText) koText.textContent = 'K.O.';
+}
+
+function selectNewGame(){
+  safeClearOnlineForCareer();
+
+  // New Run should start a fresh ladder but keep earned cash/unlocks.
+  fight = 1;
+  currentOpponent = 0;
+  champ = false;
+  streak = 0;
+  resetRoundState();
+  saveState();
+
+  show('careerIntro');
+  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+  typeCareerWords();
+}
+
+function continueCareer(){
+  safeClearOnlineForCareer();
+
+  if(champ){
+    showChampionRoom();
+    return;
+  }
+
+  show('careerIntro');
+  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+  typeCareerWords();
+}
+
+function startCareerFight(){
+  safeClearOnlineForCareer();
+  stopMenuMusic();
+
+  show('career');
+
+  setTimeout(()=>{
+    loadFightIdle();
+    locked = false;
+    pendingContinue = false;
+    setButtons(false);
+    render();
+    if($('status')){
+      $('status').textContent = champ
+        ? 'Champion mode. Defend the belt.'
+        : `Fight ${fight}: ${activeFighter().name}. Choose your move.`;
+    }
+  },25);
+}
+
+function backToMenu(){
+  safeClearOnlineForCareer();
+  startMenuMusic();
+  show('menu');
+}
+
+function continueAfterKO(){
+  if(typeof onlineMode !== 'undefined' && onlineMode && onlineFinished){
+    if($('koOverlay')) $('koOverlay').classList.remove('show');
+
+    const koText = document.querySelector('#koOverlay .koText');
+    if(koText) koText.textContent = 'K.O.';
+
+    clearOnlineMode();
+    startMenuMusic();
+    show('online');
+    resetOnlineMenuFields();
+    return;
+  }
+
+  if($('koOverlay')) $('koOverlay').classList.remove('show');
+
+  const koText = document.querySelector('#koOverlay .koText');
+  if(koText) koText.textContent = 'K.O.';
+
+  if(returnToChampionRoom){
+    returnToChampionRoom = false;
+    showChampionRoom();
+    bell();
+    return;
+  }
+
+  loadFightIdle();
+  pendingContinue = false;
+  locked = false;
+  setButtons(false);
+  render();
+  bell();
 }
 
 // initial asset load
