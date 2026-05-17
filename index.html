@@ -809,7 +809,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">ONLINE PVP RULES FIXED</div>
+<div id="buildStamp">ONLINE POV IMAGE MAP v3</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -1822,7 +1822,7 @@ function resolveOnlineMoves(hostMove, guestMove, room){
   if(h === 'taunt' && g === 'taunt'){
     hostPower = true; guestPower = true; message = 'Double taunt! Both fighters power up.';
   }else if(h === 'block' && g === 'block'){
-    message = 'Both fighters block. Draw.';
+    message = 'Both fighters block. Reset.';
   }else if(h === 'taunt' && g === 'block'){
     hostPower = true; message = 'Host taunt succeeds. Host powers up.';
   }else if(g === 'taunt' && h === 'block'){
@@ -1890,82 +1890,26 @@ async function maybeResolveOnlineRound(room){
   }
 }
 
-
-/* ONLINE ONLY PVP VISUAL MAPPING */
 function onlineVisualFor(room){
   const msg = room.lastMessage || '';
-  const me = onlineRole; // host or guest
-  const winner = room.winnerRole || '';
+  const me = onlineRole;
 
   if(room.status === 'finished'){
-    if(winner === 'draw') return {scene:'draw', shake:'bigShake', flash:'white'};
-    return winner === me
-      ? {scene:'opponentHurt', shake:'shake', flash:'white'}
-      : {scene:'playerHurt', shake:'bigShake', flash:'red'};
+    if(room.winnerRole === 'draw') return {scene:'draw', shake:'bigShake', flash:'white'};
+    return room.winnerRole === me ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
   }
-
-  // Clean P1/P2 mirror logic using room state text, not CPU labels.
-  if(msg.includes('Same move') || msg.includes('Both fighters take')) {
-    return {scene:'draw', shake:'shake', flash:'white'};
-  }
-  if(msg.includes('Both fighters block')) {
-    return {scene:'draw', shake:'', flash:''};
-  }
-  if(msg.includes('Double taunt')) {
-    return {scene:'draw', shake:'', flash:'gold'};
-  }
-
-  // Successful counters / landed attacks
-  if(msg.includes('Host lands the counter')) {
-    return me === 'host'
-      ? {scene:'playerCounter', shake:'shake', flash:'white'}
-      : {scene:'opponentCounter', shake:'bigShake', flash:'red'};
-  }
-  if(msg.includes('Guest lands the counter')) {
-    return me === 'guest'
-      ? {scene:'playerCounter', shake:'shake', flash:'white'}
-      : {scene:'opponentCounter', shake:'bigShake', flash:'red'};
-  }
-
-  // Blocks
-  if(msg.includes('Host blocks the jab') || msg.includes('Host blocks but takes chip damage')) {
-    return me === 'host'
-      ? {scene:'playerBlock', shake:'', flash:''}
-      : {scene:'opponentBlock', shake:'', flash:''};
-  }
-  if(msg.includes('Guest blocks the jab') || msg.includes('Guest blocks but takes chip damage')) {
-    return me === 'guest'
-      ? {scene:'playerBlock', shake:'', flash:''}
-      : {scene:'opponentBlock', shake:'', flash:''};
-  }
-
-  // Taunt success (taunt vs block)
-  if(msg.includes('Host taunt succeeds')) {
-    return me === 'host'
-      ? {scene:'playerTaunt', shake:'', flash:'gold'}
-      : {scene:'opponentTaunt', shake:'', flash:'gold'};
-  }
-  if(msg.includes('Guest taunt succeeds')) {
-    return me === 'guest'
-      ? {scene:'playerTaunt', shake:'', flash:'gold'}
-      : {scene:'opponentTaunt', shake:'', flash:'gold'};
-  }
-
-  // Taunt punished
-  if(msg.includes('Host taunted at the wrong time')) {
-    return me === 'host'
-      ? {scene:'opponentCounter', shake:'bigShake', flash:'red'}
-      : {scene:'playerCounter', shake:'shake', flash:'white'};
-  }
-  if(msg.includes('Guest taunted at the wrong time')) {
-    return me === 'guest'
-      ? {scene:'opponentCounter', shake:'bigShake', flash:'red'}
-      : {scene:'playerCounter', shake:'shake', flash:'white'};
-  }
-
+  if(msg.includes('Same move') || msg.includes('Both fighters take')) return {scene:'draw', shake:'shake', flash:'white'};
+  if(msg.includes('Host lands')) return me === 'host' ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
+  if(msg.includes('Guest lands')) return me === 'guest' ? {scene:'opponentHurt', shake:'shake', flash:'white'} : {scene:'playerHurt', shake:'bigShake', flash:'red'};
+  if(msg.includes('Host blocks')) return me === 'host' ? {scene:'playerBlock', shake:'', flash:''} : {scene:'opponentBlock', shake:'', flash:''};
+  if(msg.includes('Guest blocks')) return me === 'guest' ? {scene:'playerBlock', shake:'', flash:''} : {scene:'opponentBlock', shake:'', flash:''};
+  if(msg.includes('Host taunt')) return me === 'host' ? {scene:'playerTaunt', shake:'', flash:'gold'} : {scene:'opponentTaunt', shake:'', flash:'gold'};
+  if(msg.includes('Guest taunt')) return me === 'guest' ? {scene:'playerTaunt', shake:'', flash:'gold'} : {scene:'opponentTaunt', shake:'', flash:'gold'};
+  if(msg.includes('Double taunt')) return {scene:'draw', shake:'', flash:'gold'};
+  if(msg.includes('Host taunted')) return me === 'host' ? {scene:'playerHurt', shake:'bigShake', flash:'red'} : {scene:'opponentHurt', shake:'shake', flash:'white'};
+  if(msg.includes('Guest taunted')) return me === 'guest' ? {scene:'playerHurt', shake:'bigShake', flash:'red'} : {scene:'opponentHurt', shake:'shake', flash:'white'};
   return {scene:'draw', shake:'', flash:''};
 }
-
 
 function applyOnlineVisualIfNew(room){
   const resolved = Number(room.resolvedRound || 0);
@@ -2084,6 +2028,222 @@ async function joinOnlineRoom(){
   }
 }
 
+
+/* ============================================================
+   ONLINE POV IMAGE MAP v3 - FINAL OVERRIDE
+   ------------------------------------------------------------
+   Career Mode is untouched.
+
+   Online display is POV based:
+   - P1 means "ME" on my own screen.
+   - P2 means "THEM" as the opponent image on my screen.
+   - My glove color comes from my selected glove color.
+   - Their fighter image comes from their selected fighter color.
+   ============================================================ */
+
+const ONLINE_POV_DISPLAY_MAP = {
+  "jab|jab": {gloves:"GLOVES PLAYER DRAW", opponent:"CPU DRAW"},
+  "hook|hook": {gloves:"GLOVES PLAYER DRAW", opponent:"CPU DRAW"},
+  "uppercut|uppercut": {gloves:"GLOVES PLAYER DRAW", opponent:"CPU DRAW"},
+  "block|block": {gloves:"GLOVES PLAYER BLOCK", opponent:"CPU BLOCK"},
+  "taunt|taunt": {gloves:"GLOVES OPPONENT TAUNT", opponent:"CPU TAUNT"},
+
+  "jab|hook": {gloves:"GLOVES CPU COUNTER", opponent:"CPU COUNTER"},
+  "jab|uppercut": {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+  "jab|block": {gloves:"GLOVES CPU BLOCK", opponent:"CPU BLOCK"},
+  "jab|taunt": {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+
+  "hook|jab": {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+  "uppercut|jab": {gloves:"GLOVES CPU COUNTER", opponent:"PLAYER COUNTER"},
+  "block|jab": {gloves:"GLOVES CPU BLOCK", opponent:"PLAYER BLOCK"},
+  "taunt|jab": {gloves:"GLOVES CPU COUNTER", opponent:"CPU COUNTER"},
+
+  "hook|uppercut": {gloves:"GLOVES CPU COUNTER", opponent:"CPU COUNTER"},
+  "hook|block": {gloves:"GLOVES CPU BLOCK", opponent:"CPU BLOCK"},
+  "hook|taunt": {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+
+  "uppercut|hook": {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+  "block|hook": {gloves:"GLOVES PLAYER BLOCK", opponent:"PLAYER BLOCK"},
+  "taunt|hook": {gloves:"GLOVES CPU COUNTER", opponent:"CPU COUNTER"},
+
+  "uppercut|block": {gloves:"GLOVES CPU BLOCK", opponent:"PLAYER BLOCK"},
+  "uppercut|taunt": {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+
+  "block|uppercut": {gloves:"GLOVES CPU BLOCK", opponent:"PLAYER BLOCK"},
+  "taunt|uppercut": {gloves:"GLOVES CPU BLOCK", opponent:"CPU COUNTER"},
+
+  "block|taunt": {gloves:"GLOVES PLAYER BLOCK", opponent:"CPU TAUNT"},
+  "taunt|block": {gloves:"GLOVES PLAYER TAUNT", opponent:"CPU BLOCK"}
+};
+
+function onlineMyGloveColor(room){
+  return onlineRole === 'host'
+    ? String(room.hostGloves || state.selectedGloves || 'GREEN').toUpperCase()
+    : String(room.guestGloves || state.selectedGloves || 'GREEN').toUpperCase();
+}
+
+function onlineOpponentFighterColor(room){
+  return onlineRole === 'host'
+    ? String(room.guestFighter || 'BLUE').toUpperCase()
+    : String(room.hostFighter || 'GREEN').toUpperCase();
+}
+
+function onlineImageBase(color, suffix){
+  return `${String(color || '').toUpperCase()} ${String(suffix || '').toUpperCase()}`;
+}
+
+function onlineDisplayFor(room){
+  const my = onlineMyMove(room);
+  const them = onlineTheirMove(room);
+  if(!my || !them) return null;
+  const key = `${String(my.move || '').toLowerCase()}|${String(them.move || '').toLowerCase()}`;
+  return ONLINE_POV_DISPLAY_MAP[key] || {gloves:"GLOVES PLAYER DRAW", opponent:"CPU DRAW"};
+}
+
+function loadOnlineFightIdle(room){
+  setImg($('ringScene'), ['RING4','RING1']);
+  setImg($('opponentScene'), [
+    onlineImageBase(onlineOpponentFighterColor(room), 'IDLE'),
+    onlineImageBase(onlineOpponentFighterColor(room), 'CPU TAUNT'),
+    'BLUE IDLE',
+    'GREEN IDLE'
+  ]);
+  setImg($('gloveScene'), [
+    onlineImageBase(onlineMyGloveColor(room), 'GLOVES IDLE'),
+    onlineImageBase(onlineMyGloveColor(room), 'GLOVES PLAYER TAUNT'),
+    'GREEN GLOVES IDLE'
+  ]);
+  setOnlineFightHud(room);
+}
+
+function setOnlineMappedScene(display, room, autoReturn=true){
+  clearTimeout(idleTimer);
+
+  const gloveColor = onlineMyGloveColor(room);
+  const opponentColor = onlineOpponentFighterColor(room);
+
+  setImg($('ringScene'), ['RING4','RING1']);
+  setImg($('gloveScene'), [
+    onlineImageBase(gloveColor, display.gloves),
+    onlineImageBase(gloveColor, 'GLOVES IDLE')
+  ]);
+  setImg($('opponentScene'), [
+    onlineImageBase(opponentColor, display.opponent),
+    onlineImageBase(opponentColor, 'IDLE')
+  ]);
+
+  if($('status')) $('status').textContent = room.lastMessage || 'Round resolved.';
+
+  const msg = room.lastMessage || '';
+  let shake = '';
+  let flash = '';
+
+  if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) shake = 'shake';
+  if(msg.includes('Double taunt') || msg.includes('powers up') || msg.includes('taunt succeeds')) flash = 'gold';
+  else if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) flash = 'white';
+
+  if(shake){
+    const frame=$('fightFrame');
+    frame.classList.remove('shake','bigShake');
+    void frame.offsetWidth;
+    frame.classList.add(shake);
+    setTimeout(()=>frame.classList.remove(shake),520);
+  }
+
+  if(flash){
+    const fl=$('flash');
+    fl.className='flash';
+    void fl.offsetWidth;
+    fl.classList.add(flash);
+    setTimeout(()=>fl.className='flash',520);
+  }
+
+  if(autoReturn && room.status !== 'finished'){
+    idleTimer=setTimeout(()=>{
+      if(onlineMode && onlineRoomData) loadOnlineFightIdle(onlineRoomData);
+    },2000);
+  }
+}
+
+function applyOnlineVisualIfNew(room){
+  const resolved = Number(room.resolvedRound || 0);
+  if(!resolved || resolved <= onlineLastVisualRound) return;
+
+  onlineLastVisualRound = resolved;
+  const display = onlineDisplayFor(room);
+  if(!display) return;
+
+  setOnlineMappedScene(display, room, room.status !== 'finished');
+}
+
+async function createOnlineRoom(){
+  clearOnlineMode();
+
+  const name = onlineName();
+  const code = randomRoomCode();
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+
+  if(typeof window.createCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Creating room...');
+    await window.createCounterBoxingRoom({
+      code,
+      hostName:name,
+      hostGloves:state.selectedGloves || 'GREEN',
+      hostFighter:state.selectedFighter || 'GREEN'
+    });
+    onlineRole = 'host';
+    onlineRoomCode = code;
+    await startOnlineRoomWatcher('host', code);
+    setOnlineStatus(`Room ${code} created. Waiting for challenger...`);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not create room. Check Firebase rules.');
+  }
+}
+
+async function joinOnlineRoom(){
+  clearOnlineMode();
+
+  const name = onlineName();
+  const code = String(($('onlineRoomCode') && $('onlineRoomCode').value) || '').trim().toUpperCase();
+
+  if(!code){
+    setOnlineStatus('Enter a room code first.');
+    return;
+  }
+
+  if(typeof window.joinCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Joining room...');
+    const room = await window.joinCounterBoxingRoom({
+      code,
+      guestName:name,
+      guestGloves:state.selectedGloves || 'GREEN',
+      guestFighter:state.selectedFighter || 'BLUE'
+    });
+    if(!room){
+      setOnlineStatus('Room not found.');
+      return;
+    }
+    onlineRole = 'guest';
+    onlineRoomCode = code;
+    await startOnlineRoomWatcher('guest', code);
+    startOnlineMatch('guest', code, room);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
+  }
+}
+
 // initial asset load
 setImg($('startBg'), SCREEN_BASES.start);
 setImg($('menuBg'), SCREEN_BASES.menu);
@@ -2147,7 +2307,11 @@ window.createCounterBoxingRoom = async function(room) {
   const cleanRoom = {
     code,
     hostName: String(room.hostName || "PLAYER").slice(0, 16).toUpperCase(),
+    hostGloves: String(room.hostGloves || "GREEN").toUpperCase(),
+    hostFighter: String(room.hostFighter || "GREEN").toUpperCase(),
     guestName: "",
+    guestGloves: "",
+    guestFighter: "",
     status: "waiting",
     round: 1,
     hostHp: 8,
@@ -2184,6 +2348,8 @@ window.joinCounterBoxingRoom = async function(join) {
 
   await update(roomRef, {
     guestName: String(join.guestName || "PLAYER").slice(0, 16).toUpperCase(),
+    guestGloves: String(join.guestGloves || "GREEN").toUpperCase(),
+    guestFighter: String(join.guestFighter || "BLUE").toUpperCase(),
     status: "playing",
     lastMessage: "Both fighters joined. Choose your move.",
     joinedAt: Date.now(),
