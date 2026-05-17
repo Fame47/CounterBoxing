@@ -809,7 +809,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">ONLINE WAGER SAFE v7</div>
+<div id="buildStamp">MERGED CAREER+ONLINE SAFE v8</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -2960,6 +2960,113 @@ function continueAfterKO(){
 
   continueAfterKO_OnlineWagerSafeV7();
 }
+
+
+/* ============================================================
+   MERGED CAREER+ONLINE SAFE v8 - CAREER RESTORE LAYER
+   ------------------------------------------------------------
+   This file keeps the working online wager build, but restores
+   Career Mode using direct assignment after all older wrappers.
+   This avoids JavaScript function-hoisting wrapper recursion.
+   ============================================================ */
+
+const CB_ORIGINAL_CAREER_CONTINUE_AFTER_KO = function(){
+  if($('koOverlay')) $('koOverlay').classList.remove('show');
+
+  const koText = document.querySelector('#koOverlay .koText');
+  if(koText) koText.textContent = 'K.O.';
+
+  if(returnToChampionRoom){
+    returnToChampionRoom = false;
+    showChampionRoom();
+    bell();
+    return;
+  }
+
+  loadFightIdle();
+  pendingContinue = false;
+  locked = false;
+  setButtons(false);
+  render();
+  bell();
+};
+
+function cbCareerHardResetButtons(){
+  try{ setFightButtonsForCareer(); }catch(e){}
+  clearTimeout(idleTimer);
+  pendingContinue = false;
+  locked = false;
+  setButtons(false);
+  if($('scoreOverlay')) $('scoreOverlay').classList.remove('show');
+  if($('koOverlay')) $('koOverlay').classList.remove('show');
+  const koText = document.querySelector('#koOverlay .koText');
+  if(koText) koText.textContent = 'K.O.';
+}
+
+// Restore Career Mode button behavior directly.
+selectNewGame = function(){
+  cbCareerHardResetButtons();
+  show('careerIntro');
+  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+  typeCareerWords();
+};
+
+continueCareer = function(){
+  cbCareerHardResetButtons();
+  if(champ){
+    showChampionRoom();
+    return;
+  }
+  show('careerIntro');
+  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
+  typeCareerWords();
+};
+
+startCareerFight = function(){
+  cbCareerHardResetButtons();
+  stopMenuMusic();
+  show('career');
+  loadFightIdle();
+  render();
+};
+
+backToMenu = function(){
+  // If leaving an online match, close its listener. Career does not need this.
+  if(typeof onlineUnsubscribe !== 'undefined' && onlineUnsubscribe){
+    try{ onlineUnsubscribe(); }catch(e){}
+    onlineUnsubscribe = null;
+  }
+  try{ onlineMode = false; }catch(e){}
+  try{ onlineRole = null; }catch(e){}
+  try{ onlineRoomCode = null; }catch(e){}
+  try{ onlineRoomData = null; }catch(e){}
+  try{ onlineFinished = false; }catch(e){}
+  try{ onlineLastAnimId = 0; }catch(e){}
+  try{ onlineResultPaidLocal = false; }catch(e){}
+
+  cbCareerHardResetButtons();
+  startMenuMusic();
+  show('menu');
+};
+
+continueAfterKO = function(){
+  if(typeof onlineMode !== 'undefined' && onlineMode && onlineFinished){
+    if($('koOverlay')) $('koOverlay').classList.remove('show');
+
+    const koText = document.querySelector('#koOverlay .koText');
+    if(koText) koText.textContent = 'K.O.';
+
+    clearOnlineMode();
+    startMenuMusic();
+    show('online');
+    if($('onlineRoomCode')) $('onlineRoomCode').value = '';
+    setOnlineStatus('Create a new room code or join a new room. Max wager: $1000.');
+    loadOnlineLeaderboard();
+    return;
+  }
+
+  CB_ORIGINAL_CAREER_CONTINUE_AFTER_KO();
+};
 
 // initial asset load
 setImg($('startBg'), SCREEN_BASES.start);
