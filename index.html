@@ -648,20 +648,13 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
 /* ONLINE FIGHT PHASE 1 CLEAN */
 .onlinePhaseNote{color:#ffd032}
 
-
-/* ONLINE WAGER v7 */
-.onlineWagerWarning{
-  color:#ffd032;
-  font-weight:900;
-}
-
 </style>
 </head>
 <body>
 <section id="start" class="screen active"><div class="frame"><img id="startBg" class="bg" alt="Counter Boxing"><button class="start-btn" onclick="startMenuMusic();show('menu')">Start</button></div></section>
 <section id="menu" class="screen"><div class="frame"><img id="menuBg" class="bg" alt="Main menu"><div class="clean-menu"><button class="ui-btn" onclick="show('careerStart')">Career Mode</button><button class="ui-btn" onclick="show('online')">Online Mode</button><button class="ui-btn" onclick="showLocker()">Locker Room</button><button class="ui-btn" onclick="show('options')">Options</button></div></div></section>
-<section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="cbCareerNewRun()">New Run</button><button class="ui-btn" onclick="cbCareerContinue()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
-<section id="careerIntro" class="screen"><div class="frame"><img id="careerIntroBg" class="bg" alt="Career intro"><img id="careerIntroFrame" class="careerIntroFrame" alt="CB Frame"><div id="careerIntroWords" class="careerIntroText">Coach said \"take my time and look for a counter\", Seems easy enough!</div><button class="start-btn careerIntroBtn" onclick="cbCareerStartFight()">Continue</button></div></section>
+<section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="selectNewGame()">New Run</button><button class="ui-btn" onclick="continueCareer()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
+<section id="careerIntro" class="screen"><div class="frame"><img id="careerIntroBg" class="bg" alt="Career intro"><img id="careerIntroFrame" class="careerIntroFrame" alt="CB Frame"><div id="careerIntroWords" class="careerIntroText">Coach said \"take my time and look for a counter\", Seems easy enough!</div><button class="start-btn careerIntroBtn" onclick="startCareerFight()">Continue</button></div></section>
 <section id="locker" class="screen"><div class="frame"><img id="lockerBg" class="bg" alt="Locker Room"><img id="lockerDisplay" class="lockerDisplay" alt="Locker Room Display"><button class="top-back" onclick="show('menu')">BACK</button><div class="record-box"><div class="record-title">Fight Record</div><div class="record-row"><span>Cash</span><span id="lockerCash">0</span></div><div class="record-row"><span>Wins</span><span id="lockerWins">0</span></div><div class="record-row"><span>Losses</span><span id="lockerLosses">0</span></div><div class="record-row"><span>Title Defenses</span><span id="lockerDefenses">0</span></div></div><div class="locker-tabs"><div class="locker-tab" onclick="showFighters()"><div>Fighters<small id="fighterLockText">Win Belt</small></div><div class="lock">🔒</div></div><div class="locker-tab" onclick="showGloves()"><div>Gloves<small>Select Color</small></div><div class="lock">🥊</div></div><div class="locker-tab" onclick="showStore()"><div>Store<small>Taunts + Gloves</small></div><div class="lock">💰</div></div></div><div id="lockerNotice" class="notice"></div></div></section>
 <section id="championRoom" class="screen">
   <div class="frame">
@@ -816,7 +809,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">DIRECT CAREER BUTTON FIX v9</div>
+<div id="buildStamp">ONLINE WAGER SAFE v7</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -2658,102 +2651,26 @@ function clearOnlineMode(){
 
 
 /* ============================================================
-   ONLINE END FLOW v6 - NO REMATCH
+   ONLINE WAGER SAFE v7 - ONLINE ONLY
    ------------------------------------------------------------
-   End of online match:
-   - Show YOU WIN / YOU LOSE / DRAW
-   - One button only: ONLINE MENU
-   - Returns to Online Mode so players make a new room code
-   - No rematch logic yet because wager flow comes next
+   Built on the last working career file.
+
+   Career Mode is NOT touched here.
+   Online rules:
+   - Max wager: $1000 per player.
+   - Players may wager different amounts.
+   - Each player pays their own wager when room/create join succeeds.
+   - Winner receives the full purse.
+   - Draw or disconnect = wager is lost.
+   - Leaderboard records online wins/losses by player name.
+   - Total wager purse shows total money wagered online.
    ============================================================ */
 
-function handleOnlineFinished(room){
-  if(onlineFinished) return;
-
-  onlineFinished = true;
-  locked = true;
-  setButtons(true);
-
-  const isDraw = room.winnerRole === 'draw';
-  const didWin = room.winnerRole === onlineRole;
-
-  let resultText = 'ONLINE DRAW';
-  if(!isDraw) resultText = didWin ? 'YOU WIN' : 'YOU LOSE';
-
-  if($('status')){
-    $('status').textContent = isDraw
-      ? 'Online match ended in a draw. Return to Online Mode for a new code.'
-      : didWin
-        ? 'You won the online match. Return to Online Mode for a new code.'
-        : 'You lost the online match. Return to Online Mode for a new code.';
-  }
-
-  const koText = document.querySelector('#koOverlay .koText');
-  if(koText) koText.textContent = resultText;
-
-  showKO('Online Menu');
-  if($('nextFightBtn')) $('nextFightBtn').textContent = 'Online Menu';
-}
-
-function resetOnlineMenuFields(){
-  if($('onlineRoomCode')) $('onlineRoomCode').value = '';
-  if($('onlineStatus')) $('onlineStatus').textContent = 'Create a new room code or join a new room.';
-  renderOnlineCash();
-}
-
-const careerContinueAfterKO_EndFlowV6 = continueAfterKO;
-function continueAfterKO(){
-  if(onlineMode && onlineFinished){
-    if($('koOverlay')) $('koOverlay').classList.remove('show');
-
-    const koText = document.querySelector('#koOverlay .koText');
-    if(koText) koText.textContent = 'K.O.';
-
-    clearOnlineMode();
-    startMenuMusic();
-    show('online');
-    resetOnlineMenuFields();
-    return;
-  }
-
-  const koText = document.querySelector('#koOverlay .koText');
-  if(koText) koText.textContent = 'K.O.';
-
-  careerContinueAfterKO_EndFlowV6();
-}
-
-const careerBackToMenu_EndFlowV6 = backToMenu;
-function backToMenu(){
-  if(onlineMode){
-    const koText = document.querySelector('#koOverlay .koText');
-    if(koText) koText.textContent = 'K.O.';
-    clearOnlineMode();
-  }
-  careerBackToMenu_EndFlowV6();
-}
-
-
-/* ============================================================
-   ONLINE WAGER + LEADERBOARD v7 - FINAL OVERRIDE
-   ------------------------------------------------------------
-   Online wager rules:
-   - Each player can wager up to $1000 per match.
-   - Each player can wager a different amount.
-   - Each player's wager is removed from their local cash when they
-     create/join the match.
-   - Winner receives the total purse.
-   - Draw = no winner, purse is lost.
-   - Disconnect/leave = money already removed stays lost.
-   - Online leaderboard tracks online wins/losses/win%.
-   - Total wager purse tracks total money wagered online.
-   ============================================================ */
-
-let onlineLocalWagerPaid = false;
-let onlineResultRecorded = false;
-let onlineCurrentWager = 0;
+let onlineResultPaidLocal = false;
 
 function onlineWager(){
-  const raw = Math.max(0, Math.floor(Number(($('onlineWager') && $('onlineWager').value) || 0)));
+  const input = $('onlineWager');
+  const raw = Math.max(0, Math.floor(Number((input && input.value) || 0)));
   const cash = Number(state.cash || 0);
   return Math.min(raw, cash, 1000);
 }
@@ -2761,8 +2678,8 @@ function onlineWager(){
 function setOnlineWagerInputMax(){
   const input = $('onlineWager');
   if(!input) return;
+  input.min = '0';
   input.max = String(Math.min(1000, Number(state.cash || 0)));
-  input.min = "0";
 }
 
 function renderOnlineCash(){
@@ -2793,47 +2710,11 @@ function getOnlineMatchPurse(room){
   return Number(room.totalPurse || 0) || (Number(room.hostWager || 0) + Number(room.guestWager || 0));
 }
 
-function getMyOnlineWager(room){
-  return onlineRole === 'host' ? Number(room.hostWager || 0) : Number(room.guestWager || 0);
-}
-
-function getMyOnlineName(){
-  return onlineName();
-}
-
-async function recordOnlineMatchResult(room){
-  if(onlineResultRecorded) return;
-  onlineResultRecorded = true;
-
-  if(typeof window.saveCounterBoxingOnlineRecord !== 'function') return;
-
-  const isDraw = room.winnerRole === 'draw';
-  const didWin = room.winnerRole === onlineRole;
-  const result = isDraw ? 'loss' : didWin ? 'win' : 'loss';
-  const name = getMyOnlineName();
-  const myWager = getMyOnlineWager(room);
-  const totalPurse = getOnlineMatchPurse(room);
-
-  try{
-    await window.saveCounterBoxingOnlineRecord({
-      name,
-      result,
-      wager: myWager,
-      purse: totalPurse,
-      role: onlineRole || '',
-      roomCode: onlineRoomCode || '',
-      timestamp: Date.now()
-    });
-  }catch(err){
-    console.error(err);
-  }
-}
-
 function renderOnlineLeaderboardRows(payload){
   const wrap = $('onlineLeaderboardRows');
   if(!wrap) return;
 
-  const records = Array.isArray(payload) ? payload : (payload && payload.records) || [];
+  const records = Array.isArray(payload) ? payload : ((payload && payload.records) || []);
   const totalPurse = Array.isArray(payload) ? 0 : Number((payload && payload.totalPurse) || 0);
 
   const title = $('onlineLeaderboardTitle');
@@ -2844,17 +2725,17 @@ function renderOnlineLeaderboardRows(payload){
   const right = top.slice(10,20);
 
   function col(items, offset){
-    let html = '<div class="onlineRankCol">';
-    html += '<div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div>';
+    let out = '<div class="onlineRankCol">';
+    out += '<div class="onlineRankRow header"><div>#</div><div>Name</div><div>W</div><div>L</div><div>WIN%</div></div>';
     if(!items.length){
-      html += '<div class="onlineRankRow"><div>-</div><div>No records</div><div>-</div><div>-</div><div>-</div></div>';
-    } else {
+      out += '<div class="onlineRankRow"><div>-</div><div>No records</div><div>-</div><div>-</div><div>-</div></div>';
+    }else{
       items.forEach((r,i)=>{
-        const wins = Number(r.onlineWins || r.wins || 0);
-        const losses = Number(r.onlineLosses || r.losses || 0);
+        const wins = Number(r.onlineWins || 0);
+        const losses = Number(r.onlineLosses || 0);
         const total = wins + losses;
         const pct = total ? Math.round((wins / total) * 100) : 0;
-        html += `<div class="onlineRankRow">
+        out += `<div class="onlineRankRow">
           <div>${offset+i+1}</div>
           <div>${String(r.name || 'PLAYER').slice(0,16)}</div>
           <div>${wins}</div>
@@ -2863,8 +2744,8 @@ function renderOnlineLeaderboardRows(payload){
         </div>`;
       });
     }
-    html += '</div>';
-    return html;
+    out += '</div>';
+    return out;
   }
 
   wrap.innerHTML = col(left,0) + col(right,10);
@@ -2891,7 +2772,6 @@ async function loadOnlineLeaderboard(){
   }
 }
 
-/* override create room with host wager */
 async function createOnlineRoom(){
   clearOnlineMode();
 
@@ -2909,8 +2789,6 @@ async function createOnlineRoom(){
   try{
     setOnlineStatus('Creating room...');
     const paid = payOnlineWager(wager);
-    onlineLocalWagerPaid = true;
-    onlineCurrentWager = paid;
 
     await window.createCounterBoxingRoom({
       code,
@@ -2922,7 +2800,7 @@ async function createOnlineRoom(){
 
     onlineRole = 'host';
     onlineRoomCode = code;
-    onlineResultRecorded = false;
+    onlineResultPaidLocal = false;
     await startOnlineRoomWatcher('host', code);
     setOnlineStatus(`Room ${code} created. You wagered $${paid}. Waiting for challenger...`);
   }catch(err){
@@ -2931,7 +2809,6 @@ async function createOnlineRoom(){
   }
 }
 
-/* override join room with guest wager */
 async function joinOnlineRoom(){
   clearOnlineMode();
 
@@ -2952,8 +2829,6 @@ async function joinOnlineRoom(){
   try{
     setOnlineStatus('Joining room...');
     const paid = payOnlineWager(wager);
-    onlineLocalWagerPaid = true;
-    onlineCurrentWager = paid;
 
     const room = await window.joinCounterBoxingRoom({
       code,
@@ -2970,7 +2845,7 @@ async function joinOnlineRoom(){
 
     onlineRole = 'guest';
     onlineRoomCode = code;
-    onlineResultRecorded = false;
+    onlineResultPaidLocal = false;
     await startOnlineRoomWatcher('guest', code);
     startOnlineMatch('guest', code, room);
   }catch(err){
@@ -2979,7 +2854,56 @@ async function joinOnlineRoom(){
   }
 }
 
-/* override finish flow to award purse + record leaderboard */
+/* Host still resolves the match, but now also writes final online records once. */
+async function maybeResolveOnlineRound(room){
+  if(!room.hostMove || !room.guestMove) return;
+
+  const r = onlineRound(room);
+  if(Number(room.hostMove.round) !== r || Number(room.guestMove.round) !== r) return;
+  if(Number(room.resolvedRound || 0) >= r) return;
+  if(typeof window.resolveCounterBoxingRound !== 'function') return;
+
+  const lastHostMove = room.hostMove;
+  const lastGuestMove = room.guestMove;
+  const result = resolveOnlineMoves(lastHostMove.move, lastGuestMove.move, room);
+
+  const hostDisplay = makeOnlineDisplayForMoves(lastHostMove.move, lastGuestMove.move);
+  const guestDisplay = makeOnlineDisplayForMoves(lastGuestMove.move, lastHostMove.move);
+
+  const finalPayload = {
+    ...result,
+    round: result.status === 'finished' ? r : r + 1,
+    resolvedRound: r,
+    animId: Date.now(),
+    hostDisplay,
+    guestDisplay,
+    lastHostMove,
+    lastGuestMove,
+    hostMove: null,
+    guestMove: null,
+    updatedAt: Date.now()
+  };
+
+  try{
+    await window.resolveCounterBoxingRound(onlineRoomCode, finalPayload);
+
+    if(result.status === 'finished' && typeof window.saveCounterBoxingOnlineMatchFinal === 'function'){
+      await window.saveCounterBoxingOnlineMatchFinal(onlineRoomCode, {
+        hostName: room.hostName || 'HOST',
+        guestName: room.guestName || 'GUEST',
+        hostWager: Number(room.hostWager || 0),
+        guestWager: Number(room.guestWager || 0),
+        totalPurse: Number(room.totalPurse || 0) || (Number(room.hostWager || 0) + Number(room.guestWager || 0)),
+        winnerRole: result.winnerRole || 'draw',
+        timestamp: Date.now()
+      });
+    }
+  }catch(err){
+    console.error(err);
+    if($('status')) $('status').textContent = 'Round resolve failed. Check Firebase rules.';
+  }
+}
+
 function handleOnlineFinished(room){
   if(onlineFinished) return;
 
@@ -2991,21 +2915,20 @@ function handleOnlineFinished(room){
   const didWin = room.winnerRole === onlineRole;
   const purse = getOnlineMatchPurse(room);
 
-  if(!isDraw && didWin){
+  if(!onlineResultPaidLocal && !isDraw && didWin){
+    onlineResultPaidLocal = true;
     awardOnlinePurse(purse);
   }
-
-  recordOnlineMatchResult(room);
 
   let resultText = 'ONLINE DRAW';
   if(!isDraw) resultText = didWin ? 'YOU WIN' : 'YOU LOSE';
 
   if($('status')){
     $('status').textContent = isDraw
-      ? `Online draw. Total purse $${purse} is lost. Return to Online Mode for a new code.`
+      ? `Online draw. The $${purse} purse is lost.`
       : didWin
-        ? `You won the online match and collected the $${purse} purse.`
-        : `You lost the online match. Your wager is gone.`;
+        ? `You won the $${purse} purse.`
+        : 'You lost. Your wager is gone.';
   }
 
   const koText = document.querySelector('#koOverlay .koText');
@@ -3015,138 +2938,9 @@ function handleOnlineFinished(room){
   if($('nextFightBtn')) $('nextFightBtn').textContent = 'Online Menu';
 }
 
-function resetOnlineMenuFields(){
-  if($('onlineRoomCode')) $('onlineRoomCode').value = '';
-  if($('onlineStatus')) $('onlineStatus').textContent = 'Create a new room code or join a new room. Max wager: $1000.';
-  renderOnlineCash();
-  loadOnlineLeaderboard();
-}
-
-function clearOnlineMode(){
-  if(onlineUnsubscribe){
-    try{ onlineUnsubscribe(); }catch(e){}
-    onlineUnsubscribe = null;
-  }
-  onlineMode = false;
-  onlineRole = null;
-  onlineRoomCode = null;
-  onlineRoomData = null;
-  onlineFinished = false;
-  onlineLastVisualRound = 0;
-  onlineLastAnimId = 0;
-  onlineLocalWagerPaid = false;
-  onlineCurrentWager = 0;
-  onlineResultRecorded = false;
-  setFightButtonsForCareer();
-  locked = false;
-  pendingContinue = false;
-  setButtons(false);
-}
-
-
-/* ============================================================
-   CAREER BUTTON FIX v8 - FINAL OVERRIDE
-   ------------------------------------------------------------
-   Fixes the New Run / Continue Run tabs.
-
-   The earlier online patches used wrapper functions that captured
-   other function names. Because JavaScript hoists function
-   declarations, that could make the career buttons call the wrong
-   wrapper chain.
-
-   These final functions do NOT wrap older functions.
-   They directly perform the career actions.
-   ============================================================ */
-
-function safeClearOnlineForCareer(){
-  try{
-    if(typeof onlineUnsubscribe !== 'undefined' && onlineUnsubscribe){
-      try{ onlineUnsubscribe(); }catch(e){}
-      onlineUnsubscribe = null;
-    }
-  }catch(e){}
-
-  try{ onlineMode = false; }catch(e){}
-  try{ onlineRole = null; }catch(e){}
-  try{ onlineRoomCode = null; }catch(e){}
-  try{ onlineRoomData = null; }catch(e){}
-  try{ onlineFinished = false; }catch(e){}
-  try{ onlineLastVisualRound = 0; }catch(e){}
-  try{ onlineLastAnimId = 0; }catch(e){}
-  try{ onlineLocalWagerPaid = false; }catch(e){}
-  try{ onlineCurrentWager = 0; }catch(e){}
-  try{ onlineResultRecorded = false; }catch(e){}
-
-  try{ setFightButtonsForCareer(); }catch(e){}
-  locked = false;
-  pendingContinue = false;
-  clearTimeout(idleTimer);
-  setButtons(false);
-
-  if($('koOverlay')) $('koOverlay').classList.remove('show');
-  if($('scoreOverlay')) $('scoreOverlay').classList.remove('show');
-
-  const koText = document.querySelector('#koOverlay .koText');
-  if(koText) koText.textContent = 'K.O.';
-}
-
-function selectNewGame(){
-  safeClearOnlineForCareer();
-
-  // New Run should start a fresh ladder but keep earned cash/unlocks.
-  fight = 1;
-  currentOpponent = 0;
-  champ = false;
-  streak = 0;
-  resetRoundState();
-  saveState();
-
-  show('careerIntro');
-  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
-  typeCareerWords();
-}
-
-function continueCareer(){
-  safeClearOnlineForCareer();
-
-  if(champ){
-    showChampionRoom();
-    return;
-  }
-
-  show('careerIntro');
-  setImg($('careerIntroBg'), SCREEN_BASES.careerStart);
-  typeCareerWords();
-}
-
-function startCareerFight(){
-  safeClearOnlineForCareer();
-  stopMenuMusic();
-
-  show('career');
-
-  setTimeout(()=>{
-    loadFightIdle();
-    locked = false;
-    pendingContinue = false;
-    setButtons(false);
-    render();
-    if($('status')){
-      $('status').textContent = champ
-        ? 'Champion mode. Defend the belt.'
-        : `Fight ${fight}: ${activeFighter().name}. Choose your move.`;
-    }
-  },25);
-}
-
-function backToMenu(){
-  safeClearOnlineForCareer();
-  startMenuMusic();
-  show('menu');
-}
-
+const continueAfterKO_OnlineWagerSafeV7 = continueAfterKO;
 function continueAfterKO(){
-  if(typeof onlineMode !== 'undefined' && onlineMode && onlineFinished){
+  if(onlineMode && onlineFinished){
     if($('koOverlay')) $('koOverlay').classList.remove('show');
 
     const koText = document.querySelector('#koOverlay .koText');
@@ -3155,28 +2949,16 @@ function continueAfterKO(){
     clearOnlineMode();
     startMenuMusic();
     show('online');
-    resetOnlineMenuFields();
+    if($('onlineRoomCode')) $('onlineRoomCode').value = '';
+    setOnlineStatus('Create a new room code or join a new room. Max wager: $1000.');
+    loadOnlineLeaderboard();
     return;
   }
-
-  if($('koOverlay')) $('koOverlay').classList.remove('show');
 
   const koText = document.querySelector('#koOverlay .koText');
   if(koText) koText.textContent = 'K.O.';
 
-  if(returnToChampionRoom){
-    returnToChampionRoom = false;
-    showChampionRoom();
-    bell();
-    return;
-  }
-
-  loadFightIdle();
-  pendingContinue = false;
-  locked = false;
-  setButtons(false);
-  render();
-  bell();
+  continueAfterKO_OnlineWagerSafeV7();
 }
 
 // initial asset load
@@ -3326,17 +3108,34 @@ window.resolveCounterBoxingRound = async function(code, result) {
 };
 
 
-window.saveCounterBoxingOnlineRecord = async function(record){
-  const clean = {
-    name: String(record.name || "PLAYER").slice(0, 16).toUpperCase(),
-    result: record.result === "win" ? "win" : "loss",
-    wager: Number(record.wager || 0),
-    purse: Number(record.purse || 0),
-    role: String(record.role || ""),
-    roomCode: String(record.roomCode || ""),
-    timestamp: Date.now()
+window.saveCounterBoxingOnlineMatchFinal = async function(roomCode, match){
+  const code = String(roomCode || "");
+  const winnerRole = match.winnerRole || "draw";
+
+  const hostResult = winnerRole === "host" ? "win" : "loss";
+  const guestResult = winnerRole === "guest" ? "win" : "loss";
+
+  const base = {
+    roomCode: code,
+    totalPurse: Number(match.totalPurse || 0),
+    timestamp: Number(match.timestamp || Date.now())
   };
-  await push(ref(db, "counterBoxingOnlineMatches"), clean);
+
+  await push(ref(db, "counterBoxingOnlineMatches"), {
+    ...base,
+    name: String(match.hostName || "HOST").slice(0,16).toUpperCase(),
+    role: "host",
+    result: hostResult,
+    wager: Number(match.hostWager || 0)
+  });
+
+  await push(ref(db, "counterBoxingOnlineMatches"), {
+    ...base,
+    name: String(match.guestName || "GUEST").slice(0,16).toUpperCase(),
+    role: "guest",
+    result: guestResult,
+    wager: Number(match.guestWager || 0)
+  });
 };
 
 window.loadCounterBoxingOnlineRecords = async function(){
@@ -3346,13 +3145,13 @@ window.loadCounterBoxingOnlineRecords = async function(){
 
   snap.forEach(child=>{
     const r = child.val() || {};
-    const name = String(r.name || "PLAYER").slice(0, 16).toUpperCase();
+    const name = String(r.name || "PLAYER").slice(0,16).toUpperCase();
+
     if(!byName[name]) byName[name] = {name, onlineWins:0, onlineLosses:0};
 
     if(r.result === "win") byName[name].onlineWins++;
     else byName[name].onlineLosses++;
 
-    // Each player record stores their own wager. This sums all money wagered online.
     totalPurse += Number(r.wager || 0);
   });
 
