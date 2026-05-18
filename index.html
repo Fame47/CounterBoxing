@@ -1436,92 +1436,40 @@ html, body{
 
 
 /* ============================================================
-   V11.7 COMING SOON GLOVES
+   V11.6.4 FINAL LOCKER LABEL UNLOCK TEXT
+   ------------------------------------------------------------
+   Unlock text is placed directly inside card labels.
    ============================================================ */
 
-.card.comingSoon{
-  opacity:.62 !important;
-  filter:grayscale(.25) brightness(.82) !important;
-  cursor:not-allowed !important;
-}
-
-.card.comingSoon .cardLabel{
-  color:#ddd !important;
-}
-
-.cardComingSoonText{
-  position:absolute !important;
-  left:50% !important;
-  top:50% !important;
-  transform:translate(-50%,-50%) rotate(-8deg) !important;
-  z-index:12 !important;
-  color:#ffd032 !important;
-  font-size:clamp(20px,2vw,42px) !important;
+.unlockLineV1164{
+  display:block !important;
+  margin-top:4px !important;
+  color:#ffd54a !important;
+  font-size:clamp(9px,.78vw,15px) !important;
   font-weight:1000 !important;
+  line-height:1.05 !important;
   text-transform:uppercase !important;
-  text-align:center !important;
-  line-height:.95 !important;
-  text-shadow:3px 3px #000, 0 0 12px #000 !important;
-  pointer-events:none !important;
+  text-shadow:2px 2px #000, 0 0 8px #000 !important;
+  white-space:normal !important;
 }
 
-.storeComingSoon{
-  color:#999 !important;
-  font-size:clamp(17px,1.65vw,34px) !important;
+#fightersGrid .cardLabel,
+#glovesGrid .cardLabel{
+  min-height:46px !important;
+  padding:6px 8px !important;
+  background:rgba(0,0,0,.72) !important;
 }
 
+#fightersGrid .card.locked .cardLabel,
+#glovesGrid .card.locked .cardLabel,
+#glovesGrid .card.comingSoon .cardLabel{
+  background:rgba(0,0,0,.92) !important;
+}
 
-/* ============================================================
-   V11.8 LOCKED ITEM TOOLTIP POLISH
-   ============================================================ */
-.card[data-tip], .shopItem[data-tip], .fighterCard[data-tip] {
-  position: relative !important;
-}
-.card[data-tip]::after,
-.shopItem[data-tip]::after,
-.fighterCard[data-tip]::after {
-  content: attr(data-tip);
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 10px);
-  transform: translateX(-50%);
-  min-width: 180px;
-  max-width: 280px;
-  background: rgba(0,0,0,0.95);
-  color: #fff;
-  border: 2px solid #ffd032;
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: clamp(12px, 1vw, 16px);
-  font-weight: 800;
-  line-height: 1.2;
-  text-align: center;
-  box-shadow: 0 0 12px rgba(0,0,0,0.45);
-  opacity: 0;
-  pointer-events: none;
-  z-index: 999;
-  transition: opacity .12s ease;
-  white-space: normal;
-}
-.card[data-tip]::before,
-.shopItem[data-tip]::before,
-.fighterCard[data-tip]::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: calc(100% + 2px);
-  transform: translateX(-50%);
-  border: 8px solid transparent;
-  border-top-color: #ffd032;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 998;
-  transition: opacity .12s ease;
-}
-.card[data-tip]:hover::after, .card[data-tip]:hover::before,
-.shopItem[data-tip]:hover::after, .shopItem[data-tip]:hover::before,
-.fighterCard[data-tip]:hover::after, .fighterCard[data-tip]:hover::before {
-  opacity: 1;
+#fightersGrid .card.locked,
+#glovesGrid .card.locked,
+#glovesGrid .card.comingSoon{
+  cursor:help !important;
 }
 
 </style>
@@ -1684,7 +1632,7 @@ html, body{
   </div>
 </div>
 
-<div id="buildStamp">Created by gamingwitfame [v11.8]</div>
+<div id="buildStamp">Created by gamingwitfame [v11.6.7]</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -4072,68 +4020,31 @@ function renderOnlineCash(){
 showFighters = function(){
   show('fighters');
   setImg($('fightersBg'), SCREEN_BASES.locker);
-  const grid = $('fightersGrid');
-  if(!grid) return;
-  grid.innerHTML = '';
-  const fighters = ['GREEN','BLUE','RED','PURPLE','WHITE','GOLD'];
-  fighters.forEach(color=>{
-    const unlocked = state.unlockedFighters && state.unlockedFighters.includes(color);
-    const card = document.createElement('div');
-    card.className = 'fighterCard ' + (unlocked ? 'unlocked' : 'locked');
-    if(!unlocked){ card.setAttribute('data-tip', fighterUnlockTipV118(color)); }
-    const img = document.createElement('img');
-    img.alt = color + ' fighter';
-    if(typeof fighterProfileBaseV114 === 'function'){
-      setImg(img, fighterProfileBaseV114(color));
-    }else{
-      setImg(img, [color+' BOXER PROFILE', color+' LOCKER ROOM', color+' IDLE']);
-    }
-    const name = document.createElement('div');
-    name.className = 'fighterName';
-    name.textContent = color;
-    card.appendChild(img);
-    card.appendChild(name);
+  const g=$('fightersGrid');
+  g.innerHTML='';
 
-    const controls = document.createElement('div');
-    controls.className = 'fighterControls';
+  if(!state.unlockedFighters.includes('GREEN')){
+    state.unlockedFighters.push('GREEN');
+    saveState();
+  }
 
-    const tauntSelect = document.createElement('select');
-    tauntSelect.className = 'fighterTauntSelect';
-
-    const availableTaunts = (typeof getUnlockedTauntsForFighter === 'function')
-      ? getUnlockedTauntsForFighter(color)
-      : [{id:'DEFAULT', label:'DEFAULT TAUNT'}];
-
-    availableTaunts.forEach(t=>{
-      const opt = document.createElement('option');
-      opt.value = t.id || t.value || 'DEFAULT';
-      opt.textContent = t.label || t.name || 'DEFAULT TAUNT';
-      tauntSelect.appendChild(opt);
-    });
-
-    const currentSel = state.selectedTaunts && state.selectedTaunts[color] ? state.selectedTaunts[color] : tauntSelect.value;
-    tauntSelect.value = currentSel;
-
-    tauntSelect.onchange = ()=>{
-      if(!unlocked){ showNotice('locker', fighterUnlockTipV118(color)); return; }
-      state.selectedTaunts = state.selectedTaunts || {};
-      state.selectedTaunts[color] = tauntSelect.value;
-      saveState();
-      if(state.selectedFighter === color) showLocker();
-    };
-
-    controls.appendChild(tauntSelect);
-    card.appendChild(controls);
-
-    card.onclick = (e)=>{
-      if(e.target === tauntSelect) return;
-      if(!unlocked){ showNotice('locker', fighterUnlockTipV118(color)); return; }
-      state.selectedFighter = color;
+  FIGHTERS.forEach(f=>{
+    const unlocked=state.unlockedFighters.includes(f.id);
+    const card=document.createElement('div');
+    card.className='card '+(unlocked?'':'locked');
+    card.innerHTML=`<img alt="${f.name}"><div class="cardLabel">${f.name}${unlocked?'':' 🔒'}</div>`;
+    setImg(card.querySelector('img'), [f.id+' BOXER PROFILE', f.id+' IDLE', f.id+' PLAYER TAUNT']);
+    card.onclick=()=>{
+      if(!unlocked){
+        showNotice('locker','Beat this fighter to unlock them.');
+        return;
+      }
+      state.selectedFighter=f.id;
+      state.selectedTaunt='DEFAULT';
       saveState();
       showLocker();
     };
-
-    grid.appendChild(card);
+    g.appendChild(card);
   });
 };
 
@@ -5937,99 +5848,177 @@ buyStoreItemV114 = function(item){
 
 
 /* ============================================================
-   V11.7 WHITE + FLAME ON COMING SOON
+   V11.6.1 ONLINE CASH SYNC FIX
    ------------------------------------------------------------
-   White Gloves and Flame On Gloves are not released yet.
-   - Removed from rotating store pool
-   - Show as COMING SOON in glove select
-   - Cannot be selected even if previously in save data
+   Base: loved v11.6 build.
+   Goal: only fix Online Mode cash/wager registration.
+
+   Fixes:
+   - Online screen always reloads latest local save cash.
+   - Create/Join tab cash labels update from state.cash.
+   - Wager input max updates from current cash.
+   - Create/Join functions sync visible tab values before paying wager.
+   - Wager cannot exceed cash or $1000.
+   - Does not touch store, menu, career, fighter, or visual systems.
    ============================================================ */
 
-const COMING_SOON_GLOVES_V117 = ['WHITE','FLAME ON'];
-
-/* Remove coming-soon gloves from active store rotation. */
-if(typeof STORE_GLOVE_POOL_V114 !== 'undefined'){
-  STORE_GLOVE_POOL_V114 = STORE_GLOVE_POOL_V114.filter(item => {
-    const id = item.gloveId || item.id;
-    return !COMING_SOON_GLOVES_V117.includes(id);
-  });
-}
-
-/* If a save already unlocked them during testing, keep them unavailable for now. */
-state.unlockedGloves = (state.unlockedGloves || []).filter(g => !COMING_SOON_GLOVES_V117.includes(g));
-if(COMING_SOON_GLOVES_V117.includes(state.selectedGloves)){
-  state.selectedGloves = 'BLACK';
-}
-saveState();
-
-/* Override glove screen with Coming Soon cards. */
-showGloves = function(){
-  show('gloves');
-  setImg($('glovesBg'), SCREEN_BASES.locker);
-  const g=$('glovesGrid');
-  g.innerHTML='';
-
-  const colors = ['BLACK','GREEN','BLUE','RED','PINK','WHITE','AMERICA','FLAME ON','GOLD'];
-
-  colors.forEach(color=>{
-    const comingSoon = COMING_SOON_GLOVES_V117.includes(color);
-    const unlocked = !comingSoon && state.unlockedGloves.includes(color);
-    const displayName = color === 'AMERICA' ? 'AMERICAN' : color;
-
-    const card=document.createElement('div');
-    card.className='card '+(unlocked?'':'locked')+(comingSoon?' comingSoon':'');
-    if(!unlocked || comingSoon){ card.setAttribute('data-tip', gloveUnlockTipV118(color)); }
-
-    card.innerHTML=`
-      <img alt="${displayName} gloves">
-      ${comingSoon ? '<div class="cardComingSoonText">COMING<br>SOON</div>' : ''}
-      <div class="cardLabel">${displayName} GLOVES${comingSoon?'':' '+(unlocked?'':'🔒')}</div>
-    `;
-
-    if(typeof gloveDisplayBasesV114 === 'function'){
-      setImg(card.querySelector('img'), gloveDisplayBasesV114(color));
-    }else{
-      setImg(card.querySelector('img'), [
-        color+' GLOVES DISPLAY',
-        color+' DISPLAY',
-        color+' GLOVES IDLE',
-        color+' GLOVES PLAYER TAUNT'
-      ]);
+function refreshStateFromSaveV1161(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(SAVE_KEY) || '{}');
+    if(saved && typeof saved === 'object'){
+      state = Object.assign(state || defaultState(), saved);
     }
+  }catch(e){}
+  state.cash = Number(state.cash || 0);
+  return state;
+}
 
-    card.onclick=()=>{
-      if(comingSoon){
-        showNotice('locker','Coming soon.');
-        return;
-      }
-      if(!unlocked){
-        showNotice('locker','Buy this glove color in the store.');
-        return;
-      }
-      state.selectedGloves=color;
-      saveState();
-      showLocker();
-    };
+function currentCashV1161(){
+  refreshStateFromSaveV1161();
+  return Number(state.cash || 0);
+}
 
-    g.appendChild(card);
+function syncOnlineTabCashV1161(){
+  const cash = currentCashV1161();
+  const max = Math.min(1000, cash);
+
+  ['onlineCashCreate','onlineCashJoin','onlineCash'].forEach(id=>{
+    const el = $(id);
+    if(el) el.textContent = cash;
   });
+
+  ['onlineCreateWager','onlineJoinWager','onlineWager'].forEach(id=>{
+    const input = $(id);
+    if(input){
+      input.min = '0';
+      input.max = String(max);
+
+      const current = Math.max(0, Math.floor(Number(input.value || 0)));
+      if(current > max) input.value = String(max);
+    }
+  });
+
+  const savedName = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+
+  if($('onlineCreatePlayerName') && !$('onlineCreatePlayerName').value) $('onlineCreatePlayerName').value = savedName;
+  if($('onlineJoinPlayerName') && !$('onlineJoinPlayerName').value) $('onlineJoinPlayerName').value = savedName;
+  if($('onlinePlayerName') && !$('onlinePlayerName').value) $('onlinePlayerName').value = savedName;
+}
+
+function syncCreateTabToHiddenV1161(){
+  refreshStateFromSaveV1161();
+
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+  const name = String(($('onlineCreatePlayerName') && $('onlineCreatePlayerName').value) || saved || 'PLAYER')
+    .trim().slice(0,16).toUpperCase() || 'PLAYER';
+
+  const cash = currentCashV1161();
+  const rawWager = Math.max(0, Math.floor(Number(($('onlineCreateWager') && $('onlineCreateWager').value) || 0)));
+  const wager = Math.min(rawWager, cash, 1000);
+
+  if($('onlinePlayerName')) $('onlinePlayerName').value = name;
+  if($('onlineWager')) $('onlineWager').value = String(wager);
+  if($('onlineRoomCode')) $('onlineRoomCode').value = '';
+
+  if($('onlineCreateWager')) $('onlineCreateWager').value = String(wager);
+  localStorage.setItem('counterBoxingPlayerName', name);
+
+  syncOnlineTabCashV1161();
+}
+
+function syncJoinTabToHiddenV1161(){
+  refreshStateFromSaveV1161();
+
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+  const name = String(($('onlineJoinPlayerName') && $('onlineJoinPlayerName').value) || saved || 'PLAYER')
+    .trim().slice(0,16).toUpperCase() || 'PLAYER';
+
+  const cash = currentCashV1161();
+  const rawWager = Math.max(0, Math.floor(Number(($('onlineJoinWager') && $('onlineJoinWager').value) || 0)));
+  const wager = Math.min(rawWager, cash, 1000);
+
+  const code = String(($('onlineJoinRoomCode') && $('onlineJoinRoomCode').value) || '')
+    .trim().toUpperCase();
+
+  if($('onlinePlayerName')) $('onlinePlayerName').value = name;
+  if($('onlineWager')) $('onlineWager').value = String(wager);
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+
+  if($('onlineJoinWager')) $('onlineJoinWager').value = String(wager);
+  localStorage.setItem('counterBoxingPlayerName', name);
+
+  syncOnlineTabCashV1161();
+}
+
+/* Override onlineWager so all online create/join functions get current cash correctly. */
+onlineWager = function(){
+  refreshStateFromSaveV1161();
+
+  let raw = 0;
+
+  const createActive = $('onlineCreatePanel') && $('onlineCreatePanel').classList.contains('active');
+  const joinActive = $('onlineJoinPanel') && $('onlineJoinPanel').classList.contains('active');
+
+  if(createActive && $('onlineCreateWager')){
+    raw = Math.max(0, Math.floor(Number($('onlineCreateWager').value || 0)));
+  }else if(joinActive && $('onlineJoinWager')){
+    raw = Math.max(0, Math.floor(Number($('onlineJoinWager').value || 0)));
+  }else{
+    raw = Math.max(0, Math.floor(Number(($('onlineWager') && $('onlineWager').value) || 0)));
+  }
+
+  return Math.min(raw, Number(state.cash || 0), 1000);
 };
 
+/* Override renderOnlineCash safely. */
+renderOnlineCash = function(){
+  syncOnlineTabCashV1161();
+};
 
-/* ============================================================
-   V11.8 TOOLTIP HELPERS
-   ============================================================ */
-function gloveUnlockTipV118(color){
-  if(color === 'WHITE') return 'Coming soon.';
-  if(color === 'FLAME ON') return 'Coming soon.';
-  if(color === 'GOLD') return 'Win the championship, then defend it 6 times to unlock.';
-  if(color === 'BLACK') return 'Unlocked by default.';
-  return 'Buy from the store to unlock.';
-}
-function fighterUnlockTipV118(color){
-  if(color === 'GREEN') return 'Unlocked by default.';
-  return 'Defeat ' + color + ' in career mode to unlock.';
-}
+/* Override tab switch safely. */
+showOnlineTab = function(tab){
+  const create = tab === 'create';
+
+  if($('onlineCreateTab')) $('onlineCreateTab').classList.toggle('active', create);
+  if($('onlineJoinTab')) $('onlineJoinTab').classList.toggle('active', !create);
+
+  if($('onlineCreatePanel')) $('onlineCreatePanel').classList.toggle('active', create);
+  if($('onlineJoinPanel')) $('onlineJoinPanel').classList.toggle('active', !create);
+
+  syncOnlineTabCashV1161();
+
+  if(typeof setOnlineStatus === 'function'){
+    setOnlineStatus(create ? 'Create a room, then share the generated code.' : 'Enter the room code your opponent shared.');
+  }
+};
+
+/* Fully override tab buttons to call the CURRENT create/join functions, not old captured v10.1 bases. */
+createOnlineRoomFromTab = async function(){
+  syncCreateTabToHiddenV1161();
+  await createOnlineRoom();
+
+  if($('onlineCreateRoomCode') && $('onlineRoomCode')){
+    $('onlineCreateRoomCode').value = $('onlineRoomCode').value || $('onlineCreateRoomCode').value || '';
+  }
+
+  syncOnlineTabCashV1161();
+};
+
+joinOnlineRoomFromTab = async function(){
+  syncJoinTabToHiddenV1161();
+  await joinOnlineRoom();
+  syncOnlineTabCashV1161();
+};
+
+/* Refresh cash whenever online opens without replacing the main show() function. */
+document.addEventListener('DOMContentLoaded', ()=>{
+  setInterval(()=>{
+    const online = $('online');
+    if(online && online.classList.contains('active')){
+      syncOnlineTabCashV1161();
+    }
+  }, 600);
+});
 
 // initial asset load
 setImg($('startBg'), SCREEN_BASES.start);
@@ -6046,6 +6035,423 @@ setImg($('onlineBg'), SCREEN_BASES.ring4);
 loadFightIdle();
 render();
 updateMusicUI();
+
+
+/* ============================================================
+   V11.6.4 FINAL LOCKER LABEL UNLOCK TEXT
+   ------------------------------------------------------------
+   IMPORTANT:
+   This block is intentionally injected at the END of the main
+   script so it overrides every earlier showFighters/showGloves.
+   ============================================================ */
+
+function unlockLabelV1164(title, locked, help){
+  return `
+    <div class="cardLabel">
+      ${title}${locked ? ' 🔒' : ''}
+      ${help ? `<span class="unlockLineV1164">${help}</span>` : ''}
+    </div>
+  `;
+}
+
+function fighterHelpV1164(id){
+  id = String(id || '').toUpperCase();
+  if(id === 'GREEN') return '';
+  return 'Defeat ' + id + ' in Career Mode';
+}
+
+function gloveHelpV1164(id){
+  id = String(id || '').toUpperCase();
+  if(id === 'WHITE') return 'Coming Soon';
+  if(id === 'FLAME ON') return 'Coming Soon';
+  if(id === 'GOLD') return 'Win Championship + 6 Defenses';
+  if(id === 'BLACK') return '';
+  return 'Buy from Store';
+}
+
+showFighters = function(){
+  show('fighters');
+  setImg($('fightersBg'), SCREEN_BASES.locker);
+  ensureSelectedTaunts();
+
+  const grid = $('fightersGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  if(!state.unlockedFighters.includes('GREEN')){
+    state.unlockedFighters.push('GREEN');
+    saveState();
+  }
+
+  FIGHTERS.forEach(f=>{
+    const unlocked = state.unlockedFighters.includes(f.id);
+    const options = tauntOptionsForFighter(f.id);
+    const current = activeTauntIdForFighter(f.id);
+    const help = unlocked ? '' : fighterHelpV1164(f.id);
+
+    const card = document.createElement('div');
+    card.className = 'card ' + (unlocked ? '' : 'locked');
+
+    let dropdown = '';
+    if(unlocked){
+      dropdown = `
+        <div class="tauntSelectWrap" onclick="event.stopPropagation()">
+          <div class="tauntSelectLabel">${f.id} CPU TAUNT (${options.length})</div>
+          <select class="fighterTauntSelect" data-fighter="${f.id}">
+            ${options.map(o=>{
+              const owned = o.owned();
+              const label = owned ? o.label : o.label + ' 🔒';
+              return `<option value="${o.id}" ${o.id===current?'selected':''} ${owned?'':'disabled'}>${label}</option>`;
+            }).join('')}
+          </select>
+        </div>
+      `;
+    }
+
+    card.innerHTML = `
+      <img alt="${f.name}">
+      ${unlockLabelV1164(f.name, !unlocked, help)}
+      ${dropdown}
+    `;
+
+    setImg(card.querySelector('img'), [
+      ...activeTauntBasesForFighter(f.id),
+      f.id + ' BOXER PROFILE',
+      f.id + ' IDLE',
+      f.id + ' PLAYER TAUNT'
+    ]);
+
+    card.onclick = ()=>{
+      if(!unlocked){
+        showNotice('locker', help);
+        return;
+      }
+      state.selectedFighter = f.id;
+      state.selectedTaunt = activeTauntIdForFighter(f.id);
+      saveState();
+      showLocker();
+    };
+
+    const select = card.querySelector('.fighterTauntSelect');
+    if(select){
+      select.onchange = (e)=>{
+        e.stopPropagation();
+        setActiveFighterTaunt(f.id, select.value);
+      };
+    }
+
+    grid.appendChild(card);
+  });
+};
+
+showGloves = function(){
+  show('gloves');
+  setImg($('glovesBg'), SCREEN_BASES.locker);
+
+  const grid = $('glovesGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+
+  const colors = ['BLACK','GREEN','BLUE','RED','PINK','WHITE','AMERICA','FLAME ON','GOLD'];
+
+  colors.forEach(color=>{
+    const comingSoon = color === 'WHITE' || color === 'FLAME ON';
+    const unlocked = !comingSoon && state.unlockedGloves.includes(color);
+    const displayName = color === 'AMERICA' ? 'AMERICAN' : color;
+    const help = unlocked ? '' : gloveHelpV1164(color);
+
+    const card = document.createElement('div');
+    card.className = 'card ' + (unlocked ? '' : 'locked') + (comingSoon ? ' comingSoon' : '');
+
+    card.innerHTML = `
+      <img alt="${displayName} gloves">
+      ${unlockLabelV1164(displayName + ' GLOVES', !unlocked || comingSoon, help)}
+    `;
+
+    if(typeof gloveDisplayBasesV114 === 'function'){
+      setImg(card.querySelector('img'), gloveDisplayBasesV114(color));
+    }else{
+      setImg(card.querySelector('img'), [
+        color + ' GLOVES DISPLAY',
+        color + ' DISPLAY',
+        color + ' GLOVES IDLE',
+        color + ' GLOVES PLAYER TAUNT',
+        color + ' GLOVES DRAW',
+        color + ' GLOVES PLAYER BLOCK',
+        color + ' GLOVES CPU BLOCK',
+        color + ' GLOVES CPU COUNTER',
+        color + ' GLOVES PLAYER COUNTER'
+      ]);
+    }
+
+    card.onclick = ()=>{
+      if(comingSoon){
+        showNotice('locker','Coming Soon');
+        return;
+      }
+      if(!unlocked){
+        showNotice('locker', help || 'Buy from Store');
+        return;
+      }
+      state.selectedGloves = color;
+      saveState();
+      showLocker();
+    };
+
+    grid.appendChild(card);
+  });
+};
+
+
+
+/* ============================================================
+   V11.6.5 FINAL POLISH
+   ------------------------------------------------------------
+   - Music starts at 15%
+   - Continue Run goes directly into the current career match
+   - White / Flame On removed from active store rotation
+   ============================================================ */
+
+/* Music default volume: 15% */
+function setDefaultMusicVolumeV1165(){
+  try{
+    const target = 0.15;
+
+    ['bgMusic','menuMusic','fightMusic','careerMusic','onlineMusic','storeMusic'].forEach(id=>{
+      const audio = $(id);
+      if(audio && typeof audio.volume === 'number') audio.volume = target;
+    });
+
+    document.querySelectorAll('audio').forEach(audio=>{
+      if(audio && audio.dataset && !audio.dataset.v1165UserVolume){
+        audio.volume = target;
+      }
+    });
+
+    if(typeof musicVolume !== 'undefined') musicVolume = target;
+    if(typeof MUSIC_VOLUME !== 'undefined') MUSIC_VOLUME = target;
+
+    const sliders = ['musicVolume','musicSlider','musicVolumeSlider','volumeMusic'];
+    sliders.forEach(id=>{
+      const slider = $(id);
+      if(slider){
+        slider.value = slider.max && Number(slider.max) > 1 ? 15 : 0.15;
+      }
+    });
+
+    if(typeof updateMusicUI === 'function') updateMusicUI();
+  }catch(err){
+    console.warn('v11.6.5 music volume default skipped:', err);
+  }
+}
+
+/* Remove unreleased gloves from store rotation. */
+function removeComingSoonFromStoreV1165(){
+  try{
+    const block = ['WHITE','FLAME ON'];
+
+    if(typeof STORE_GLOVE_POOL_V114 !== 'undefined' && Array.isArray(STORE_GLOVE_POOL_V114)){
+      STORE_GLOVE_POOL_V114 = STORE_GLOVE_POOL_V114.filter(item=>{
+        const id = String(item.gloveId || item.id || '').toUpperCase();
+        const name = String(item.name || '').toUpperCase();
+        return !block.includes(id) && !block.some(b=>name.includes(b));
+      });
+    }
+
+    if(typeof STORE_GLOVE_POOL_V113 !== 'undefined' && Array.isArray(STORE_GLOVE_POOL_V113)){
+      STORE_GLOVE_POOL_V113 = STORE_GLOVE_POOL_V113.filter(item=>{
+        const id = String(item.gloveId || item.id || '').toUpperCase();
+        const name = String(item.name || '').toUpperCase();
+        return !block.includes(id) && !block.some(b=>name.includes(b));
+      });
+    }
+
+    if(typeof STORE_GLOVE_POOL_V112 !== 'undefined' && Array.isArray(STORE_GLOVE_POOL_V112)){
+      STORE_GLOVE_POOL_V112 = STORE_GLOVE_POOL_V112.filter(item=>{
+        const id = String(item.gloveId || item.id || '').toUpperCase();
+        const name = String(item.name || '').toUpperCase();
+        return !block.includes(id) && !block.some(b=>name.includes(b));
+      });
+    }
+
+    if(typeof ROTATING_GLOVE_POOL_V111 !== 'undefined' && Array.isArray(ROTATING_GLOVE_POOL_V111)){
+      ROTATING_GLOVE_POOL_V111 = ROTATING_GLOVE_POOL_V111.filter(item=>{
+        const id = String(item.gloveId || item.id || '').toUpperCase();
+        const name = String(item.name || '').toUpperCase();
+        return !block.includes(id) && !block.some(b=>name.includes(b));
+      });
+    }
+  }catch(err){
+    console.warn('v11.6.5 store pool cleanup skipped:', err);
+  }
+}
+
+/* Continue Run should go straight into the current match, not back to New Run. */
+function continueRunDirectV1165(){
+  try{
+    onlineMode = false;
+
+    // Keep current career progress. If fight is missing, start at fight 1.
+    fight = Math.max(1, Number(fight || 1));
+    round = 1;
+
+    startFight();
+  }catch(err){
+    console.warn('v11.6.5 continue direct failed:', err);
+    try{
+      if(typeof startFight === 'function') startFight();
+    }catch(e){}
+  }
+}
+
+/* Patch the Continue Run button when the career/new run screen renders. */
+function patchContinueButtonsV1165(){
+  const buttons = Array.from(document.querySelectorAll('button,.btn,.menuBtn'));
+  buttons.forEach(btn=>{
+    const txt = String(btn.textContent || '').trim().toUpperCase();
+    if(txt === 'CONTINUE RUN' || txt.includes('CONTINUE RUN')){
+      if(btn.dataset.v1165ContinuePatched === '1') return;
+      btn.dataset.v1165ContinuePatched = '1';
+      btn.onclick = (e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        continueRunDirectV1165();
+      };
+    }
+  });
+}
+
+/* If the game already has a named continue function, override it safely. */
+if(typeof continueRun === 'function'){
+  continueRun = continueRunDirectV1165;
+}
+if(typeof continueCareer === 'function'){
+  continueCareer = continueRunDirectV1165;
+}
+if(typeof loadRun === 'function'){
+  const loadRunV1165Base = loadRun;
+  loadRun = function(){
+    const result = loadRunV1165Base.apply(this, arguments);
+    setTimeout(patchContinueButtonsV1165, 50);
+    return result;
+  };
+}
+
+/* Store render should always use cleaned pool first. */
+if(typeof renderStoreV114 === 'function'){
+  const renderStoreV114_v1165_base = renderStoreV114;
+  renderStoreV114 = function(){
+    removeComingSoonFromStoreV1165();
+    return renderStoreV114_v1165_base.apply(this, arguments);
+  };
+}
+
+if(typeof showStore === 'function'){
+  const showStore_v1165_base = showStore;
+  showStore = function(){
+    removeComingSoonFromStoreV1165();
+    return showStore_v1165_base.apply(this, arguments);
+  };
+}
+
+/* Apply on load and keep Continue button patched when screens change. */
+document.addEventListener('DOMContentLoaded', ()=>{
+  setDefaultMusicVolumeV1165();
+  removeComingSoonFromStoreV1165();
+  patchContinueButtonsV1165();
+
+  setInterval(()=>{
+    patchContinueButtonsV1165();
+
+    const store = $('store');
+    if(store && store.classList.contains('active')){
+      removeComingSoonFromStoreV1165();
+    }
+  }, 700);
+});
+
+setDefaultMusicVolumeV1165();
+removeComingSoonFromStoreV1165();
+
+
+
+/* ============================================================
+   V11.6.7 SAFE CONTINUE RUN FIX
+   ------------------------------------------------------------
+   Previous v11.6.6 tried to rebuild career state and caused blank screen.
+   This safer patch uses the game's already-working career fight starter.
+
+   Continue Run:
+   - clears online mode
+   - resets fight buttons safely
+   - if champion, goes to Champion Room like the working game expects
+   - otherwise starts the career fight directly using startCareerFight()
+   ============================================================ */
+
+function safeContinueRunV1167(){
+  try{
+    if(typeof clearOnlineMode === 'function') clearOnlineMode();
+  }catch(e){}
+
+  try{
+    if(typeof cbCareerHardResetButtons === 'function') cbCareerHardResetButtons();
+  }catch(e){}
+
+  try{
+    if(typeof champ !== 'undefined' && champ && typeof showChampionRoom === 'function'){
+      showChampionRoom();
+      return;
+    }
+  }catch(e){}
+
+  try{
+    if(typeof startCareerFight === 'function'){
+      startCareerFight();
+      return;
+    }
+  }catch(err){
+    console.warn('safeContinueRunV1167 startCareerFight failed:', err);
+  }
+
+  /* Last fallback: use the same basic flow as startCareerFight */
+  try{
+    if(typeof stopMenuMusic === 'function') stopMenuMusic();
+    if(typeof show === 'function') show('career');
+    if(typeof loadFightIdle === 'function') loadFightIdle();
+    if(typeof render === 'function') render();
+  }catch(err){
+    console.warn('safeContinueRunV1167 fallback failed:', err);
+  }
+}
+
+/* Override the actual inline button target */
+continueCareer = safeContinueRunV1167;
+
+/* If older patches keep scanning buttons, make the button point to the safe function. */
+function patchContinueRunButtonV1167(){
+  document.querySelectorAll('button,.ui-btn,.menuBtn,.btn').forEach(btn=>{
+    const txt = String(btn.textContent || '').trim().toUpperCase();
+    if(txt.includes('CONTINUE RUN')){
+      btn.onclick = function(e){
+        if(e){
+          e.preventDefault();
+          e.stopPropagation();
+        }
+        safeContinueRunV1167();
+        return false;
+      };
+      btn.setAttribute('onclick','safeContinueRunV1167(); return false;');
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  patchContinueRunButtonV1167();
+  setInterval(patchContinueRunButtonV1167, 800);
+});
+
+patchContinueRunButtonV1167();
+
 </script>
 
 <!-- FIREBASE PHASE 1 ONLINE FIGHT CODE -->
