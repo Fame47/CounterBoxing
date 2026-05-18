@@ -660,53 +660,15 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
 }
 
 
-/* V10 MUSIC + ONLINE POPUP UPDATE */
-#buildStamp{
-  font-size:10px !important;
-  padding:3px 7px !important;
-  text-transform:none !important;
-}
-
-#globalMusicWidget{
-  right:2% !important;
-  bottom:7% !important;
-  min-width:15% !important;
-  max-width:22% !important;
-  padding:.42% .7% !important;
-  border-radius:8px !important;
-}
-.musicNow{font-size:clamp(10px,.9vw,18px) !important}
-.musicSong{font-size:clamp(8px,.72vw,14px) !important}
-.musicControls{margin-top:4px !important;gap:5px !important}
-.musicSmallBtn{font-size:clamp(8px,.7vw,13px) !important;padding:3px 6px !important}
-.musicMiniRange{width:62px !important}
-
-.fightMusic{
-  position:absolute;
-  right:10.5%;
-  bottom:2%;
-  z-index:35;
-  pointer-events:auto;
-  border:2px solid rgba(255,210,60,.75);
-  border-radius:999px;
-  background:rgba(0,0,0,.55);
-  color:#fff;
-  padding:.5% 1%;
-  font-weight:900;
-  font-size:clamp(10px,1vw,18px);
-  cursor:pointer;
-}
-
-/* Online Mode v10 tabs and black popout panels */
-.onlinePanel.v10{
-  grid-template-columns:1fr 1.25fr !important;
-  background:rgba(0,0,0,.70) !important;
+/* V10 ONLINE TWO TAB ROOM SETUP - NO RING CHOICE */
+.onlineRoomBox{
+  display:flex;
+  flex-direction:column;
 }
 .onlineTabs{
   display:flex;
   gap:2%;
-  justify-content:center;
-  margin-bottom:3%;
+  margin:1% 0 2%;
 }
 .onlineTab{
   flex:1;
@@ -715,7 +677,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   background:rgba(0,0,0,.78);
   color:#fff;
   padding:clamp(10px,1vw,18px);
-  font-size:clamp(13px,1.25vw,24px);
+  font-size:clamp(13px,1.2vw,24px);
   font-weight:1000;
   text-transform:uppercase;
   cursor:pointer;
@@ -724,164 +686,848 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   background:linear-gradient(180deg,#e0a21f,#9e6500);
   color:#111;
 }
-.onlinePopup{
+.onlineTabPanel{
   display:none;
   background:#000;
   border:2px solid rgba(255,210,60,.92);
-  border-radius:14px;
+  border-radius:12px;
   padding:3%;
-  box-shadow:0 0 28px rgba(255,210,60,.18),0 14px 36px rgba(0,0,0,.8);
 }
-.onlinePopup.active{display:block}
-.onlinePopupTitle{
-  color:#ffd032;
-  text-align:center;
-  font-size:clamp(18px,1.65vw,34px);
-  font-weight:1000;
-  text-transform:uppercase;
-  margin-bottom:2%;
-}
-.onlineHint{
-  color:#aaa;
-  font-size:clamp(10px,.9vw,17px);
-  font-weight:850;
-  text-align:center;
-  line-height:1.25;
-  margin-top:2%;
-}
-.onlineHint strong{color:#ffd032}
-.onlineInputLabel{
-  color:#ffd032;
+.onlineTabPanel.active{
   display:block;
-  font-size:clamp(10px,.9vw,17px);
-  font-weight:950;
-  text-transform:uppercase;
-  margin-top:2%;
 }
-.onlineSelect{
-  width:100%;
-  margin:1.3% 0;
-  padding:1.55%;
-  background:#111;
+.onlinePanelTitle{
   color:#fff;
-  border:2px solid #ffd032;
-  border-radius:10px;
-  font-size:clamp(16px,1.6vw,30px);
+  font-size:clamp(22px,2vw,40px);
   font-weight:1000;
   text-align:center;
   text-transform:uppercase;
+  line-height:1;
+  margin-bottom:2%;
+  text-shadow:0 3px 5px #000;
+}
+.onlineInputLabel{
+  display:block;
+  color:#ffd032;
+  font-size:clamp(10px,.85vw,16px);
+  font-weight:1000;
+  text-transform:uppercase;
+  margin:2% 0 .7%;
+}
+.onlineBtn.full{
+  width:100%;
+  margin-top:2%;
+}
+.onlineCashNote{
+  line-height:1.2;
 }
 @media(max-width:760px){
-  #globalMusicWidget{right:2% !important;bottom:15% !important;min-width:30% !important;max-width:40% !important}
-  .fightMusic{right:28%;bottom:2%;font-size:10px}
-  .onlinePanel.v10{grid-template-columns:1fr !important}
-}
-
-
-/* V10.2 START SCREEN CLEANUP */
-#start #globalMusicWidget,
-#start + #globalMusicWidget{
-  display:none !important;
+  .onlineTabs{gap:1%;margin-bottom:2%}
+  .onlineTabPanel{padding:3.5%}
 }
 
 
 /* ============================================================
-   V10.5 SURGICAL UI FIX
-   Keeps original full-size game frame intact.
+   V10.1 ONLINE COMPACT LAYOUT FIX
+   ------------------------------------------------------------
+   Keeps the tab area from stretching the screen.
    ============================================================ */
 
-#buildStamp{font-size:10px!important;padding:3px 7px!important;text-transform:none!important;max-width:280px!important}
-
-/* Smaller global music player */
-#globalMusicWidget{
-  right:2%!important;bottom:7.5%!important;width:240px!important;min-width:190px!important;max-width:240px!important;
-  padding:7px 10px!important;border-radius:8px!important;transform:none!important;
-}
-.musicNow{font-size:15px!important;line-height:1!important}
-.musicSong{font-size:11px!important;line-height:1.1!important}
-.musicControls{margin-top:4px!important;gap:5px!important}
-.musicSmallBtn{font-size:10px!important;padding:3px 6px!important}
-.musicMiniRange{width:64px!important}
-
-/* In-match music button next to sound */
-.fightMusic{
-  position:absolute!important;right:10.7%!important;bottom:2%!important;z-index:55!important;pointer-events:auto!important;
-  border:2px solid rgba(255,210,60,.8)!important;border-radius:999px!important;background:rgba(0,0,0,.7)!important;
-  color:#fff!important;padding:6px 13px!important;font-weight:1000!important;font-size:clamp(10px,.9vw,16px)!important;cursor:pointer!important;
+#online .onlinePanel{
+  top:12% !important;
+  height:72% !important;
+  width:min(82%,1220px) !important;
+  overflow:hidden !important;
 }
 
-/* Battle screen HUD cleanup */
-#career .hudBox,#career .enemyBox{
-  background:transparent!important;border:none!important;box-shadow:none!important;backdrop-filter:none!important;
-}
-#career .hudBox{width:14.5%!important;left:6.2%!important;top:11.8%!important;padding:0!important}
-#career .enemyBox{width:14.5%!important;right:6.2%!important;top:12.1%!important;padding:0!important}
-#career .hudBox h2,#career .enemyBox h2{font-size:clamp(22px,2.1vw,40px)!important;margin:0 0 10px!important}
-#career .hearts{font-size:clamp(16px,1.35vw,28px)!important;line-height:1.15!important}
-#career .hudStats{margin-top:12px!important;padding-top:10px!important;border-top:1px solid rgba(255,255,255,.18)!important}
-#career .hudStats .label{font-size:clamp(12px,1vw,20px)!important}
-#career .hudStats .value{font-size:clamp(24px,2vw,40px)!important}
-
-/* Round badge square */
-#career .roundBadge,.roundBadge{
-  width:74px!important;height:74px!important;aspect-ratio:1/1!important;right:8.2%!important;top:2.7%!important;
-  border-radius:4px!important;padding:5px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;
-}
-.roundBadge .roundLabel{font-size:13px!important;line-height:1!important}
-.roundBadge #round{font-size:48px!important;line-height:.9!important}
-
-/* Online screen layout, do not resize full game */
-#online .onlinePanel,#online .onlinePanel.v10{
-  width:72%!important;top:5%!important;left:50%!important;transform:translateX(-50%)!important;
-  display:grid!important;grid-template-columns:38% 1fr!important;gap:1.4%!important;padding:1.2%!important;
-  background:rgba(0,0,0,.72)!important;border:2px solid rgba(255,210,60,.86)!important;border-radius:14px!important;overflow:visible!important;
-}
-#online .onlineTitle{
-  grid-column:1/-1!important;font-size:clamp(38px,4.2vw,78px)!important;line-height:.92!important;margin:0 0 .8%!important;text-align:center!important;
-}
 #online .onlineBox{
-  background:rgba(0,0,0,.42)!important;border:1px solid rgba(255,255,255,.15)!important;border-radius:10px!important;
-  padding:2%!important;min-height:470px!important;max-height:570px!important;overflow:hidden!important;
+  overflow:hidden !important;
+  min-height:0 !important;
 }
-#online .onlineBox:first-of-type{display:flex!important;flex-direction:column!important}
-#online .onlineSubTitle{font-size:clamp(22px,2vw,38px)!important;line-height:1!important;margin:0 0 10px!important;text-align:center!important}
 
-#online .onlineTabs{display:flex!important;gap:8px!important;margin:0 0 9px!important;width:100%!important;flex-shrink:0!important}
+#online .onlineRoomBox{
+  display:flex !important;
+  flex-direction:column !important;
+}
+
+#online .onlineTabs{
+  flex-shrink:0 !important;
+  gap:2% !important;
+  margin:0 0 1.2% !important;
+}
+
 #online .onlineTab{
-  flex:1!important;border:2px solid #ffd032!important;border-radius:7px!important;background:#050505!important;color:#fff!important;
-  padding:10px 6px!important;font-size:clamp(12px,1.05vw,21px)!important;line-height:1!important;font-weight:1000!important;text-transform:uppercase!important;
+  padding:clamp(7px,.75vw,12px) !important;
+  font-size:clamp(12px,1vw,20px) !important;
+  min-height:0 !important;
 }
-#online .onlineTab.active{background:linear-gradient(180deg,#efbf32,#b67500)!important;color:#111!important}
 
-#online .onlinePopup{
-  display:none!important;position:relative!important;background:#000!important;border:2px solid #ffd032!important;border-radius:0!important;
-  box-shadow:none!important;padding:12px!important;min-height:0!important;height:355px!important;overflow:hidden!important;
+#online .onlineTabPanel{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+  max-height:100% !important;
+  padding:2% !important;
+  overflow:hidden !important;
 }
-#online .onlinePopup.active{display:block!important}
-#online .onlinePopupTitle{color:#fff!important;font-size:clamp(22px,2.05vw,40px)!important;line-height:1!important;margin:0 0 7px!important;text-align:center!important;text-shadow:2px 2px #000!important}
-#online .onlineInputLabel{display:block!important;color:#ffd032!important;font-size:clamp(9px,.72vw,14px)!important;line-height:1!important;font-weight:1000!important;text-transform:uppercase!important;margin:5px 0 3px!important}
-#online .onlineInput,#online .onlineSelect{
-  width:100%!important;box-sizing:border-box!important;margin:0!important;padding:6px 10px!important;height:42px!important;min-height:0!important;
-  border:2px solid #ffd032!important;border-radius:5px!important;background:#090909!important;color:#fff!important;
-  font-size:clamp(18px,1.75vw,32px)!important;line-height:1!important;font-weight:1000!important;text-transform:uppercase!important;text-align:left!important;
-}
-#online .onlineSelect{appearance:auto!important}
-#online .onlineBtn{
-  width:100%!important;margin-top:8px!important;padding:9px 8px!important;height:40px!important;min-height:0!important;
-  line-height:1!important;border-radius:7px!important;font-size:clamp(12px,1vw,20px)!important;
-}
-#online .onlineHint{font-size:clamp(9px,.68vw,12px)!important;line-height:1.12!important;color:#ddd!important;text-align:left!important;margin-top:6px!important}
-#online .onlineStatus{font-size:clamp(9px,.68vw,12px)!important;line-height:1.12!important;min-height:16px!important;margin-top:7px!important;overflow:hidden!important}
 
-#onlineLeaderboardTitle{font-size:clamp(23px,2.1vw,40px)!important;line-height:1.15!important;margin-bottom:14px!important}
-#online .onlineLeaderboard{grid-template-columns:1fr!important;max-width:100%!important}
-#online .onlineRankRow{grid-template-columns:40px 1fr 54px 54px 72px!important;font-size:clamp(10px,.86vw,16px)!important;min-height:32px!important}
-#online .top-back{left:50%!important;top:auto!important;bottom:3%!important;transform:translateX(-50%)!important;width:230px!important}
+#online .onlinePanelTitle{
+  font-size:clamp(18px,1.65vw,32px) !important;
+  margin-bottom:1% !important;
+}
+
+#online .onlineInputLabel{
+  font-size:clamp(9px,.72vw,14px) !important;
+  margin:1.2% 0 .45% !important;
+}
+
+#online .onlineInput{
+  height:clamp(34px,4vh,48px) !important;
+  min-height:0 !important;
+  padding:.9% 1.4% !important;
+  font-size:clamp(14px,1.35vw,26px) !important;
+  margin:0 !important;
+}
+
+#online .onlineBtn.full{
+  margin-top:1.5% !important;
+  padding:clamp(7px,.75vw,12px) !important;
+  min-height:0 !important;
+  font-size:clamp(12px,1vw,20px) !important;
+}
+
+#online .onlineCashNote,
+#online .onlineStatus{
+  font-size:clamp(9px,.72vw,14px) !important;
+  line-height:1.12 !important;
+  margin-top:1% !important;
+  min-height:0 !important;
+}
+
+#online .onlineLeaderboard{
+  grid-template-columns:1fr !important;
+  max-width:720px !important;
+  margin:0 auto !important;
+}
+
+#online .onlineRankRow{
+  grid-template-columns:42px 1fr 64px 64px 74px !important;
+}
+
+
+/* V10.3 MUSIC + CLEAN IMAGE FIX */
+img:not([src]), img[src=""]{visibility:hidden !important}
+#globalMusicWidget{
+  display:none;
+  position:absolute !important;
+  right:3% !important;
+  bottom:8% !important;
+  z-index:900 !important;
+  width:clamp(210px,22vw,320px) !important;
+  min-width:210px !important;
+  max-width:320px !important;
+  padding:7px 10px !important;
+  background:rgba(0,0,0,.62) !important;
+  border:2px solid rgba(255,210,60,.58) !important;
+  border-radius:10px !important;
+  text-align:center !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.55) !important;
+  pointer-events:auto !important;
+}
+.musicNow{font-size:clamp(12px,1.05vw,20px) !important}
+.musicSong{font-size:clamp(9px,.86vw,15px) !important}
+.musicControls{margin-top:5px !important;gap:6px !important}
+.musicSmallBtn{font-size:clamp(9px,.78vw,13px) !important;padding:3px 7px !important}
+.musicMiniRange{width:70px !important}
+
+
+/* ============================================================
+   V10.4b SAFE VIEWPORT CONSISTENCY
+   ------------------------------------------------------------
+   Safer than v10.4:
+   - Does NOT wrap show()
+   - Does NOT touch Start button
+   - Keeps screens consistent with a stable 16:9 frame
+   ============================================================ */
+
+html, body{
+  margin:0 !important;
+  padding:0 !important;
+  width:100% !important;
+  height:100% !important;
+  overflow:hidden !important;
+  background:#000 !important;
+}
+
+.screen{
+  width:100vw !important;
+  height:100vh !important;
+  min-height:100vh !important;
+  overflow:hidden !important;
+  background:#000 !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.screen.active{
+  display:flex !important;
+}
+
+.frame{
+  width:min(100vw, calc(100vh * 16 / 9)) !important;
+  height:min(100vh, calc(100vw * 9 / 16)) !important;
+  aspect-ratio:16 / 9 !important;
+  margin:auto !important;
+  overflow:hidden !important;
+}
+
+/* Keep the online setup inside the visible stage */
+#online .onlinePanel{
+  top:9% !important;
+  width:74% !important;
+  max-height:78% !important;
+  overflow:hidden !important;
+}
+
+#online .onlineTabPanel{
+  max-height:42vh !important;
+  overflow:hidden !important;
+}
+
+#online .onlineInput{
+  min-height:0 !important;
+}
+
+#globalMusicWidget{
+  transform:none !important;
+}
+
+
+/* ============================================================
+   V10.6 FIGHTER TAUNT SELECT
+   ------------------------------------------------------------
+   Unlocked fighters can choose their active taunt from the
+   Fighters screen. GREEN supports Default, Go To Sleep, Man of Steel.
+   ============================================================ */
+.tauntSelectWrap{
+  margin:6px auto 0;
+  width:92%;
+  position:relative;
+  z-index:5;
+}
+.tauntSelectLabel{
+  color:#ffd032;
+  font-size:clamp(8px,.7vw,13px);
+  font-weight:1000;
+  text-transform:uppercase;
+  text-align:center;
+  line-height:1.1;
+  margin-bottom:3px;
+}
+.fighterTauntSelect{
+  width:100%;
+  background:#050505;
+  color:#fff;
+  border:2px solid #ffd032;
+  border-radius:7px;
+  padding:5px 7px;
+  font-size:clamp(9px,.82vw,15px);
+  font-weight:900;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.fighterTauntSelect option:disabled{
+  color:#777;
+}
+.card.locked .tauntSelectWrap{
+  display:none;
+}
+
+
+/* ============================================================
+   V10.7 FIGHTER CARD / TAUNT SELECT CLEANUP
+   ------------------------------------------------------------
+   Makes fighter names readable and keeps taunt select inside cards.
+   ============================================================ */
+
+#fightersGrid .card,
+#fighters .card{
+  overflow:hidden !important;
+  padding-bottom:72px !important;
+}
+
+#fightersGrid .card img,
+#fighters .card img{
+  max-height:72% !important;
+  object-fit:contain !important;
+  object-position:center top !important;
+}
+
+#fightersGrid .cardLabel,
+#fighters .cardLabel{
+  position:absolute !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:8px !important;
+  z-index:6 !important;
+  text-align:center !important;
+  font-size:clamp(24px,2.1vw,44px) !important;
+  line-height:1 !important;
+  padding:0 8px !important;
+  text-shadow:3px 3px #000, 0 0 10px #000 !important;
+  pointer-events:none !important;
+}
+
+#fightersGrid .tauntSelectWrap,
+#fighters .tauntSelectWrap{
+  position:absolute !important;
+  left:50% !important;
+  bottom:50px !important;
+  transform:translateX(-50%) !important;
+  width:78% !important;
+  margin:0 !important;
+  z-index:10 !important;
+  background:rgba(0,0,0,.78) !important;
+  border:1px solid rgba(255,210,60,.65) !important;
+  border-radius:8px !important;
+  padding:5px !important;
+}
+
+#fightersGrid .tauntSelectLabel,
+#fighters .tauntSelectLabel{
+  display:none !important;
+}
+
+#fightersGrid .fighterTauntSelect,
+#fighters .fighterTauntSelect{
+  width:100% !important;
+  background:#050505 !important;
+  color:#fff !important;
+  border:2px solid #ffd032 !important;
+  border-radius:7px !important;
+  padding:5px 7px !important;
+  font-size:clamp(10px,.85vw,15px) !important;
+  font-weight:900 !important;
+  text-transform:uppercase !important;
+}
+
+
+/* ============================================================
+   V11.2 CLEAN ROTATING STORE REBUILD
+   ------------------------------------------------------------
+   Uses LOCKERROOM SCREEN only as the background.
+   No old store card CSS. Fixed visible layout.
+   ============================================================ */
+
+#store .frame{position:relative !important;overflow:hidden !important;background:#000 !important}
+#storeBg{
+  position:absolute !important;inset:0 !important;width:100% !important;height:100% !important;object-fit:cover !important;
+  z-index:1 !important;visibility:visible !important;opacity:.86 !important;filter:brightness(.62) contrast(1.08) !important;
+}
+.storeV112Header{
+  position:absolute !important;left:8.5% !important;top:7.5% !important;z-index:50 !important;display:flex !important;
+  align-items:center !important;gap:28px !important;text-transform:uppercase !important;pointer-events:none !important;
+}
+.storeV112Title{
+  color:#dfff00 !important;font-size:clamp(54px,6.4vw,126px) !important;font-weight:1000 !important;line-height:.9 !important;
+  text-shadow:0 0 18px rgba(220,255,0,.85),0 6px 10px #000 !important;
+}
+.storeV112CashLabel{
+  color:#fff !important;font-size:clamp(31px,3.4vw,72px) !important;font-weight:1000 !important;line-height:1 !important;
+  text-shadow:0 6px 9px #000 !important;
+}
+.storeV112Cash{
+  color:#00f060 !important;font-size:clamp(34px,3.7vw,78px) !important;font-weight:1000 !important;line-height:1 !important;
+  text-shadow:0 6px 9px #000 !important;
+}
+.storeV112TauntWord,.storeV112GlovesWord{
+  position:absolute !important;z-index:50 !important;color:#00f060 !important;font-size:clamp(38px,4.2vw,84px) !important;
+  font-weight:1000 !important;line-height:.95 !important;text-transform:uppercase !important;text-shadow:0 6px 9px #000 !important;
+  pointer-events:none !important;
+}
+.storeV112TauntWord{left:8.8% !important;top:28.5% !important}
+.storeV112GlovesWord{left:51.5% !important;top:19% !important;transform:translateX(-50%) !important}
+.storeV112TauntSlot{
+  position:absolute !important;left:8.5% !important;top:37.5% !important;width:24.5% !important;height:37% !important;
+  z-index:55 !important;display:block !important;visibility:visible !important;overflow:visible !important;
+}
+.storeV112GloveSlots{
+  position:absolute !important;left:35.5% !important;top:28.5% !important;width:56% !important;height:32% !important;
+  z-index:55 !important;display:grid !important;grid-template-columns:repeat(3,1fr) !important;gap:2.5% !important;
+  visibility:visible !important;overflow:visible !important;
+}
+.storeV112Item{
+  position:relative !important;width:100% !important;height:100% !important;z-index:60 !important;display:flex !important;
+  flex-direction:column !important;align-items:center !important;justify-content:flex-start !important;overflow:visible !important;
+  cursor:pointer !important;background:rgba(0,0,0,.18) !important;
+}
+.storeV112ItemImage{
+  position:relative !important;width:100% !important;height:64% !important;display:flex !important;align-items:center !important;
+  justify-content:center !important;overflow:visible !important;z-index:61 !important;
+}
+.storeV112TauntSlot .storeV112ItemImage{height:76% !important}
+.storeV112ItemImage img{
+  display:block !important;visibility:visible !important;opacity:1 !important;width:100% !important;height:100% !important;
+  object-fit:contain !important;z-index:62 !important;filter:drop-shadow(0 8px 10px rgba(0,0,0,.8)) !important;
+}
+.storeV112ItemName{
+  color:#e6ff00 !important;width:100% !important;font-size:clamp(20px,2.1vw,44px) !important;font-weight:1000 !important;
+  text-align:center !important;text-transform:uppercase !important;line-height:.96 !important;margin-top:2px !important;
+  text-shadow:0 5px 7px #000,0 0 10px #000 !important;z-index:63 !important;
+}
+.storeV112ItemPrice{
+  color:#fff !important;width:100% !important;font-size:clamp(24px,2.45vw,52px) !important;font-weight:1000 !important;
+  text-align:center !important;line-height:1 !important;margin-top:4px !important;text-shadow:0 5px 7px #000,0 0 10px #000 !important;z-index:63 !important;
+}
+.storeV112Owned{color:#00f060 !important}
+.storeV112Countdown{
+  position:absolute !important;left:50% !important;bottom:20.5% !important;transform:translateX(-50%) !important;z-index:70 !important;
+  color:#fff !important;font-size:clamp(34px,4.25vw,86px) !important;font-weight:500 !important;font-style:italic !important;
+  letter-spacing:.04em !important;text-transform:uppercase !important;white-space:nowrap !important;text-shadow:0 0 14px #fff,0 6px 10px #000 !important;
+  pointer-events:none !important;
+}
+.storeV112Back{
+  position:absolute !important;left:50% !important;bottom:10.2% !important;transform:translateX(-50%) !important;z-index:75 !important;
+  min-width:15.5% !important;height:7.2% !important;border:5px solid #fff !important;border-radius:8px !important;background:rgba(0,0,0,.82) !important;
+  color:#fff !important;font-size:clamp(30px,3.45vw,70px) !important;font-weight:1000 !important;line-height:1 !important;cursor:pointer !important;
+  text-transform:uppercase !important;box-shadow:0 7px 20px rgba(0,0,0,.65) !important;
+}
+.storeV112Back:hover{border-color:#dfff00 !important;color:#dfff00 !important}
+#store .notice{z-index:90 !important}
+#store #globalMusicWidget{z-index:95 !important}
+
+
+/* V11.3 STORE SCREEN + FIGHTER SCREEN POLISH */
+#store .frame{position:relative!important;overflow:hidden!important;background:#000!important}
+#storeBg{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;z-index:1!important;opacity:1!important;visibility:visible!important;filter:none!important}
+.storeV113TopBar{position:absolute!important;left:13.1%!important;top:8.4%!important;width:73.8%!important;height:7.2%!important;z-index:40!important;display:grid!important;grid-template-columns:16% 1fr 32%!important;align-items:center!important;color:#000!important;text-transform:uppercase!important;pointer-events:none!important}
+.storeV113Title{font-size:clamp(34px,3.1vw,66px)!important;font-weight:1000!important;line-height:1!important}
+.storeV113Cash{font-size:clamp(16px,1.45vw,30px)!important;font-weight:1000!important;line-height:1!important;padding-left:18px!important}
+.storeV113Refresh{font-size:clamp(16px,1.45vw,30px)!important;font-style:italic!important;font-weight:500!important;line-height:1!important;text-align:right!important;padding-right:18px!important}
+#storeCountdown{color:#f00000!important;font-weight:700!important}
+.storeV113TauntSlot{position:absolute!important;left:12.4%!important;top:24.5%!important;width:17.2%!important;height:56%!important;z-index:45!important;display:block!important;overflow:visible!important}
+.storeV113GloveSlots{position:absolute!important;left:31.2%!important;top:30.2%!important;width:54.3%!important;height:34%!important;z-index:46!important;display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:3.2%!important;overflow:visible!important}
+.storeV113Item{position:relative!important;width:100%!important;height:100%!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-start!important;overflow:visible!important;cursor:pointer!important;color:#000!important;z-index:50!important}
+.storeV113ItemImage{width:100%!important;height:58%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:visible!important}
+.storeV113TauntSlot .storeV113ItemImage{height:78%!important}
+.storeV113ItemImage img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important;visibility:visible!important;opacity:1!important;filter:drop-shadow(0 5px 7px rgba(0,0,0,.65))!important}
+.storeV113ItemName{width:100%!important;font-size:clamp(17px,1.85vw,38px)!important;font-weight:1000!important;text-align:center!important;text-transform:uppercase!important;line-height:.94!important;color:#000!important;margin-top:4px!important}
+.storeV113ItemPrice{width:100%!important;font-size:clamp(22px,2.25vw,48px)!important;font-weight:1000!important;text-align:center!important;line-height:1!important;color:#000!important;margin-top:5px!important}
+.storeV113Owned{color:#008a20!important}
+.storeV113Back{position:absolute!important;left:50%!important;bottom:10.5%!important;transform:translateX(-50%)!important;z-index:60!important;width:7.5%!important;height:4.1%!important;border:2px solid #fff!important;background:#111!important;color:#fff!important;font-size:clamp(18px,1.7vw,34px)!important;font-weight:1000!important;line-height:1!important;cursor:pointer!important;text-transform:uppercase!important}
+.storeV113Back:hover{border-color:#ffd032!important;color:#ffd032!important}
+#fightersGrid .card,#fighters .card{overflow:hidden!important;padding:0!important;background:rgba(0,0,0,.38)!important;border:4px solid #fff!important}
+#fightersGrid .card img,#fighters .card img{position:absolute!important;left:50%!important;top:0!important;width:115%!important;height:88%!important;max-height:none!important;object-fit:contain!important;object-position:center top!important;transform:translateX(-50%) scale(1.22)!important;transform-origin:center top!important;z-index:1!important}
+#fightersGrid .cardLabel,#fighters .cardLabel{position:absolute!important;left:0!important;right:0!important;bottom:4px!important;z-index:6!important;font-size:clamp(26px,2.25vw,48px)!important;line-height:.9!important;text-align:center!important;color:#fff!important;text-shadow:4px 4px #000,0 0 10px #000!important;pointer-events:none!important}
+#fightersGrid .tauntSelectWrap,#fighters .tauntSelectWrap{position:absolute!important;left:50%!important;bottom:56px!important;transform:translateX(-50%)!important;width:76%!important;margin:0!important;z-index:8!important;background:rgba(0,0,0,.88)!important;border:2px solid #ffd032!important;border-radius:8px!important;padding:5px!important}
+#fightersGrid .tauntSelectLabel,#fighters .tauntSelectLabel{display:none!important}
+#fightersGrid .fighterTauntSelect,#fighters .fighterTauntSelect{width:100%!important;height:34px!important;background:#060606!important;color:#fff!important;border:1px solid #fff!important;border-radius:4px!important;padding:3px 8px!important;font-size:clamp(10px,.85vw,16px)!important;font-weight:1000!important;text-transform:uppercase!important}
+
+
+/* ============================================================
+   V11.4 STORE ALIGNMENT + 60 MINUTE COUNTDOWN FIX
+   ============================================================ */
+
+/* Store top white bar text */
+.storeV113TopBar{
+  left:13.2% !important;
+  top:8.45% !important;
+  width:73.6% !important;
+  height:6.65% !important;
+  grid-template-columns:15% 1fr 30% !important;
+  padding:0 .9% !important;
+  z-index:80 !important;
+}
+
+.storeV113Title{
+  font-size:clamp(32px,3vw,62px) !important;
+  color:#000 !important;
+  display:block !important;
+  opacity:1 !important;
+}
+
+.storeV113Cash{
+  font-size:clamp(15px,1.35vw,28px) !important;
+  color:#000 !important;
+  display:block !important;
+  opacity:1 !important;
+}
+
+.storeV113Refresh{
+  font-size:clamp(15px,1.35vw,28px) !important;
+  color:#000 !important;
+  display:block !important;
+  opacity:1 !important;
+}
+
+#storeCountdown{
+  color:#e60000 !important;
+  display:inline !important;
+  opacity:1 !important;
+}
+
+/* Store item placement on STORE SCREEN.png */
+.storeV113TauntSlot{
+  left:12.6% !important;
+  top:23.6% !important;
+  width:17.8% !important;
+  height:58.5% !important;
+  z-index:70 !important;
+}
+
+.storeV113GloveSlots{
+  left:31.8% !important;
+  top:29.8% !important;
+  width:53.6% !important;
+  height:36.5% !important;
+  gap:2.8% !important;
+  z-index:70 !important;
+}
+
+.storeV113Item{
+  background:transparent !important;
+}
+
+.storeV113ItemImage{
+  height:57% !important;
+}
+
+.storeV113TauntSlot .storeV113ItemImage{
+  height:76% !important;
+}
+
+.storeV113ItemName{
+  font-size:clamp(17px,1.7vw,34px) !important;
+  line-height:.92 !important;
+  color:#000 !important;
+  margin-top:4px !important;
+  text-shadow:none !important;
+}
+
+.storeV113ItemPrice{
+  font-size:clamp(21px,2.05vw,42px) !important;
+  color:#000 !important;
+  margin-top:5px !important;
+  text-shadow:none !important;
+}
+
+.storeV113Owned{
+  color:#008c20 !important;
+}
+
+.storeV113Back{
+  bottom:10.6% !important;
+  width:7.4% !important;
+  height:3.95% !important;
+}
+
+/* Keep the big music widget from covering the shop panel too much */
+#store #globalMusicWidget{
+  transform:scale(.82) !important;
+  transform-origin:bottom right !important;
+}
+
+
+/* ============================================================
+   V11.5 STORE READABILITY + PAY TO REFRESH
+   ============================================================ */
+
+/* Move all top text into the white bar */
+.storeV113TopBar{
+  left:13.1% !important;
+  top:15.3% !important;
+  width:73.8% !important;
+  height:6.5% !important;
+  grid-template-columns:16% 1fr 31% !important;
+  z-index:120 !important;
+  padding:0 1.1% !important;
+  align-items:center !important;
+  color:#000 !important;
+  text-shadow:none !important;
+}
+
+.storeV113Title{
+  color:#000 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  font-size:clamp(34px,3.1vw,66px) !important;
+  text-shadow:none !important;
+}
+
+.storeV113Cash{
+  color:#000 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  font-size:clamp(16px,1.45vw,30px) !important;
+  text-shadow:none !important;
+}
+
+.storeV113Refresh{
+  color:#000 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  font-size:clamp(16px,1.45vw,30px) !important;
+  text-shadow:none !important;
+  text-align:right !important;
+}
+
+#storeCountdown{
+  color:#e80000 !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  display:inline !important;
+  font-weight:900 !important;
+  text-shadow:none !important;
+}
+
+/* Left-side taunt sits on dark background, so make text white */
+.storeV113TauntSlot .storeV113ItemName,
+.storeV113TauntSlot .storeV113ItemPrice{
+  color:#fff !important;
+  text-shadow:0 4px 8px #000, 0 0 12px #000 !important;
+}
+
+.storeV113TauntSlot .storeV113Owned{
+  color:#00d64f !important;
+  text-shadow:0 4px 8px #000, 0 0 12px #000 !important;
+}
+
+/* Glove panel text stays black for the light display area */
+.storeV113GloveSlots .storeV113ItemName,
+.storeV113GloveSlots .storeV113ItemPrice{
+  color:#000 !important;
+  text-shadow:none !important;
+}
+
+.storeV113GloveSlots .storeV113Owned{
+  color:#008f27 !important;
+  text-shadow:none !important;
+}
+
+/* Buttons */
+.storeV115RefreshBtn{
+  position:absolute !important;
+  left:50% !important;
+  bottom:15.4% !important;
+  transform:translateX(-50%) !important;
+  z-index:130 !important;
+  min-width:18% !important;
+  height:4.2% !important;
+  border:2px solid #ffd032 !important;
+  background:rgba(0,0,0,.88) !important;
+  color:#ffd032 !important;
+  font-size:clamp(14px,1.25vw,26px) !important;
+  font-weight:1000 !important;
+  line-height:1 !important;
+  cursor:pointer !important;
+  text-transform:uppercase !important;
+  box-shadow:0 5px 14px rgba(0,0,0,.7) !important;
+}
+
+.storeV115RefreshBtn:hover{
+  background:#ffd032 !important;
+  color:#000 !important;
+}
+
+.storeV113Back{
+  bottom:10.3% !important;
+  z-index:130 !important;
+}
+
+/* Small notice location for store purchase messages */
+#store .notice{
+  z-index:150 !important;
+}
+
+
+/* ============================================================
+   V11.6 STORE TOP BAR + ITEM TEXT TIGHTENING
+   ============================================================ */
+
+/* Keep STORE, PLAYER CASH, and REFRESH separated inside white bar */
+.storeV113TopBar{
+  left:13.1% !important;
+  top:15.25% !important;
+  width:73.8% !important;
+  height:6.7% !important;
+  display:grid !important;
+  grid-template-columns:18% 46% 36% !important;
+  padding:0 1.15% !important;
+  align-items:center !important;
+  column-gap:0 !important;
+}
+
+.storeV113Title{
+  font-size:clamp(31px,2.85vw,58px) !important;
+  letter-spacing:.01em !important;
+  text-align:left !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+}
+
+.storeV113Cash{
+  font-size:clamp(15px,1.32vw,27px) !important;
+  text-align:left !important;
+  padding-left:22px !important;
+  white-space:nowrap !important;
+  overflow:hidden !important;
+}
+
+.storeV113Refresh{
+  font-size:clamp(15px,1.28vw,26px) !important;
+  text-align:right !important;
+  padding-right:8px !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+}
+
+#storeCountdown{
+  font-size:1em !important;
+  white-space:nowrap !important;
+}
+
+/* Better item alignment inside store slots */
+.storeV113TauntSlot{
+  left:12.35% !important;
+  top:24.2% !important;
+  width:18.2% !important;
+  height:56.5% !important;
+}
+
+.storeV113GloveSlots{
+  left:31.9% !important;
+  top:29.4% !important;
+  width:53.9% !important;
+  height:36.9% !important;
+  gap:2.2% !important;
+}
+
+.storeV113ItemName{
+  font-size:clamp(16px,1.55vw,32px) !important;
+  line-height:.94 !important;
+  letter-spacing:.01em !important;
+}
+
+.storeV113ItemPrice{
+  font-size:clamp(20px,1.95vw,40px) !important;
+  line-height:1 !important;
+  margin-top:4px !important;
+}
+
+.storeV113TauntSlot .storeV113ItemName{
+  font-size:clamp(17px,1.6vw,34px) !important;
+  line-height:.9 !important;
+  padding:0 2% !important;
+}
+
+.storeV113TauntSlot .storeV113ItemPrice{
+  font-size:clamp(22px,2.05vw,42px) !important;
+}
+
+.storeV115RefreshBtn{
+  bottom:15.35% !important;
+  min-width:17.8% !important;
+  height:4.15% !important;
+  font-size:clamp(13px,1.12vw,24px) !important;
+}
+
+.storeV113Back{
+  bottom:10.25% !important;
+}
+
+
+/* ============================================================
+   V11.7 COMING SOON GLOVES
+   ============================================================ */
+
+.card.comingSoon{
+  opacity:.62 !important;
+  filter:grayscale(.25) brightness(.82) !important;
+  cursor:not-allowed !important;
+}
+
+.card.comingSoon .cardLabel{
+  color:#ddd !important;
+}
+
+.cardComingSoonText{
+  position:absolute !important;
+  left:50% !important;
+  top:50% !important;
+  transform:translate(-50%,-50%) rotate(-8deg) !important;
+  z-index:12 !important;
+  color:#ffd032 !important;
+  font-size:clamp(20px,2vw,42px) !important;
+  font-weight:1000 !important;
+  text-transform:uppercase !important;
+  text-align:center !important;
+  line-height:.95 !important;
+  text-shadow:3px 3px #000, 0 0 12px #000 !important;
+  pointer-events:none !important;
+}
+
+.storeComingSoon{
+  color:#999 !important;
+  font-size:clamp(17px,1.65vw,34px) !important;
+}
+
+
+/* ============================================================
+   V11.8 LOCKED ITEM TOOLTIP POLISH
+   ============================================================ */
+.card[data-tip], .shopItem[data-tip], .fighterCard[data-tip] {
+  position: relative !important;
+}
+.card[data-tip]::after,
+.shopItem[data-tip]::after,
+.fighterCard[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  transform: translateX(-50%);
+  min-width: 180px;
+  max-width: 280px;
+  background: rgba(0,0,0,0.95);
+  color: #fff;
+  border: 2px solid #ffd032;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: clamp(12px, 1vw, 16px);
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(0,0,0,0.45);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
+  transition: opacity .12s ease;
+  white-space: normal;
+}
+.card[data-tip]::before,
+.shopItem[data-tip]::before,
+.fighterCard[data-tip]::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 2px);
+  transform: translateX(-50%);
+  border: 8px solid transparent;
+  border-top-color: #ffd032;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 998;
+  transition: opacity .12s ease;
+}
+.card[data-tip]:hover::after, .card[data-tip]:hover::before,
+.shopItem[data-tip]:hover::after, .shopItem[data-tip]:hover::before,
+.fighterCard[data-tip]:hover::after, .fighterCard[data-tip]:hover::before {
+  opacity: 1;
+}
 
 </style>
 </head>
 <body>
-<section id="start" class="screen active"><div class="frame"><img id="startBg" class="bg" alt="Counter Boxing"><button class="start-btn" onclick="cbStartGame()">Start</button></div></section>
+<section id="start" class="screen active"><div class="frame"><img id="startBg" class="bg" alt="Counter Boxing"><button class="start-btn" onclick="startMenuMusic();show('menu')">Start</button></div></section>
 <section id="menu" class="screen"><div class="frame"><img id="menuBg" class="bg" alt="Main menu"><div class="clean-menu"><button class="ui-btn" onclick="show('careerStart')">Career Mode</button><button class="ui-btn" onclick="show('online')">Online Mode</button><button class="ui-btn" onclick="showLocker()">Locker Room</button><button class="ui-btn" onclick="show('options')">Options</button></div></div></section>
 <section id="careerStart" class="screen"><div class="frame"><img id="careerStartBg" class="bg" alt="Career menu"><div class="clean-menu"><button class="ui-btn" onclick="selectNewGame()">New Run</button><button class="ui-btn" onclick="continueCareer()">Continue Run</button><button class="ui-btn" onclick="show('menu')">Back</button></div></div></section>
 <section id="careerIntro" class="screen"><div class="frame"><img id="careerIntroBg" class="bg" alt="Career intro"><img id="careerIntroFrame" class="careerIntroFrame" alt="CB Frame"><div id="careerIntroWords" class="careerIntroText">Coach said \"take my time and look for a counter\", Seems easy enough!</div><button class="start-btn careerIntroBtn" onclick="startCareerFight()">Continue</button></div></section>
@@ -921,52 +1567,17 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
 <section id="gloves" class="screen"><div class="frame"><img id="glovesBg" class="bg" alt="gloves"><button class="top-back" onclick="showLocker()">BACK</button><div id="glovesGrid" class="grid"></div></div></section>
 
 <section id="store" class="screen">
-  <div class="frame">
-    <img id="storeBg" class="bg" alt="Store Background">
-    <img id="storeHero" class="storeHero" alt="Store Hero">
-    <button class="fight-menu" onclick="backFromStore()">BACK</button>
-    <div class="storeHeader">STORE</div>
-
-    <div id="gloveBand" class="storeBand">
-      <div class="bandLabel">GLOVES</div>
-      <div class="bandContent">
-        <div class="shopItem" onclick="showNotice('locker','American Flag gloves coming soon')">
-          <img id="storeFlagImg" alt="American Flag gloves">
-          <div class="shopText">
-            <div class="name">AMERICAN FLAG</div>
-            <div class="price">$2500</div>
-          </div>
-        </div>
-        <div class="shopItem" onclick="showNotice('locker','Flame On gloves coming soon')">
-          <img id="storeFlameImg" alt="Flame On gloves">
-          <div class="shopText">
-            <div class="name">FLAME ON</div>
-            <div class="price">$2500</div>
-          </div>
-        </div>
-      </div>
+  <div class="frame" id="storeFrame">
+    <img id="storeBg" class="bg" alt="STORE SCREEN">
+    <div class="storeV113TopBar">
+      <div class="storeV113Title">STORE</div>
+      <div class="storeV113Cash">PLAYER CASH: <span id="storeCashAmount">$0</span></div>
+      <div class="storeV113Refresh">REFRESHES IN <span id="storeCountdown">3H 00M</span></div>
     </div>
-
-    <div id="tauntBand" class="storeBand">
-      <div class="bandLabel">TAUNTS</div>
-      <div class="bandContent">
-        <div class="tauntItem" onclick="buyItem(STORE_ITEMS[0])">
-          <img id="storeSleepImg" alt="Go To Sleep taunt">
-          <div class="tauntText">
-            <div class="bar">GO TO SLEEP</div>
-            <div class="price">$5000</div>
-          </div>
-        </div>
-        <div class="tauntItem" onclick="buyItem(STORE_ITEMS[1])">
-          <img id="storeSteelImg" alt="Man Of Steel taunt">
-          <div class="tauntText">
-            <div class="bar">MAN OF STEEL</div>
-            <div class="price">$5000</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <div id="storeTauntSlot" class="storeV113TauntSlot"></div>
+    <div id="storeGloveSlots" class="storeV113GloveSlots"></div>
+    <button class="storeV115RefreshBtn" id="storeRefreshNowBtn" onclick="payToRefreshStoreV115()">REFRESH NOW $10,000</button>
+    <button class="storeV113Back" onclick="backFromStore()">BACK</button>
     <div id="storeNotice" class="notice"></div>
   </div>
 </section>
@@ -982,10 +1593,10 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
     <img id="onlineBg" class="bg" alt="Online Mode">
     <button class="top-back" onclick="show('menu')">BACK</button>
 
-    <div class="onlinePanel v10">
+    <div class="onlinePanel">
       <div class="onlineTitle">Online Mode</div>
 
-      <div class="onlineBox">
+      <div class="onlineBox onlineRoomBox">
         <div class="onlineSubTitle">Room Setup</div>
 
         <div class="onlineTabs">
@@ -993,35 +1604,25 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
           <button id="onlineJoinTab" class="onlineTab" onclick="showOnlineTab('join')">Join Room</button>
         </div>
 
-        <div id="onlineCreatePopup" class="onlinePopup active">
-          <div class="onlinePopupTitle">Create Room</div>
+        <div id="onlineCreatePanel" class="onlineTabPanel active">
+          <div class="onlinePanelTitle">Create Room</div>
 
           <label class="onlineInputLabel">Player Name</label>
           <input id="onlineCreatePlayerName" class="onlineInput" maxlength="16" placeholder="Player Name" value="PLAYER">
-
-          <label class="onlineInputLabel">Select Ring</label>
-          <select id="onlineRingSelect" class="onlineSelect">
-            <option value="RING1">Ring 1</option>
-            <option value="RING2">Ring 2</option>
-            <option value="RING3">Ring 3</option>
-            <option value="RING4" selected>Ring 4</option>
-            <option value="RING5">Ring 5</option>
-            <option value="RING6">Ring 6</option>
-          </select>
 
           <label class="onlineInputLabel">Cash Wager</label>
           <input id="onlineCreateWager" class="onlineInput" type="number" min="0" max="1000" placeholder="Cash Wager">
 
           <label class="onlineInputLabel">Room Code</label>
-          <input id="onlineCreateRoomCode" class="onlineInput" maxlength="8" placeholder="GENERATE CODE" readonly>
+          <input id="onlineCreateRoomCode" class="onlineInput" maxlength="8" placeholder="Generate Code" readonly>
 
-          <button class="onlineBtn" style="width:100%;margin-top:2%" onclick="createOnlineRoom()">Create Room</button>
+          <button class="onlineBtn full" onclick="createOnlineRoomFromTab()">Create Room</button>
 
-          <div class="onlineHint">Your Cash: <strong><span id="onlineCash">0</span></strong> | Max wager: <strong>$1000</strong> | Wager cannot exceed your cash.</div>
+          <div class="onlineCashNote">Your Cash: <span id="onlineCashCreate">0</span> | Max wager: $1000 | Wager cannot exceed your cash.</div>
         </div>
 
-        <div id="onlineJoinPopup" class="onlinePopup">
-          <div class="onlinePopupTitle">Join Room</div>
+        <div id="onlineJoinPanel" class="onlineTabPanel">
+          <div class="onlinePanelTitle">Join Room</div>
 
           <label class="onlineInputLabel">Player Name</label>
           <input id="onlineJoinPlayerName" class="onlineInput" maxlength="16" placeholder="Player Name" value="PLAYER">
@@ -1029,20 +1630,20 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
           <label class="onlineInputLabel">Cash Wager</label>
           <input id="onlineJoinWager" class="onlineInput" type="number" min="0" max="1000" placeholder="Cash Wager">
 
-          <label class="onlineInputLabel">ENTER CODE</label>
-          <input id="onlineJoinRoomCode" class="onlineInput" maxlength="8" placeholder="ENTER CODE">
+          <label class="onlineInputLabel">Enter Room Code</label>
+          <input id="onlineJoinRoomCode" class="onlineInput" maxlength="8" placeholder="Enter Code">
 
-          <button class="onlineBtn dark" style="width:100%;margin-top:2%" onclick="joinOnlineRoom()">Join Room</button>
+          <button class="onlineBtn dark full" onclick="joinOnlineRoomFromTab()">Join Room</button>
 
-          <div class="onlineHint">Your Cash: <strong><span id="onlineCashJoin">0</span></strong> | Max wager: <strong>$1000</strong> | Wager cannot exceed your cash.</div>
+          <div class="onlineCashNote">Your Cash: <span id="onlineCashJoin">0</span> | Max wager: $1000 | Wager cannot exceed your cash.</div>
         </div>
 
-        <!-- Hidden compatibility inputs used by existing online functions -->
+        <!-- Hidden compatibility inputs used by the existing online code. -->
         <input id="onlinePlayerName" type="hidden" value="PLAYER">
         <input id="onlineWager" type="hidden" value="0">
         <input id="onlineRoomCode" type="hidden" value="">
 
-        <div id="onlineStatus" class="onlineStatus">Create or join a room. Max wager: $1000. Winner collects the full purse.</div>
+        <div id="onlineStatus" class="onlineStatus">Create a room or join one. Max wager: $1000. Winner collects the full purse.</div>
       </div>
 
       <div class="onlineBox">
@@ -1058,7 +1659,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
     <div id="onlineNotice" class="notice"></div>
   </div>
 </section>
-<section id="career" class="screen"><div class="frame" id="fightFrame"><img id="ringScene" class="bg" alt="Ring"><img id="opponentScene" class="opponentLayer" alt="Opponent"><img id="gloveScene" class="gloveLayer" alt="Gloves"><div class="hud"><div class="round"><small>ROUND</small><span id="round">1</span></div><div class="panel player"><div class="title" id="youTitle">YOU</div><div class="hearts" id="youHearts"></div><div class="row">STREAK<strong id="streak">0</strong></div><div class="row">WINS<strong id="wins">0</strong></div></div><div class="panel enemy"><div class="title" id="enemyName">OPPONENT</div><div class="hearts" id="enemyHearts"></div><div class="row">FIGHT<strong id="fightNum">1 OF 6</strong></div></div><div class="status" id="status">Choose your move.</div><div class="actions"><button class="move jab" onclick="play('jab')">Jab</button><button class="move hook" onclick="play('hook')">Hook</button><button class="move uppercut" onclick="play('uppercut')">Uppercut</button><button class="move block" onclick="play('block')">Block</button><button class="move taunt" onclick="play('taunt')">Taunt</button></div><button class="sound" id="soundBtn" onclick="toggleSound()">🔊 Sound</button><button class="fightMusic" id="fightMusicBtn" onclick="toggleFightMusic()">🎵 Music</button><button class="fight-menu" onclick="backToMenu()">MENU</button><div id="flash" class="flash"></div><div id="koOverlay" class="koOverlay"><div class="koText">K.O.</div><button id="nextFightBtn" class="nextBtn" onclick="continueAfterKO()">Next Fight</button></div>
+<section id="career" class="screen"><div class="frame" id="fightFrame"><img id="ringScene" class="bg" alt="Ring"><img id="opponentScene" class="opponentLayer" alt="Opponent"><img id="gloveScene" class="gloveLayer" alt="Gloves"><div class="hud"><div class="round"><small>ROUND</small><span id="round">1</span></div><div class="panel player"><div class="title" id="youTitle">YOU</div><div class="hearts" id="youHearts"></div><div class="row">STREAK<strong id="streak">0</strong></div><div class="row">WINS<strong id="wins">0</strong></div></div><div class="panel enemy"><div class="title" id="enemyName">OPPONENT</div><div class="hearts" id="enemyHearts"></div><div class="row">FIGHT<strong id="fightNum">1 OF 6</strong></div></div><div class="status" id="status">Choose your move.</div><div class="actions"><button class="move jab" onclick="play('jab')">Jab</button><button class="move hook" onclick="play('hook')">Hook</button><button class="move uppercut" onclick="play('uppercut')">Uppercut</button><button class="move block" onclick="play('block')">Block</button><button class="move taunt" onclick="play('taunt')">Taunt</button></div><button class="sound" id="soundBtn" onclick="toggleSound()">🔊 Sound</button><button class="fight-menu" onclick="backToMenu()">MENU</button><div id="flash" class="flash"></div><div id="koOverlay" class="koOverlay"><div class="koText">K.O.</div><button id="nextFightBtn" class="nextBtn" onclick="continueAfterKO()">Next Fight</button></div>
 <div id="scoreOverlay" class="scoreOverlay">
   <div class="scoreBox">
     <div class="scoreTitle">Career Run Over</div>
@@ -1083,7 +1684,7 @@ html,body{margin:0;background:#000;color:#fff;font-family:Arial,Helvetica,sans-s
   </div>
 </div>
 
-<div id="buildStamp">Created by gamingwitfame [v10.5]</div>
+<div id="buildStamp">Created by gamingwitfame [v11.8]</div>
 <script>
 const ASSET_DIR='images/';
 const EXTS=['png','jpg','jpeg','webp'];
@@ -1144,9 +1745,7 @@ function menuTrackCandidates(track){
   return files;
 }
 
-function isMusicScreen(id){
-  return ['menu','careerStart','careerIntro','locker','fighters','gloves','store','options','howto','online','championRoom'].includes(id);
-}
+function isMusicScreen(id){return ['start','menu','careerStart','careerIntro','locker','fighters','gloves','store','options','howto','online','championRoom'].includes(id);}
 
 function updateMusicUI(){
   const track = MENU_TRACKS[menuMusicIndex] || MENU_TRACKS[0];
@@ -1231,6 +1830,13 @@ let hp=MAX,ehp=MAX,round=1,fight=1,wins=state.wins||0,losses=state.losses||0,str
 
 
 
+
+/* V10.3 MIGRATION: GREEN FIGHTER ALWAYS UNLOCKED */
+if(!state.unlockedFighters.includes('GREEN')){
+  state.unlockedFighters.push('GREEN');
+  localStorage.setItem(SAVE_KEY, JSON.stringify(state));
+}
+
 /* SAFE SAVE MIGRATION */
 if(!state.unlockedGloves.includes('BLACK')){
   state.unlockedGloves.push('BLACK');
@@ -1240,13 +1846,30 @@ if(!state.unlockedGloves.includes('BLACK')){
 let currentOpponent=0,champ=state.champ||false,pPower=false,ePower=false,locked=false,soundOn=true,audioCtx=null,audioUnlocked=false,idleTimer=null,pendingContinue=false,championChallenges=[],returnToChampionRoom=false;
 function $(id){return document.getElementById(id)}
 function candidateFiles(bases){const out=[];bases.forEach(base=>EXTS.forEach(ext=>out.push(ASSET_DIR+base+'.'+ext)));return out}
-function setImg(el, bases){const files=Array.isArray(bases)?candidateFiles(bases):candidateFiles([bases]);let i=0;el.onerror=()=>{i++;if(i<files.length)el.src=files[i];else el.onerror=null};el.src=files[0];}
+function setImg(el, bases){
+  if(!el) return;
+  const files=Array.isArray(bases)?candidateFiles(bases):candidateFiles([bases]);
+  let i=0;
+  el.style.visibility='hidden';
+  el.onerror=()=>{
+    i++;
+    if(i<files.length){
+      el.src=files[i];
+    }else{
+      el.onerror=null;
+      el.removeAttribute('src');
+      el.style.visibility='hidden';
+    }
+  };
+  el.onload=()=>{el.style.visibility='visible';};
+  el.src=files[0];
+}
 function defaultState(){return{cash:0,wins:0,losses:0,titleDefenses:0,onlineWins:0,onlineLosses:0,champ:false,selectedFighter:'GREEN',selectedGloves:'GREEN',selectedTaunt:'DEFAULT',unlockedFighters:['GREEN'],unlockedGloves:['GREEN','BLACK'],ownedTaunts:[]}}
 function loadState(){try{return Object.assign(defaultState(),JSON.parse(localStorage.getItem(SAVE_KEY))||{})}catch{return defaultState()}}
 function saveState(){state.cash=Math.max(0,state.cash||0);state.wins=wins;state.losses=losses;state.titleDefenses=titleDefenses;state.champ=champ;localStorage.setItem(SAVE_KEY,JSON.stringify(state));render();}
 function selectedFighterData(){return FIGHTERS.find(f=>f.id===state.selectedFighter)||FIGHTERS[0]}
 function activeFighter(){return FIGHTERS[currentOpponent]||FIGHTERS[0]}
-function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');render();if(typeof updateMusicUI==='function')updateMusicUI();if(typeof updateFightMusicButton==='function')updateFightMusicButton();if(id==='online') setTimeout(()=>loadOnlineLeaderboard(),100);}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');render();if(typeof updateMusicUI==='function')updateMusicUI();if(id==='online') setTimeout(()=>loadOnlineLeaderboard(),100);}
 function showNotice(which,text){const id=which==='online'?'onlineNotice':'lockerNotice';const n=$(id);if(!n)return;n.textContent=text;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),1500)}
 function showLocker(){show('locker');renderLocker();}
 function renderLocker(){let bases=SCREEN_BASES.locker;const ownedTaunt=STORE_ITEMS.find(i=>i.id===state.selectedTaunt && state.ownedTaunts.includes(i.id));if(ownedTaunt) bases=[ownedTaunt.locker]; else if(state.unlockedFighters.includes(state.selectedFighter)) bases=[state.selectedFighter+' LOCKER ROOM']; setImg($('lockerBg'), bases); $('fighterLockText').textContent=champ?'Unlocked':'Win Belt';}
@@ -1351,7 +1974,7 @@ function beats(a,b){return(a==='jab'&&b==='uppercut')||(a==='uppercut'&&b==='hoo
 function pow(dmg,who){if(dmg<=0)return dmg;if(who==='p'&&pPower){pPower=false;return dmg*2}if(who==='e'&&ePower){ePower=false;return dmg*2}return dmg}
 function resetRoundState(){hp=MAX;ehp=MAX;round=1;pPower=false;ePower=false}
 function resetCareerLadder(){fight=1;currentOpponent=0;champ=false;streak=0;resetRoundState()}
-async function play(p){if(locked||pendingContinue)return;locked=true;setButtons(true);await unlockAudio();const c=cpu();let playerDamage=0,opponentDamage=0,sceneCard='idle',msg='',sh='',fl='';bell();if(p==='taunt'&&c==='taunt'){pPower=true;ePower=true;sceneCard='draw';msg='Double taunt! Both fighters get a power boost.';cheer();fl='gold'}else if(p==='block'&&c==='block'){sceneCard='draw';msg='Both fighters block. Reset.';blockSound()}else if(p==='taunt'&&c==='block'){pPower=true;sceneCard='playerTaunt';msg='Taunt success! Your next hit does double.';cheer();fl='gold'}else if(c==='taunt'&&p==='block'){ePower=true;sceneCard='opponentTaunt';msg=`${activeFighter().name} taunt success. Their next hit does double.`;cheer();fl='gold'}else if(p==='taunt'){playerDamage=4;sceneCard='playerHurt';msg='Bad taunt! You get punished for 4 hearts.';sh='bigShake';fl='red';punchSound()}else if(c==='taunt'){opponentDamage=pow(2,'p');sceneCard='opponentHurt';msg=`You catch ${activeFighter().name} taunting!`;sh='shake';fl='white';punchSound()}else if(p==='block'){sceneCard='playerBlock';if(c==='jab'){msg='Perfect block. Jab stopped.';blockSound()}else{playerDamage=pow(1,'e');msg='You block, but still take 1 heart from the heavier attack.';blockSound();sh='shake'}}else if(c==='block'){sceneCard='opponentBlock';if(p==='jab'){msg=`${activeFighter().name} blocks your Jab.`;blockSound()}else{opponentDamage=pow(1,'p');msg=`${activeFighter().name} blocks, but still takes 1 heart.`;blockSound();sh='shake'}}else if(p===c){playerDamage=pow(1,'e');opponentDamage=pow(1,'p');sceneCard='draw';msg='Same move. Both fighters take 1 heart.';blockSound();sh='shake'}else if(beats(p,c)){opponentDamage=pow(2,'p');sceneCard='opponentHurt';msg=`Counter lands! ${activeFighter().name} loses ${opponentDamage} hearts.`;sh='shake';fl='white';punchSound()}else{playerDamage=pow(2,'e');sceneCard='playerHurt';msg=`${activeFighter().name} counters you! You lose ${playerDamage} hearts.`;sh='bigShake';fl='red';punchSound()}hp=Math.max(0,hp-playerDamage);ehp=Math.max(0,ehp-opponentDamage);if(hp<=0&&ehp<=0){losses++;msg='Double K.O. Ladder resets.';koSound();setScene('draw',msg,'bigShake','white',false);resetCareerLadder();saveState();openScoreSubmit();return}if(hp<=0){const winnerName=activeFighter().name;losses++;msg=`K.O. ${winnerName} beat you. Ladder resets.`;koSound();setScene('playerHurt',msg,'bigShake','red',false);resetCareerLadder();saveState();openScoreSubmit();return}if(ehp<=0){const defeatedName=activeFighter().name;const defeatedIndex=currentOpponent;wins++;state.cash=(state.cash||0)+500;koSound();if(champ){streak+=2;const purse=nextDefensePurse();titleDefenses++;state.cash+=purse;if(titleDefenses>=6&&!state.unlockedGloves.includes('GOLD'))state.unlockedGloves.push('GOLD');msg=`K.O. ${defeatedName} defeated. Title defense won! +$${purse}`;setScene('ko',msg,'shake','white',false);resetRoundState();saveState();returnToChampionRoom=true;showKO('Champion Room');return}if(fight===FIGHTERS.length){champ=true;streak+=2;['GREEN','BLUE','RED','PURPLE','WHITE','GOLD'].forEach(f=>{if(!state.unlockedFighters.includes(f))state.unlockedFighters.push(f)});['GREEN','BLUE','RED','PINK'].forEach(g=>{if(!state.unlockedGloves.includes(g))state.unlockedGloves.push(g)});msg=`K.O. ${defeatedName} defeated. You are the Champion!`;setScene('ko',msg,'shake','gold',false);resetRoundState();saveState();returnToChampionRoom=true;showKO('Champion Room');renderLocker();return}streak++;const nextIndex=Math.min(defeatedIndex+1,FIGHTERS.length-1);const nextName=FIGHTERS[nextIndex].name;msg=`K.O. ${defeatedName} defeated! Next opponent: ${nextName}!`;setScene('ko',msg,'shake','white',false);fight++;currentOpponent=nextIndex;resetRoundState();saveState();showKO('Next Fight');return}round++;render();setScene(sceneCard,msg,sh,fl,true)}
+async function play(p){if(locked||pendingContinue)return;locked=true;setButtons(true);await unlockAudio();const c=cpu();let playerDamage=0,opponentDamage=0,sceneCard='idle',msg='',sh='',fl='';bell();if(p==='taunt'&&c==='taunt'){pPower=true;ePower=true;sceneCard='draw';msg='Double taunt! Both fighters get a power boost.';cheer();fl='gold'}else if(p==='block'&&c==='block'){sceneCard='draw';msg='Both fighters block. Reset.';blockSound()}else if(p==='taunt'&&c==='block'){pPower=true;sceneCard='playerTaunt';msg='Taunt success! Your next hit does double.';cheer();fl='gold'}else if(c==='taunt'&&p==='block'){ePower=true;sceneCard='opponentTaunt';msg=`${activeFighter().name} taunt success. Their next hit does double.`;cheer();fl='gold'}else if(p==='taunt'){playerDamage=4;sceneCard='playerHurt';msg='Bad taunt! You get punished for 4 hearts.';sh='bigShake';fl='red';punchSound()}else if(c==='taunt'){opponentDamage=pow(2,'p');sceneCard='opponentHurt';msg=`You catch ${activeFighter().name} taunting!`;sh='shake';fl='white';punchSound()}else if(p==='block'){sceneCard='playerBlock';if(c==='jab'){msg='Perfect block. Jab stopped.';blockSound()}else{playerDamage=pow(1,'e');msg='You block, but still take 1 heart from the heavier attack.';blockSound();sh='shake'}}else if(c==='block'){sceneCard='opponentBlock';if(p==='jab'){msg=`${activeFighter().name} blocks your Jab.`;blockSound()}else{opponentDamage=pow(1,'p');msg=`${activeFighter().name} blocks, but still takes 1 heart.`;blockSound();sh='shake'}}else if(p===c){playerDamage=pow(1,'e');opponentDamage=pow(1,'p');sceneCard='draw';msg='Same move. Both fighters take 1 heart.';blockSound();sh='shake'}else if(beats(p,c)){opponentDamage=pow(2,'p');sceneCard='opponentHurt';msg=`Counter lands! ${activeFighter().name} loses ${opponentDamage} hearts.`;sh='shake';fl='white';punchSound()}else{playerDamage=pow(2,'e');sceneCard='playerHurt';msg=`${activeFighter().name} counters you! You lose ${playerDamage} hearts.`;sh='bigShake';fl='red';punchSound()}hp=Math.max(0,hp-playerDamage);ehp=Math.max(0,ehp-opponentDamage);if(hp<=0&&ehp<=0){losses++;msg='Double K.O. Ladder resets.';koSound();setScene('draw',msg,'bigShake','white',false);resetCareerLadder();saveState();openScoreSubmit();return}if(hp<=0){const winnerName=activeFighter().name;losses++;msg=`K.O. ${winnerName} beat you. Ladder resets.`;koSound();setScene('playerHurt',msg,'bigShake','red',false);resetCareerLadder();saveState();openScoreSubmit();return}if(ehp<=0){const defeatedName=activeFighter().name;const defeatedIndex=currentOpponent;const defeatedId=activeFighter().id;wins++;state.cash=(state.cash||0)+500;if(!state.unlockedFighters.includes(defeatedId)){state.unlockedFighters.push(defeatedId);}koSound();if(champ){streak+=2;const purse=nextDefensePurse();titleDefenses++;state.cash+=purse;if(titleDefenses>=6&&!state.unlockedGloves.includes('GOLD'))state.unlockedGloves.push('GOLD');msg=`K.O. ${defeatedName} defeated. Title defense won! +$${purse}`;setScene('ko',msg,'shake','white',false);resetRoundState();saveState();returnToChampionRoom=true;showKO('Champion Room');return}if(fight===FIGHTERS.length){champ=true;streak+=2;if(!state.unlockedGloves.includes('GOLD'))state.unlockedGloves.push('GOLD');['GREEN','BLUE','RED','PINK'].forEach(g=>{if(!state.unlockedGloves.includes(g))state.unlockedGloves.push(g)});msg=`K.O. ${defeatedName} defeated. You are the Champion!`;setScene('ko',msg,'shake','gold',false);resetRoundState();saveState();returnToChampionRoom=true;showKO('Champion Room');renderLocker();return}streak++;const nextIndex=Math.min(defeatedIndex+1,FIGHTERS.length-1);const nextName=FIGHTERS[nextIndex].name;msg=`K.O. ${defeatedName} defeated! Next opponent: ${nextName}!`;setScene('ko',msg,'shake','white',false);fight++;currentOpponent=nextIndex;resetRoundState();saveState();showKO('Next Fight');return}round++;render();setScene(sceneCard,msg,sh,fl,true)}
 function showKO(buttonText){pendingContinue=true;locked=true;setButtons(true);$('nextFightBtn').textContent=buttonText;setTimeout(()=>$('koOverlay').classList.add('show'),650)}
 function continueAfterKO(){ $('koOverlay').classList.remove('show'); if(returnToChampionRoom){returnToChampionRoom=false; showChampionRoom(); bell(); return;} loadFightIdle(); pendingContinue=false; locked=false; setButtons(false); render(); bell(); }
 function continueCareer(){if(champ){showChampionRoom();return;}show('careerIntro');setImg($('careerIntroBg'), SCREEN_BASES.careerStart);typeCareerWords();}
@@ -3069,8 +3692,7 @@ async function createOnlineRoom(){
       hostName:name,
       hostGloves:state.selectedGloves || 'GREEN',
       hostFighter:state.selectedFighter || 'GREEN',
-      hostWager:paid,
-      ring:onlineSelectedRing()
+      hostWager:paid
     });
 
     onlineRole = 'host';
@@ -3345,65 +3967,69 @@ continueAfterKO = function(){
 
 
 /* ============================================================
-   V10 MUSIC BUTTON + ONLINE TWO TAB FORM
+   V10.1 ONLINE TAB FIX - NO RING CHOICE
+   ------------------------------------------------------------
+   Fixes Create / Join tabs and keeps the existing working
+   online wager/fight code by syncing each tab into the hidden
+   compatibility inputs used by the original functions.
    ============================================================ */
 
-function updateFightMusicButton(){
-  const btn = $('fightMusicBtn');
-  if(!btn) return;
-  const playing = !!(menuMusicAudio && !menuMusicAudio.paused);
-  btn.textContent = playing ? '🎵 Music' : '🎵 Muted';
-}
-
-function toggleFightMusic(){
-  ensureMenuMusic();
-  if(menuMusicAudio && !menuMusicAudio.paused){
-    menuMusicAudio.pause();
-    menuMusicOn = false;
-  }else{
-    menuMusicOn = true;
-    startMenuMusic();
-  }
-  updateMusicUI();
-  updateFightMusicButton();
-}
-
-
 function showOnlineTab(tab){
-  const isCreate = tab === 'create';
-  if($('onlineCreateTab')) $('onlineCreateTab').classList.toggle('active', isCreate);
-  if($('onlineJoinTab')) $('onlineJoinTab').classList.toggle('active', !isCreate);
-  if($('onlineCreatePopup')) $('onlineCreatePopup').classList.toggle('active', isCreate);
-  if($('onlineJoinPopup')) $('onlineJoinPopup').classList.toggle('active', !isCreate);
-  syncOnlineCashDisplays();
-  setOnlineStatus(isCreate ? 'Create a room and share the code.' : 'Enter a room code to join.');
+  const create = tab === 'create';
+
+  if($('onlineCreateTab')) $('onlineCreateTab').classList.toggle('active', create);
+  if($('onlineJoinTab')) $('onlineJoinTab').classList.toggle('active', !create);
+
+  if($('onlineCreatePanel')) $('onlineCreatePanel').classList.toggle('active', create);
+  if($('onlineJoinPanel')) $('onlineJoinPanel').classList.toggle('active', !create);
+
+  syncOnlineTabCash();
+
+  if(typeof setOnlineStatus === 'function'){
+    setOnlineStatus(create ? 'Create a room, then share the generated code.' : 'Enter the room code your opponent shared.');
+  }
 }
 
-function syncOnlineCashDisplays(){
+function syncOnlineTabCash(){
   const cash = Number(state.cash || 0);
-  if($('onlineCash')) $('onlineCash').textContent = cash;
-  if($('onlineCashJoin')) $('onlineCashJoin').textContent = cash;
-  ['onlineCreateWager','onlineJoinWager'].forEach(id=>{
+  const max = Math.min(1000, cash);
+
+  ['onlineCashCreate','onlineCashJoin','onlineCash'].forEach(id=>{
+    const el = $(id);
+    if(el) el.textContent = cash;
+  });
+
+  ['onlineCreateWager','onlineJoinWager','onlineWager'].forEach(id=>{
     const input = $(id);
     if(input){
-      input.max = String(Math.min(1000, cash));
       input.min = '0';
+      input.max = String(max);
     }
   });
+
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+
+  if($('onlineCreatePlayerName') && !$('onlineCreatePlayerName').value){
+    $('onlineCreatePlayerName').value = saved;
+  }
+  if($('onlineJoinPlayerName') && !$('onlineJoinPlayerName').value){
+    $('onlineJoinPlayerName').value = saved;
+  }
 }
 
-function syncOnlineHiddenFromCreate(code=''){
+function syncCreateTabToHidden(){
   const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
   const name = String(($('onlineCreatePlayerName') && $('onlineCreatePlayerName').value) || saved || 'PLAYER').trim().slice(0,16).toUpperCase() || 'PLAYER';
   const wager = Math.max(0, Math.floor(Number(($('onlineCreateWager') && $('onlineCreateWager').value) || 0)));
 
   if($('onlinePlayerName')) $('onlinePlayerName').value = name;
   if($('onlineWager')) $('onlineWager').value = String(wager);
-  if($('onlineRoomCode')) $('onlineRoomCode').value = code || (($('onlineCreateRoomCode') && $('onlineCreateRoomCode').value) || '');
+  if($('onlineRoomCode')) $('onlineRoomCode').value = '';
+
   localStorage.setItem('counterBoxingPlayerName', name);
 }
 
-function syncOnlineHiddenFromJoin(){
+function syncJoinTabToHidden(){
   const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
   const name = String(($('onlineJoinPlayerName') && $('onlineJoinPlayerName').value) || saved || 'PLAYER').trim().slice(0,16).toUpperCase() || 'PLAYER';
   const wager = Math.max(0, Math.floor(Number(($('onlineJoinWager') && $('onlineJoinWager').value) || 0)));
@@ -3412,95 +4038,548 @@ function syncOnlineHiddenFromJoin(){
   if($('onlinePlayerName')) $('onlinePlayerName').value = name;
   if($('onlineWager')) $('onlineWager').value = String(wager);
   if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+
   localStorage.setItem('counterBoxingPlayerName', name);
 }
 
-const renderOnlineCash_v10 = renderOnlineCash;
+const createOnlineRoom_TabBase_v101 = createOnlineRoom;
+async function createOnlineRoomFromTab(){
+  syncCreateTabToHidden();
+  await createOnlineRoom_TabBase_v101();
+
+  if($('onlineCreateRoomCode') && $('onlineRoomCode')){
+    $('onlineCreateRoomCode').value = $('onlineRoomCode').value || '';
+  }
+
+  syncOnlineTabCash();
+}
+
+const joinOnlineRoom_TabBase_v101 = joinOnlineRoom;
+async function joinOnlineRoomFromTab(){
+  syncJoinTabToHidden();
+  await joinOnlineRoom_TabBase_v101();
+  syncOnlineTabCash();
+}
+
+const renderOnlineCash_TabBase_v101 = renderOnlineCash;
 function renderOnlineCash(){
-  renderOnlineCash_v10();
-  syncOnlineCashDisplays();
-
-  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
-  if($('onlineCreatePlayerName')) $('onlineCreatePlayerName').value = saved;
-  if($('onlineJoinPlayerName')) $('onlineJoinPlayerName').value = saved;
+  renderOnlineCash_TabBase_v101();
+  syncOnlineTabCash();
 }
 
-const createOnlineRoom_v10_base = createOnlineRoom;
-async function createOnlineRoom(){
-  const code = randomRoomCode();
-  if($('onlineCreateRoomCode')) $('onlineCreateRoomCode').value = code;
-  syncOnlineHiddenFromCreate(code);
-  await createOnlineRoom_v10_base();
 
-  // Keep visible room code matching the generated code after base function runs.
-  if($('onlineCreateRoomCode') && $('onlineRoomCode')) $('onlineCreateRoomCode').value = $('onlineRoomCode').value || code;
+/* V10.3 FIGHTERS UNLOCK FIX - DIRECT ASSIGNMENTS */
+showFighters = function(){
+  show('fighters');
+  setImg($('fightersBg'), SCREEN_BASES.locker);
+  const grid = $('fightersGrid');
+  if(!grid) return;
+  grid.innerHTML = '';
+  const fighters = ['GREEN','BLUE','RED','PURPLE','WHITE','GOLD'];
+  fighters.forEach(color=>{
+    const unlocked = state.unlockedFighters && state.unlockedFighters.includes(color);
+    const card = document.createElement('div');
+    card.className = 'fighterCard ' + (unlocked ? 'unlocked' : 'locked');
+    if(!unlocked){ card.setAttribute('data-tip', fighterUnlockTipV118(color)); }
+    const img = document.createElement('img');
+    img.alt = color + ' fighter';
+    if(typeof fighterProfileBaseV114 === 'function'){
+      setImg(img, fighterProfileBaseV114(color));
+    }else{
+      setImg(img, [color+' BOXER PROFILE', color+' LOCKER ROOM', color+' IDLE']);
+    }
+    const name = document.createElement('div');
+    name.className = 'fighterName';
+    name.textContent = color;
+    card.appendChild(img);
+    card.appendChild(name);
+
+    const controls = document.createElement('div');
+    controls.className = 'fighterControls';
+
+    const tauntSelect = document.createElement('select');
+    tauntSelect.className = 'fighterTauntSelect';
+
+    const availableTaunts = (typeof getUnlockedTauntsForFighter === 'function')
+      ? getUnlockedTauntsForFighter(color)
+      : [{id:'DEFAULT', label:'DEFAULT TAUNT'}];
+
+    availableTaunts.forEach(t=>{
+      const opt = document.createElement('option');
+      opt.value = t.id || t.value || 'DEFAULT';
+      opt.textContent = t.label || t.name || 'DEFAULT TAUNT';
+      tauntSelect.appendChild(opt);
+    });
+
+    const currentSel = state.selectedTaunts && state.selectedTaunts[color] ? state.selectedTaunts[color] : tauntSelect.value;
+    tauntSelect.value = currentSel;
+
+    tauntSelect.onchange = ()=>{
+      if(!unlocked){ showNotice('locker', fighterUnlockTipV118(color)); return; }
+      state.selectedTaunts = state.selectedTaunts || {};
+      state.selectedTaunts[color] = tauntSelect.value;
+      saveState();
+      if(state.selectedFighter === color) showLocker();
+    };
+
+    controls.appendChild(tauntSelect);
+    card.appendChild(controls);
+
+    card.onclick = (e)=>{
+      if(e.target === tauntSelect) return;
+      if(!unlocked){ showNotice('locker', fighterUnlockTipV118(color)); return; }
+      state.selectedFighter = color;
+      saveState();
+      showLocker();
+    };
+
+    grid.appendChild(card);
+  });
+};
+
+renderLocker = function(){
+  setImg($('lockerBg'), ['LOCKERROOM SCREEN','LOCKERROOMSCREEN','LOCKER ROOM SCREEN','LOCKER ROOM','LOCKERROOM']);
+  if($('lockerDisplay')){
+    setImg($('lockerDisplay'), lockerDisplayBases());
+  }
+  if($('fighterLockText')) $('fighterLockText').textContent = 'Choose Fighter';
+};
+
+showLocker = function(){
+  show('locker');
+  renderLocker();
+};
+
+
+/* V10.4b SAFE VIEWPORT REPAINT */
+function refreshViewportFrame(){
+  const activeFrame = document.querySelector('.screen.active .frame');
+  if(activeFrame){
+    activeFrame.style.willChange = 'transform';
+    requestAnimationFrame(()=>{ activeFrame.style.willChange = 'auto'; });
+  }
+}
+window.addEventListener('resize', refreshViewportFrame);
+window.addEventListener('orientationchange', () => setTimeout(refreshViewportFrame, 100));
+document.addEventListener('DOMContentLoaded', () => setTimeout(refreshViewportFrame, 50));
+
+
+/* ============================================================
+   V10.6 GREEN ACTIVE TAUNT SYSTEM
+   ------------------------------------------------------------
+   - GREEN gets 3 taunt choices:
+     DEFAULT, GO TO SLEEP, MAN OF STEEL.
+   - GTS/MOS are selectable if purchased in the store.
+   - Choosing a taunt from Fighters sets:
+     state.selectedFighter
+     state.selectedTaunts[fighterId]
+     state.selectedTaunt
+   - Locker room shows that active taunt pose.
+   - Fight scenes use the active taunt pose when that fighter taunts.
+   ============================================================ */
+
+const FIGHTER_TAUNT_OPTIONS = {
+  GREEN: [
+    {
+      id:'DEFAULT',
+      label:'Default Taunt',
+      owned:()=>true,
+      displayBases:(fighter)=>[
+        fighter+' CPU TAUNT',
+        fighter+' PLAYER TAUNT',
+        fighter+' LOCKER ROOM DISPLAY',
+        fighter+' LOCKER ROOM',
+        fighter+' IDLE'
+      ]
+    },
+    {
+      id:'GTS',
+      label:'Go To Sleep',
+      owned:()=>state.ownedTaunts.includes('GTS'),
+      displayBases:(fighter)=>[
+        fighter+' CPU TAUNT 1',
+        fighter+' CPU TAUNT GTS',
+        'GO TO SLEEP LOCKER ROOM DISPLAY',
+        'GO TO SLEEP LOCKER ROOM TAUNT GTS',
+        'GO TO SLEEP TAUNT DISPLAY'
+      ]
+    },
+    {
+      id:'MOS',
+      label:'Man Of Steel',
+      owned:()=>state.ownedTaunts.includes('MOS'),
+      displayBases:(fighter)=>[
+        fighter+' CPU TAUNT 2',
+        fighter+' CPU TAUNT MOS',
+        'MAN OF STEEL LOCKER ROOM DISPLAY',
+        'MAN OF STEEL LOCKER ROOM TAUNT MOS',
+        'MAN OF STEEL TAUNT DISPLAY'
+      ]
+    }
+  ]
+};
+
+function ensureSelectedTaunts(){
+  if(!state.selectedTaunts || typeof state.selectedTaunts !== 'object'){
+    state.selectedTaunts = {};
+  }
+  if(!state.selectedTaunts.GREEN){
+    state.selectedTaunts.GREEN = state.selectedFighter === 'GREEN' && state.selectedTaunt ? state.selectedTaunt : 'DEFAULT';
+  }
 }
 
-const joinOnlineRoom_v10_base = joinOnlineRoom;
-async function joinOnlineRoom(){
-  syncOnlineHiddenFromJoin();
-  await joinOnlineRoom_v10_base();
+function tauntOptionsForFighter(fighterId){
+  return FIGHTER_TAUNT_OPTIONS[fighterId] || [
+    {
+      id:'DEFAULT',
+      label:'Default Taunt',
+      owned:()=>true,
+      displayBases:(fighter)=>[
+        fighter+' CPU TAUNT',
+        fighter+' PLAYER TAUNT',
+        fighter+' LOCKER ROOM DISPLAY',
+        fighter+' LOCKER ROOM',
+        fighter+' IDLE'
+      ]
+    }
+  ];
 }
 
-const startOnlineMatch_v10_base = startOnlineMatch;
-function startOnlineMatch(role, code, room){
-  startOnlineMatch_v10_base(role, code, room);
-  updateFightMusicButton();
+function activeTauntIdForFighter(fighterId){
+  ensureSelectedTaunts();
+  const options = tauntOptionsForFighter(fighterId);
+  let id = state.selectedTaunts[fighterId] || 'DEFAULT';
+  let opt = options.find(o=>o.id===id);
+
+  if(!opt || !opt.owned()){
+    id = 'DEFAULT';
+    state.selectedTaunts[fighterId] = 'DEFAULT';
+    opt = options[0];
+  }
+
+  return id;
 }
 
-const clearOnlineMode_v10_base = clearOnlineMode;
-function clearOnlineMode(){
-  clearOnlineMode_v10_base();
-  syncOnlineCashDisplays();
+function activeTauntOptionForFighter(fighterId){
+  const id = activeTauntIdForFighter(fighterId);
+  return tauntOptionsForFighter(fighterId).find(o=>o.id===id) || tauntOptionsForFighter(fighterId)[0];
 }
 
-/* Host-selected ring support */
-function onlineSelectedRing(){
-  const sel = $('onlineRingSelect');
-  return String((sel && sel.value) || 'RING4').toUpperCase();
+function activeTauntBasesForFighter(fighterId){
+  const opt = activeTauntOptionForFighter(fighterId);
+  return opt.displayBases(fighterId);
 }
 
-const loadOnlineFightIdle_v10_base = loadOnlineFightIdle;
-function loadOnlineFightIdle(room){
-  const ring = String((room && room.ring) || 'RING4').toUpperCase();
-  setImg($('ringScene'), [ring, 'RING4', 'RING1']);
+function setActiveFighterTaunt(fighterId, tauntId){
+  ensureSelectedTaunts();
 
-  setImg($('opponentScene'), [
-    onlineImageBase(onlineOpponentFighterColor(room), 'IDLE'),
-    onlineImageBase(onlineOpponentFighterColor(room), 'CPU TAUNT'),
-    'BLUE IDLE',
+  const options = tauntOptionsForFighter(fighterId);
+  const opt = options.find(o=>o.id===tauntId);
+
+  if(!opt || !opt.owned()){
+    showNotice('locker','Buy this taunt first.');
+    return;
+  }
+
+  state.selectedFighter = fighterId;
+  state.selectedTaunts[fighterId] = tauntId;
+  state.selectedTaunt = tauntId;
+  saveState();
+  showLocker();
+}
+
+/* Migration */
+ensureSelectedTaunts();
+if(!state.unlockedFighters.includes('GREEN')){
+  state.unlockedFighters.push('GREEN');
+}
+saveState();
+
+/* Store purchase now also equips the taunt for the current fighter. */
+buyItem = function(item){
+  if(!item || !item.active){
+    showNotice('locker','Preview only today.');
+    return;
+  }
+
+  if(item.type === 'taunt'){
+    if(!state.ownedTaunts.includes(item.id)){
+      if((state.cash||0) < item.price){
+        showNotice('locker','Not enough cash.');
+        return;
+      }
+      state.cash -= item.price;
+      state.ownedTaunts.push(item.id);
+    }
+
+    ensureSelectedTaunts();
+    state.selectedTaunt = item.id;
+    state.selectedTaunts[state.selectedFighter || 'GREEN'] = item.id;
+    saveState();
+    showLocker();
+  }
+};
+
+/* Locker foreground uses selected fighter + selected taunt. */
+lockerDisplayBases = function(){
+  ensureSelectedTaunts();
+
+  const fighter = state.selectedFighter || 'GREEN';
+  const bases = [];
+
+  bases.push(...activeTauntBasesForFighter(fighter));
+
+  bases.push(
+    fighter + ' LOCKER ROOM DISPLAY',
+    fighter + ' LOCKER ROOM',
+    fighter + ' LOCKERROOM',
+    fighter + ' PLAYER TAUNT',
+    fighter + ' IDLE',
+    'GREEN LOCKER ROOM DISPLAY',
+    'GREEN LOCKER ROOM',
     'GREEN IDLE'
-  ]);
+  );
 
-  setImg($('gloveScene'), [
-    onlineImageBase(onlineMyGloveColor(room), 'GLOVES IDLE'),
-    onlineImageBase(onlineMyGloveColor(room), 'GLOVES PLAYER TAUNT'),
-    'GREEN GLOVES IDLE'
-  ]);
+  return [...new Set(bases)];
+};
 
-  setOnlineFightHud(room);
+renderLocker = function(){
+  setImg($('lockerBg'), ['LOCKERROOM SCREEN','LOCKERROOMSCREEN','LOCKER ROOM SCREEN','LOCKER ROOM','LOCKERROOM']);
+  if($('lockerDisplay')){
+    setImg($('lockerDisplay'), lockerDisplayBases());
+  }
+  if($('fighterLockText')) $('fighterLockText').textContent = 'Choose Fighter';
+};
+
+showLocker = function(){
+  show('locker');
+  renderLocker();
+};
+
+/* Fighters screen now includes taunt dropdowns for unlocked fighters. */
+showFighters = function(){
+  show('fighters');
+  setImg($('fightersBg'), SCREEN_BASES.locker);
+  ensureSelectedTaunts();
+
+  const g=$('fightersGrid');
+  g.innerHTML='';
+
+  if(!state.unlockedFighters.includes('GREEN')){
+    state.unlockedFighters.push('GREEN');
+    saveState();
+  }
+
+  FIGHTERS.forEach(f=>{
+    const unlocked=state.unlockedFighters.includes(f.id);
+    const options = tauntOptionsForFighter(f.id);
+    const current = activeTauntIdForFighter(f.id);
+
+    const card=document.createElement('div');
+    card.className='card '+(unlocked?'':'locked');
+
+    let dropdown = '';
+    if(unlocked){
+      dropdown = `
+        <div class="tauntSelectWrap" onclick="event.stopPropagation()">
+          <div class="tauntSelectLabel">${f.id} CPU TAUNT (${options.length})</div>
+          <select class="fighterTauntSelect" data-fighter="${f.id}">
+            ${options.map(o=>{
+              const owned = o.owned();
+              const label = owned ? o.label : o.label + ' 🔒';
+              return `<option value="${o.id}" ${o.id===current?'selected':''} ${owned?'':'disabled'}>${label}</option>`;
+            }).join('')}
+          </select>
+        </div>
+      `;
+    }
+
+    card.innerHTML=`
+      <img alt="${f.name}">
+      <div class="cardLabel">${f.name}${unlocked?'':' 🔒'}</div>
+      ${dropdown}
+    `;
+
+    setImg(card.querySelector('img'), [
+      ...activeTauntBasesForFighter(f.id),
+      f.id+' BOXER PROFILE',
+      f.id+' IDLE',
+      f.id+' PLAYER TAUNT'
+    ]);
+
+    card.onclick=()=>{
+      if(!unlocked){
+        showNotice('locker','Beat this fighter to unlock them.');
+        return;
+      }
+      state.selectedFighter=f.id;
+      state.selectedTaunt=activeTauntIdForFighter(f.id);
+      saveState();
+      showLocker();
+    };
+
+    const select = card.querySelector('.fighterTauntSelect');
+    if(select){
+      select.onchange=(e)=>{
+        e.stopPropagation();
+        setActiveFighterTaunt(f.id, select.value);
+      };
+    }
+
+    g.appendChild(card);
+  });
+};
+
+/* Fight scene images use active taunt pose. */
+fighterImg = function(scene){
+  const active = activeFighter();
+  const opponentId = active.id;
+  const playerId = state.selectedFighter || 'GREEN';
+
+  if(scene === 'playerTaunt'){
+    return activeTauntBasesForFighter(playerId);
+  }
+
+  if(scene === 'opponentTaunt'){
+    return activeTauntBasesForFighter(opponentId);
+  }
+
+  const map={
+    idle:'IDLE',
+    draw:'DRAW',
+    playerBlock:'PLAYER BLOCK',
+    opponentBlock:'CPU BLOCK',
+    playerHurt:'CPU COUNTER',
+    opponentHurt:'PLAYER COUNTER',
+    ko:'KO'
+  };
+
+  return [opponentId+' '+(map[scene]||'IDLE')];
+};
+
+
+/* ============================================================
+   V10.7 ONLINE ACTIVE TAUNT + DRAW FIX
+   ------------------------------------------------------------
+   Online now carries each player's active taunt in the room.
+   When a player taunts online, opponent scene uses that player's
+   selected taunt display.
+   Draw/same moves now force:
+   - self glove: [Color] GLOVES PLAYER DRAW
+   - opponent: [Color] CPU DRAW
+   ============================================================ */
+
+function onlineCurrentTauntForRole(role, room){
+  if(role === 'host') return room.hostTaunt || 'DEFAULT';
+  return room.guestTaunt || 'DEFAULT';
 }
 
-const setOnlineMappedScene_v10_base = setOnlineMappedScene;
-function setOnlineMappedScene(display, room, autoReturn=true){
+function onlineOpponentTauntForRole(role, room){
+  if(role === 'host') return room.guestTaunt || 'DEFAULT';
+  return room.hostTaunt || 'DEFAULT';
+}
+
+function onlineTauntBasesForFighterAndTaunt(fighterId, tauntId){
+  fighterId = String(fighterId || 'GREEN').toUpperCase();
+  tauntId = String(tauntId || 'DEFAULT').toUpperCase();
+
+  if(fighterId === 'GREEN' && tauntId === 'GTS'){
+    return [
+      'GREEN CPU TAUNT 1',
+      'GREEN CPU TAUNT GTS',
+      'GO TO SLEEP LOCKER ROOM DISPLAY',
+      'GO TO SLEEP LOCKER ROOM TAUNT GTS',
+      'GO TO SLEEP TAUNT DISPLAY',
+      'GREEN CPU TAUNT'
+    ];
+  }
+
+  if(fighterId === 'GREEN' && tauntId === 'MOS'){
+    return [
+      'GREEN CPU TAUNT 2',
+      'GREEN CPU TAUNT MOS',
+      'MAN OF STEEL LOCKER ROOM DISPLAY',
+      'MAN OF STEEL LOCKER ROOM TAUNT MOS',
+      'MAN OF STEEL TAUNT DISPLAY',
+      'GREEN CPU TAUNT'
+    ];
+  }
+
+  return [
+    fighterId + ' CPU TAUNT',
+    fighterId + ' PLAYER TAUNT',
+    fighterId + ' IDLE'
+  ];
+}
+
+function isOnlineDrawDisplay(display){
+  if(!display) return false;
+  return String(display.gloves || '').toUpperCase().includes('DRAW') ||
+         String(display.opponent || '').toUpperCase().includes('DRAW');
+}
+
+/* Override online mapped scene so online taunts and draws use exact active assets. */
+setOnlineMappedScene = function(display, room, autoReturn=true){
   clearTimeout(idleTimer);
 
   const role = onlineRole || 'host';
   const gloveColor = onlineGloveColorForRole(room, role);
   const opponentColor = onlineOpponentColorForRole(room, role);
-  const ring = String((room && room.ring) || 'RING4').toUpperCase();
 
-  setImg($('ringScene'), [ring, 'RING4', 'RING1']);
+  const opponentTaunt = onlineOpponentTauntForRole(role, room);
+  const myTaunt = onlineCurrentTauntForRole(role, room);
 
-  setImg($('gloveScene'), [
+  setImg($('ringScene'), ['RING4','RING1']);
+
+  let gloveBases = [
     onlineImageBase(gloveColor, display.gloves),
     onlineImageBase(gloveColor, 'GLOVES IDLE')
-  ]);
+  ];
 
-  setImg($('opponentScene'), [
+  let opponentBases = [
     onlineImageBase(opponentColor, display.opponent),
     onlineImageBase(opponentColor, 'IDLE')
-  ]);
+  ];
+
+  const g = String(display.gloves || '').toUpperCase();
+  const o = String(display.opponent || '').toUpperCase();
+
+  // Draw fix: force known draw files and fallbacks.
+  if(isOnlineDrawDisplay(display)){
+    gloveBases = [
+      onlineImageBase(gloveColor, 'GLOVES PLAYER DRAW'),
+      onlineImageBase(gloveColor, 'GLOVES DRAW'),
+      onlineImageBase(gloveColor, 'GLOVES IDLE')
+    ];
+    opponentBases = [
+      onlineImageBase(opponentColor, 'CPU DRAW'),
+      onlineImageBase(opponentColor, 'DRAW'),
+      onlineImageBase(opponentColor, 'IDLE')
+    ];
+  }
+
+  // If opponent is taunting on my screen, use their chosen taunt.
+  if(o.includes('TAUNT')){
+    opponentBases = [
+      ...onlineTauntBasesForFighterAndTaunt(opponentColor, opponentTaunt),
+      onlineImageBase(opponentColor, display.opponent),
+      onlineImageBase(opponentColor, 'CPU TAUNT'),
+      onlineImageBase(opponentColor, 'IDLE')
+    ];
+  }
+
+  // If my glove layer is meant to show my taunt, use my chosen taunt as fallback after gloves.
+  if(g.includes('TAUNT')){
+    gloveBases = [
+      onlineImageBase(gloveColor, display.gloves),
+      onlineImageBase(gloveColor, 'GLOVES PLAYER TAUNT'),
+      ...onlineTauntBasesForFighterAndTaunt(gloveColor, myTaunt),
+      onlineImageBase(gloveColor, 'GLOVES IDLE')
+    ];
+  }
+
+  setImg($('gloveScene'), gloveBases);
+  setImg($('opponentScene'), opponentBases);
 
   if($('status')) $('status').textContent = room.lastMessage || 'Round resolved.';
 
@@ -3536,48 +4615,1420 @@ function setOnlineMappedScene(display, room, autoReturn=true){
       }
     },2500);
   }
-}
+};
 
+/* Send selected taunts into room creation/join. */
+const createOnlineRoom_TabBase_v107 = typeof createOnlineRoom_TabBase_v101 !== 'undefined' ? createOnlineRoom_TabBase_v101 : createOnlineRoom;
+createOnlineRoom = async function(){
+  clearOnlineMode();
 
+  const name = onlineName();
+  const code = randomRoomCode();
+  const wager = onlineWager();
 
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+  if($('onlineCreateRoomCode')) $('onlineCreateRoomCode').value = code;
 
-/* V10.2 TRUE START FIX
-   No wrappers around startMenuMusic.
-   Start button calls this direct function.
-*/
-window.cbStartGame = function(){
-  try{
-    menuMusicOn = true;
-    ensureMenuMusic();
-    if(menuMusicAudio && !menuMusicAudio.src){
-      loadMenuSong(menuMusicIndex);
-    }
-    if(menuMusicAudio){
-      menuMusicAudio.volume = menuMusicVolume;
-      menuMusicAudio.play().catch(()=>{});
-    }
-  }catch(e){
-    console.warn('Music start skipped:', e);
+  if(typeof window.createCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
   }
 
-  show('menu');
+  try{
+    setOnlineStatus('Creating room...');
+    const paid = payOnlineWager(wager);
 
-  if(typeof updateMusicUI === 'function') updateMusicUI();
-  if(typeof updateFightMusicButton === 'function') updateFightMusicButton();
+    await window.createCounterBoxingRoom({
+      code,
+      hostName:name,
+      hostGloves:state.selectedGloves || 'GREEN',
+      hostFighter:state.selectedFighter || 'GREEN',
+      hostTaunt:activeTauntIdForFighter(state.selectedFighter || 'GREEN'),
+      hostWager:paid
+    });
+
+    onlineRole = 'host';
+    onlineRoomCode = code;
+    onlineResultPaidLocal = false;
+    await startOnlineRoomWatcher('host', code);
+    setOnlineStatus(`Room ${code} created. You wagered $${paid}. Waiting for challenger...`);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not create room. Check Firebase rules.');
+  }
+};
+
+joinOnlineRoom = async function(){
+  clearOnlineMode();
+
+  const name = onlineName();
+  const code = String(($('onlineRoomCode') && $('onlineRoomCode').value) || '').trim().toUpperCase();
+  const wager = onlineWager();
+
+  if(!code){
+    setOnlineStatus('Enter a room code first.');
+    return;
+  }
+
+  if(typeof window.joinCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Joining room...');
+    const paid = payOnlineWager(wager);
+
+    const room = await window.joinCounterBoxingRoom({
+      code,
+      guestName:name,
+      guestGloves:state.selectedGloves || 'GREEN',
+      guestFighter:state.selectedFighter || 'BLUE',
+      guestTaunt:activeTauntIdForFighter(state.selectedFighter || 'GREEN'),
+      guestWager:paid
+    });
+
+    if(!room){
+      setOnlineStatus('Room not found.');
+      return;
+    }
+
+    onlineRole = 'guest';
+    onlineRoomCode = code;
+    onlineResultPaidLocal = false;
+    await startOnlineRoomWatcher('guest', code);
+    startOnlineMatch('guest', code, room);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
+  }
 };
 
 
-/* V10.5 TAB PANEL BEHAVIOR */
-function showOnlineTab(tab){
-  const isCreate = tab === 'create';
-  if($('onlineCreateTab')) $('onlineCreateTab').classList.toggle('active', isCreate);
-  if($('onlineJoinTab')) $('onlineJoinTab').classList.toggle('active', !isCreate);
-  if($('onlineCreatePopup')) $('onlineCreatePopup').classList.toggle('active', isCreate);
-  if($('onlineJoinPopup')) $('onlineJoinPopup').classList.toggle('active', !isCreate);
-  if(typeof syncOnlineCashDisplays === 'function') syncOnlineCashDisplays();
-  if(typeof setOnlineStatus === 'function'){
-    setOnlineStatus(isCreate ? 'Create a room, then share the generated code.' : 'Enter a room code to join the match.');
+/* V10.7 FINAL DRAW MAP GUARD */
+const makeOnlineDisplayForMoves_v107_base = makeOnlineDisplayForMoves;
+makeOnlineDisplayForMoves = function(myMove, theirMove){
+  const m = String(myMove || '').toLowerCase();
+  const t = String(theirMove || '').toLowerCase();
+  if(m === t && ['jab','hook','uppercut'].includes(m)){
+    return {gloves:'GLOVES PLAYER DRAW', opponent:'CPU DRAW'};
   }
+  return makeOnlineDisplayForMoves_v107_base(myMove, theirMove);
+};
+
+
+/* ============================================================
+   V10.8 EXACT ONLINE VISUAL MAP + ACTIVE TAUNT SYNC
+   ------------------------------------------------------------
+   Restores the exact online display table.
+   Important:
+   - Gloves stay glove assets.
+   - Active selected taunt only changes the BODY/CPU TAUNT pose.
+   - Create/Join syncs visible tab name/wager/code before room tools run.
+   ============================================================ */
+
+const ONLINE_EXACT_VISUAL_MAP_V108 = {
+  /* 1) Same move vs same move */
+  "jab|jab":       {gloves:"GLOVES PLAYER DRAW",    opponent:"CPU DRAW"},
+  "uppercut|uppercut": {gloves:"GLOVES PLAYER DRAW", opponent:"CPU DRAW"},
+  "hook|hook":     {gloves:"GLOVES PLAYER DRAW",    opponent:"CPU DRAW"},
+  "block|block":   {gloves:"GLOVES PLAYER BLOCK",   opponent:"CPU BLOCK"},
+  "taunt|taunt":   {gloves:"GLOVES OPPONENT TAUNT", opponent:"CPU TAUNT"},
+
+  /* 2) Jab matchups */
+  "jab|hook":      {gloves:"GLOVES CPU COUNTER",    opponent:"CPU COUNTER"},
+  "jab|uppercut":  {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+  "jab|block":     {gloves:"GLOVES CPU BLOCK",      opponent:"CPU BLOCK"},
+  "jab|taunt":     {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+
+  "hook|jab":      {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+  "uppercut|jab":  {gloves:"GLOVES CPU COUNTER",    opponent:"PLAYER COUNTER"},
+  "block|jab":     {gloves:"GLOVES CPU BLOCK",      opponent:"PLAYER BLOCK"},
+  "taunt|jab":     {gloves:"GLOVES CPU COUNTER",    opponent:"CPU COUNTER"},
+
+  /* 3) Hook matchups */
+  "hook|uppercut": {gloves:"GLOVES CPU COUNTER",    opponent:"CPU COUNTER"},
+  "hook|block":    {gloves:"GLOVES CPU BLOCK",      opponent:"CPU BLOCK"},
+  "hook|taunt":    {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+
+  "uppercut|hook": {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+  "block|hook":    {gloves:"GLOVES PLAYER BLOCK",   opponent:"PLAYER BLOCK"},
+  "taunt|hook":    {gloves:"GLOVES CPU COUNTER",    opponent:"CPU COUNTER"},
+
+  /* 4) Uppercut matchups */
+  "uppercut|block": {gloves:"GLOVES CPU BLOCK",      opponent:"PLAYER BLOCK"},
+  "uppercut|taunt": {gloves:"GLOVES PLAYER COUNTER", opponent:"PLAYER COUNTER"},
+
+  "block|uppercut": {gloves:"GLOVES CPU BLOCK",      opponent:"PLAYER BLOCK"},
+  "taunt|uppercut": {gloves:"GLOVES CPU BLOCK",      opponent:"CPU COUNTER"},
+
+  /* 5) Block / Taunt special matchups */
+  "block|taunt":   {gloves:"GLOVES PLAYER BLOCK",   opponent:"CPU TAUNT"},
+  "taunt|block":   {gloves:"GLOVES PLAYER TAUNT",   opponent:"CPU BLOCK"}
+};
+
+makeOnlineDisplayForMoves = function(myMove, theirMove){
+  const key = `${String(myMove || '').toLowerCase()}|${String(theirMove || '').toLowerCase()}`;
+  return ONLINE_EXACT_VISUAL_MAP_V108[key] || {gloves:"GLOVES PLAYER DRAW", opponent:"CPU DRAW"};
+};
+
+function v108SyncCreateTabToHidden(){
+  if(typeof syncCreateTabToHidden === 'function'){
+    syncCreateTabToHidden();
+    return;
+  }
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+  const name = String(($('onlineCreatePlayerName') && $('onlineCreatePlayerName').value) || saved || 'PLAYER').trim().slice(0,16).toUpperCase() || 'PLAYER';
+  const wager = Math.max(0, Math.floor(Number(($('onlineCreateWager') && $('onlineCreateWager').value) || 0)));
+
+  if($('onlinePlayerName')) $('onlinePlayerName').value = name;
+  if($('onlineWager')) $('onlineWager').value = String(wager);
+  if($('onlineRoomCode')) $('onlineRoomCode').value = '';
+  localStorage.setItem('counterBoxingPlayerName', name);
+}
+
+function v108SyncJoinTabToHidden(){
+  if(typeof syncJoinTabToHidden === 'function'){
+    syncJoinTabToHidden();
+    return;
+  }
+  const saved = localStorage.getItem('counterBoxingPlayerName') || 'PLAYER';
+  const name = String(($('onlineJoinPlayerName') && $('onlineJoinPlayerName').value) || saved || 'PLAYER').trim().slice(0,16).toUpperCase() || 'PLAYER';
+  const wager = Math.max(0, Math.floor(Number(($('onlineJoinWager') && $('onlineJoinWager').value) || 0)));
+  const code = String(($('onlineJoinRoomCode') && $('onlineJoinRoomCode').value) || '').trim().toUpperCase();
+
+  if($('onlinePlayerName')) $('onlinePlayerName').value = name;
+  if($('onlineWager')) $('onlineWager').value = String(wager);
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+  localStorage.setItem('counterBoxingPlayerName', name);
+}
+
+function v108SelectedOnlineTaunt(){
+  ensureSelectedTaunts();
+  const fighter = state.selectedFighter || 'GREEN';
+  return activeTauntIdForFighter(fighter);
+}
+
+/* Override create room so selected tab values AND selected taunt are sent. */
+createOnlineRoom = async function(){
+  clearOnlineMode();
+  v108SyncCreateTabToHidden();
+
+  const name = onlineName();
+  const code = randomRoomCode();
+  const wager = onlineWager();
+
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+  if($('onlineCreateRoomCode')) $('onlineCreateRoomCode').value = code;
+
+  if(typeof window.createCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Creating room...');
+    const paid = payOnlineWager(wager);
+
+    await window.createCounterBoxingRoom({
+      code,
+      hostName:name,
+      hostGloves:state.selectedGloves || 'GREEN',
+      hostFighter:state.selectedFighter || 'GREEN',
+      hostTaunt:v108SelectedOnlineTaunt(),
+      hostWager:paid
+    });
+
+    onlineRole = 'host';
+    onlineRoomCode = code;
+    onlineResultPaidLocal = false;
+    await startOnlineRoomWatcher('host', code);
+    setOnlineStatus(`Room ${code} created. You wagered $${paid}. Waiting for challenger...`);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not create room. Check Firebase rules.');
+  }
+};
+
+joinOnlineRoom = async function(){
+  clearOnlineMode();
+  v108SyncJoinTabToHidden();
+
+  const name = onlineName();
+  const code = String(($('onlineRoomCode') && $('onlineRoomCode').value) || '').trim().toUpperCase();
+  const wager = onlineWager();
+
+  if(!code){
+    setOnlineStatus('Enter a room code first.');
+    return;
+  }
+
+  if(typeof window.joinCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Joining room...');
+    const paid = payOnlineWager(wager);
+
+    const room = await window.joinCounterBoxingRoom({
+      code,
+      guestName:name,
+      guestGloves:state.selectedGloves || 'GREEN',
+      guestFighter:state.selectedFighter || 'BLUE',
+      guestTaunt:v108SelectedOnlineTaunt(),
+      guestWager:paid
+    });
+
+    if(!room){
+      setOnlineStatus('Room not found.');
+      return;
+    }
+
+    onlineRole = 'guest';
+    onlineRoomCode = code;
+    onlineResultPaidLocal = false;
+    await startOnlineRoomWatcher('guest', code);
+    startOnlineMatch('guest', code, room);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
+  }
+};
+
+/* Override tab wrapper buttons to use the new create/join functions. */
+createOnlineRoomFromTab = async function(){
+  await createOnlineRoom();
+  if($('onlineCreateRoomCode') && $('onlineRoomCode')){
+    $('onlineCreateRoomCode').value = $('onlineRoomCode').value || $('onlineCreateRoomCode').value || '';
+  }
+  if(typeof syncOnlineTabCash === 'function') syncOnlineTabCash();
+};
+
+joinOnlineRoomFromTab = async function(){
+  await joinOnlineRoom();
+  if(typeof syncOnlineTabCash === 'function') syncOnlineTabCash();
+};
+
+/* Replace mapped scene again: exact table first, selected taunt only for CPU TAUNT body. */
+setOnlineMappedScene = function(display, room, autoReturn=true){
+  clearTimeout(idleTimer);
+
+  const role = onlineRole || 'host';
+  const gloveColor = onlineGloveColorForRole(room, role);
+  const opponentColor = onlineOpponentColorForRole(room, role);
+  const opponentTaunt = onlineOpponentTauntForRole(role, room);
+
+  setImg($('ringScene'), ['RING4','RING1']);
+
+  const g = String(display.gloves || '').toUpperCase();
+  const o = String(display.opponent || '').toUpperCase();
+
+  let gloveBases = [
+    onlineImageBase(gloveColor, display.gloves),
+    onlineImageBase(gloveColor, 'GLOVES IDLE')
+  ];
+
+  let opponentBases = [
+    onlineImageBase(opponentColor, display.opponent),
+    onlineImageBase(opponentColor, 'IDLE')
+  ];
+
+  // Same-move draws: exact visual and reliable fallbacks.
+  if(g.includes('DRAW') || o.includes('DRAW')){
+    gloveBases = [
+      onlineImageBase(gloveColor, 'GLOVES PLAYER DRAW'),
+      onlineImageBase(gloveColor, 'GLOVES DRAW'),
+      onlineImageBase(gloveColor, 'GLOVES IDLE')
+    ];
+    opponentBases = [
+      onlineImageBase(opponentColor, 'CPU DRAW'),
+      onlineImageBase(opponentColor, 'DRAW'),
+      onlineImageBase(opponentColor, 'IDLE')
+    ];
+  }
+
+  // Active taunt only changes the opponent/body CPU TAUNT pose.
+  // Do NOT change glove taunt visuals like GLOVES OPPONENT TAUNT.
+  if(o === 'CPU TAUNT'){
+    opponentBases = [
+      ...onlineTauntBasesForFighterAndTaunt(opponentColor, opponentTaunt),
+      onlineImageBase(opponentColor, 'CPU TAUNT'),
+      onlineImageBase(opponentColor, 'IDLE')
+    ];
+  }
+
+  setImg($('gloveScene'), gloveBases);
+  setImg($('opponentScene'), opponentBases);
+
+  if($('status')) $('status').textContent = room.lastMessage || 'Round resolved.';
+
+  const msg = room.lastMessage || '';
+  let shake = '';
+  let flash = '';
+
+  if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) shake = 'shake';
+  if(msg.includes('Double taunt') || msg.includes('powers up') || msg.includes('taunt succeeds')) flash = 'gold';
+  else if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) flash = 'white';
+
+  if(shake){
+    const frame=$('fightFrame');
+    frame.classList.remove('shake','bigShake');
+    void frame.offsetWidth;
+    frame.classList.add(shake);
+    setTimeout(()=>frame.classList.remove(shake),520);
+  }
+
+  if(flash){
+    const fl=$('flash');
+    fl.className='flash';
+    void fl.offsetWidth;
+    fl.classList.add(flash);
+    setTimeout(()=>fl.className='flash',520);
+  }
+
+  if(autoReturn && room.status !== 'finished'){
+    idleTimer=setTimeout(()=>{
+      if(onlineMode && onlineRoomData) {
+        loadOnlineFightIdle(onlineRoomData);
+        if($('status')) $('status').textContent = `Round ${onlineRound(onlineRoomData)}. Choose your move.`;
+      }
+    },2500);
+  }
+};
+
+
+/* ============================================================
+   V10.9 HOST TAUNT HARD SYNC FIX
+   ------------------------------------------------------------
+   Bug found in testing:
+   - Guest active taunt showed online.
+   - Host active taunt stayed generic on guest screen.
+
+   Fix:
+   - Force hostTaunt from the visible/selected fighter state.
+   - After room creation, patch hostTaunt into Firebase again.
+   - Guest display reads hostTaunt directly when host is opponent.
+   - Host display reads guestTaunt directly when guest is opponent.
+   ============================================================ */
+
+function v109ActiveTauntForCurrentPlayer(){
+  ensureSelectedTaunts();
+  const fighter = state.selectedFighter || 'GREEN';
+  const selected = activeTauntIdForFighter(fighter);
+  state.selectedTaunt = selected;
+  state.selectedTaunts[fighter] = selected;
+  saveState();
+  return selected;
+}
+
+function onlineOpponentTauntForRole(role, room){
+  if(role === 'host'){
+    return String((room && room.guestTaunt) || 'DEFAULT').toUpperCase();
+  }
+  return String((room && room.hostTaunt) || 'DEFAULT').toUpperCase();
+}
+
+function onlineCurrentTauntForRole(role, room){
+  if(role === 'host'){
+    return String((room && room.hostTaunt) || 'DEFAULT').toUpperCase();
+  }
+  return String((room && room.guestTaunt) || 'DEFAULT').toUpperCase();
+}
+
+/* Extra Firebase patch hook. If tool exists, we update hostTaunt after room create. */
+async function v109PatchHostTauntAfterCreate(code, taunt){
+  if(typeof window.patchCounterBoxingRoom !== 'function') return;
+  try{
+    await window.patchCounterBoxingRoom(code, {
+      hostTaunt:String(taunt || 'DEFAULT').toUpperCase(),
+      updatedAt:Date.now()
+    });
+  }catch(err){
+    console.warn('Host taunt patch skipped:', err);
+  }
+}
+
+/* Override create room one more time with hard hostTaunt sync. */
+createOnlineRoom = async function(){
+  clearOnlineMode();
+
+  if(typeof v108SyncCreateTabToHidden === 'function') v108SyncCreateTabToHidden();
+  else if(typeof syncCreateTabToHidden === 'function') syncCreateTabToHidden();
+
+  const name = onlineName();
+  const code = randomRoomCode();
+  const wager = onlineWager();
+  const fighter = state.selectedFighter || 'GREEN';
+  const hostTaunt = v109ActiveTauntForCurrentPlayer();
+
+  if($('onlineRoomCode')) $('onlineRoomCode').value = code;
+  if($('onlineCreateRoomCode')) $('onlineCreateRoomCode').value = code;
+
+  if(typeof window.createCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Creating room...');
+    const paid = payOnlineWager(wager);
+
+    await window.createCounterBoxingRoom({
+      code,
+      hostName:name,
+      hostGloves:state.selectedGloves || 'GREEN',
+      hostFighter:fighter,
+      hostTaunt:hostTaunt,
+      hostWager:paid
+    });
+
+    await v109PatchHostTauntAfterCreate(code, hostTaunt);
+
+    onlineRole = 'host';
+    onlineRoomCode = code;
+    onlineResultPaidLocal = false;
+    await startOnlineRoomWatcher('host', code);
+    setOnlineStatus(`Room ${code} created. You wagered $${paid}. Waiting for challenger...`);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not create room. Check Firebase rules.');
+  }
+};
+
+/* Override join with hard guestTaunt sync too, keeping both sides symmetrical. */
+joinOnlineRoom = async function(){
+  clearOnlineMode();
+
+  if(typeof v108SyncJoinTabToHidden === 'function') v108SyncJoinTabToHidden();
+  else if(typeof syncJoinTabToHidden === 'function') syncJoinTabToHidden();
+
+  const name = onlineName();
+  const code = String(($('onlineRoomCode') && $('onlineRoomCode').value) || '').trim().toUpperCase();
+  const wager = onlineWager();
+  const fighter = state.selectedFighter || 'GREEN';
+  const guestTaunt = v109ActiveTauntForCurrentPlayer();
+
+  if(!code){
+    setOnlineStatus('Enter a room code first.');
+    return;
+  }
+
+  if(typeof window.joinCounterBoxingRoom !== 'function'){
+    setOnlineStatus('Firebase room tools are not ready yet.');
+    return;
+  }
+
+  try{
+    setOnlineStatus('Joining room...');
+    const paid = payOnlineWager(wager);
+
+    const room = await window.joinCounterBoxingRoom({
+      code,
+      guestName:name,
+      guestGloves:state.selectedGloves || 'GREEN',
+      guestFighter:fighter,
+      guestTaunt:guestTaunt,
+      guestWager:paid
+    });
+
+    if(!room){
+      setOnlineStatus('Room not found.');
+      return;
+    }
+
+    onlineRole = 'guest';
+    onlineRoomCode = code;
+    onlineResultPaidLocal = false;
+    await startOnlineRoomWatcher('guest', code);
+    startOnlineMatch('guest', code, room);
+  }catch(err){
+    console.error(err);
+    setOnlineStatus('Could not join room. Room may be full or Firebase rules need room access.');
+  }
+};
+
+createOnlineRoomFromTab = async function(){
+  await createOnlineRoom();
+  if($('onlineCreateRoomCode') && $('onlineRoomCode')){
+    $('onlineCreateRoomCode').value = $('onlineRoomCode').value || $('onlineCreateRoomCode').value || '';
+  }
+  if(typeof syncOnlineTabCash === 'function') syncOnlineTabCash();
+};
+
+joinOnlineRoomFromTab = async function(){
+  await joinOnlineRoom();
+  if(typeof syncOnlineTabCash === 'function') syncOnlineTabCash();
+};
+
+/* Override scene again with a debug-proof opponent taunt read. */
+setOnlineMappedScene = function(display, room, autoReturn=true){
+  clearTimeout(idleTimer);
+
+  const role = onlineRole || 'host';
+  const gloveColor = onlineGloveColorForRole(room, role);
+  const opponentColor = onlineOpponentColorForRole(room, role);
+  const opponentTaunt = onlineOpponentTauntForRole(role, room);
+
+  setImg($('ringScene'), ['RING4','RING1']);
+
+  const g = String(display.gloves || '').toUpperCase();
+  const o = String(display.opponent || '').toUpperCase();
+
+  let gloveBases = [
+    onlineImageBase(gloveColor, display.gloves),
+    onlineImageBase(gloveColor, 'GLOVES IDLE')
+  ];
+
+  let opponentBases = [
+    onlineImageBase(opponentColor, display.opponent),
+    onlineImageBase(opponentColor, 'IDLE')
+  ];
+
+  if(g.includes('DRAW') || o.includes('DRAW')){
+    gloveBases = [
+      onlineImageBase(gloveColor, 'GLOVES PLAYER DRAW'),
+      onlineImageBase(gloveColor, 'GLOVES DRAW'),
+      onlineImageBase(gloveColor, 'GLOVES IDLE')
+    ];
+    opponentBases = [
+      onlineImageBase(opponentColor, 'CPU DRAW'),
+      onlineImageBase(opponentColor, 'DRAW'),
+      onlineImageBase(opponentColor, 'IDLE')
+    ];
+  }
+
+  if(o === 'CPU TAUNT'){
+    opponentBases = [
+      ...onlineTauntBasesForFighterAndTaunt(opponentColor, opponentTaunt),
+      onlineImageBase(opponentColor, 'CPU TAUNT'),
+      onlineImageBase(opponentColor, 'IDLE')
+    ];
+  }
+
+  setImg($('gloveScene'), gloveBases);
+  setImg($('opponentScene'), opponentBases);
+
+  if($('status')) $('status').textContent = room.lastMessage || 'Round resolved.';
+
+  const msg = room.lastMessage || '';
+  let shake = '';
+  let flash = '';
+
+  if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) shake = 'shake';
+  if(msg.includes('Double taunt') || msg.includes('powers up') || msg.includes('taunt succeeds')) flash = 'gold';
+  else if(msg.includes('counter') || msg.includes('damage') || msg.includes('punished') || msg.includes('K.O.')) flash = 'white';
+
+  if(shake){
+    const frame=$('fightFrame');
+    frame.classList.remove('shake','bigShake');
+    void frame.offsetWidth;
+    frame.classList.add(shake);
+    setTimeout(()=>frame.classList.remove(shake),520);
+  }
+
+  if(flash){
+    const fl=$('flash');
+    fl.className='flash';
+    void fl.offsetWidth;
+    fl.classList.add(flash);
+    setTimeout(()=>fl.className='flash',520);
+  }
+
+  if(autoReturn && room.status !== 'finished'){
+    idleTimer=setTimeout(()=>{
+      if(onlineMode && onlineRoomData) {
+        loadOnlineFightIdle(onlineRoomData);
+        if($('status')) $('status').textContent = `Round ${onlineRound(onlineRoomData)}. Choose your move.`;
+      }
+    },2500);
+  }
+};
+
+
+/* ============================================================
+   V11.2 CLEAN ROTATING STORE REBUILD
+   ------------------------------------------------------------
+   This replaces the store render completely.
+   ============================================================ */
+
+const STORE_REFRESH_MS_V112 = 3 * 60 * 60 * 1000;
+
+const STORE_TAUNT_POOL_V112 = [
+  { id:'GTS', type:'taunt', name:'GO TO SLEEP', price:5000, bases:['GREEN CPU TAUNT 1','GO TO SLEEP TAUNT DISPLAY','GO TO SLEEP LOCKER ROOM TAUNT GTS','GREEN CPU TAUNT GTS'] },
+  { id:'MOS', type:'taunt', name:'MAN OF STEEL', price:5000, bases:['GREEN CPU TAUNT 2','MAN OF STEEL TAUNT DISPLAY','MAN OF STEEL LOCKER ROOM TAUNT MOS','GREEN CPU TAUNT MOS'] }
+];
+
+const STORE_GLOVE_POOL_V112 = [
+  { id:'GREEN', type:'glove', name:'GREEN GLOVES', price:3000, bases:['GREEN GLOVES DISPLAY','GREEN GLOVES IDLE','GREEN GLOVES PLAYER TAUNT'] },
+  { id:'RED', type:'glove', name:'RED GLOVES', price:3000, bases:['RED GLOVES DISPLAY','RED GLOVES IDLE','RED GLOVES PLAYER TAUNT'] },
+  { id:'BLUE', type:'glove', name:'BLUE GLOVES', price:3000, bases:['BLUE GLOVES DISPLAY','BLUE GLOVES IDLE','BLUE GLOVES PLAYER TAUNT'] },
+  { id:'PINK', type:'glove', name:'PINK GLOVES', price:3000, bases:['PINK GLOVES DISPLAY','PINK GLOVES IDLE','PINK GLOVES PLAYER TAUNT'] },
+  { id:'AMERICAN FLAG', type:'glove', name:'AMERICAN FLAG', price:3000, bases:['AMERICAN FLAG DISPLAY','AMERICAN FLAG GLOVES DISPLAY','AMERICAN FLAG GLOVES IDLE'] },
+  { id:'FLAME ON', type:'glove', name:'FLAME ON', price:3000, bases:['FLAME ON DISPLAY','FLAME ON GLOVES DISPLAY','FLAME ON GLOVES IDLE'] },
+  { id:'WHITE', type:'glove', name:'WHITE GLOVES', price:3000, bases:['WHITE GLOVES DISPLAY','WHITE IDLE','WHITE GLOVES PLAYER TAUNT'] }
+];
+
+function storeCycleV112(){ return Math.floor(Date.now() / STORE_REFRESH_MS_V112); }
+function storeNextV112(){ return (storeCycleV112() + 1) * STORE_REFRESH_MS_V112; }
+
+function storeItemsV112(){
+  const cycle = storeCycleV112();
+  const taunt = STORE_TAUNT_POOL_V112[cycle % STORE_TAUNT_POOL_V112.length];
+  const start = (cycle * 3) % STORE_GLOVE_POOL_V112.length;
+  const gloves = [];
+  for(let i=0;i<3;i++) gloves.push(STORE_GLOVE_POOL_V112[(start+i) % STORE_GLOVE_POOL_V112.length]);
+  return {taunt, gloves};
+}
+
+function storeOwnedV112(item){
+  if(item.type === 'taunt') return state.ownedTaunts.includes(item.id);
+  if(item.type === 'glove') return state.unlockedGloves.includes(item.id);
+  return false;
+}
+
+function forceVisibleImageV112(img, bases){
+  const files = candidateFiles(bases);
+  let i = 0;
+  img.style.visibility = 'visible';
+  img.style.opacity = '1';
+  img.onerror = () => {
+    i++;
+    if(i < files.length) img.src = files[i];
+    else{
+      img.onerror = null;
+      img.style.visibility = 'visible';
+      img.style.opacity = '1';
+    }
+  };
+  img.onload = () => { img.style.visibility = 'visible'; img.style.opacity = '1'; };
+  img.src = files[0];
+}
+
+function storeCardV112(item){
+  const owned = storeOwnedV112(item);
+  const card = document.createElement('div');
+  card.className = 'storeV112Item';
+  card.innerHTML = `
+    <div class="storeV112ItemImage"><img alt="${item.name}"></div>
+    <div class="storeV112ItemName">${item.name}</div>
+    <div class="storeV112ItemPrice ${owned ? 'storeV112Owned' : ''}">${owned ? 'OWNED' : '$' + item.price}</div>
+  `;
+  forceVisibleImageV112(card.querySelector('img'), item.bases);
+  card.onclick = () => buyStoreItemV112(item);
+  return card;
+}
+
+function buyStoreItemV112(item){
+  if(!item) return;
+
+  if(item.type === 'taunt'){
+    if(!state.ownedTaunts.includes(item.id)){
+      if((state.cash || 0) < item.price){ showNotice('store','Not enough cash.'); return; }
+      state.cash -= item.price;
+      state.ownedTaunts.push(item.id);
+    }
+    ensureSelectedTaunts();
+    const fighter = state.selectedFighter || 'GREEN';
+    state.selectedTaunt = item.id;
+    state.selectedTaunts[fighter] = item.id;
+    saveState();
+    showLocker();
+    return;
+  }
+
+  if(item.type === 'glove'){
+    if(!state.unlockedGloves.includes(item.id)){
+      if((state.cash || 0) < item.price){ showNotice('store','Not enough cash.'); return; }
+      state.cash -= item.price;
+      state.unlockedGloves.push(item.id);
+    }
+    state.selectedGloves = item.id;
+    saveState();
+    showLocker();
+  }
+}
+
+function updateStoreCountdownV112(){
+  const el = $('storeCountdown');
+  if(!el) return;
+  const ms = Math.max(0, storeNextV112() - Date.now());
+  const total = Math.floor(ms / 1000);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  el.textContent = h > 0 ? `REFRESHES IN ${h}H ${String(m).padStart(2,'0')}M` : `REFRESHES IN ${m}M ${String(s).padStart(2,'0')}S`;
+}
+
+let storeTimerV112 = null;
+let storeLastCycleV112 = -1;
+
+function renderStoreV112(){
+  setImg($('storeBg'), ['LOCKERROOM SCREEN','LOCKERROOMSCREEN','LOCKER ROOM SCREEN']);
+
+  if(!state.unlockedGloves.includes('BLACK')){
+    state.unlockedGloves.push('BLACK');
+    saveState();
+  }
+
+  if($('storeCashAmount')) $('storeCashAmount').textContent = '$' + Number(state.cash || 0);
+
+  const items = storeItemsV112();
+
+  const tauntSlot = $('storeTauntSlot');
+  if(tauntSlot){
+    tauntSlot.innerHTML = '';
+    tauntSlot.appendChild(storeCardV112(items.taunt));
+  }
+
+  const gloveSlots = $('storeGloveSlots');
+  if(gloveSlots){
+    gloveSlots.innerHTML = '';
+    items.gloves.forEach(item => gloveSlots.appendChild(storeCardV112(item)));
+  }
+
+  updateStoreCountdownV112();
+  storeLastCycleV112 = storeCycleV112();
+}
+
+showStore = function(){
+  show('store');
+  renderStoreV112();
+  if(storeTimerV112) clearInterval(storeTimerV112);
+  storeTimerV112 = setInterval(()=>{
+    updateStoreCountdownV112();
+    if(storeCycleV112() !== storeLastCycleV112) renderStoreV112();
+  }, 1000);
+};
+
+backFromStore = function(){
+  if(storeTimerV112){
+    clearInterval(storeTimerV112);
+    storeTimerV112 = null;
+  }
+  showLocker();
+};
+
+if(!state.unlockedGloves.includes('BLACK')){
+  state.unlockedGloves.push('BLACK');
+  saveState();
+}
+
+const GLOVE_COLORS_V112 = ['BLACK','GREEN','BLUE','RED','PINK','WHITE','AMERICAN FLAG','FLAME ON','GOLD'];
+
+showGloves = function(){
+  show('gloves');
+  setImg($('glovesBg'), SCREEN_BASES.locker);
+  const g=$('glovesGrid');
+  g.innerHTML='';
+  GLOVE_COLORS_V112.forEach(color=>{
+    const unlocked=state.unlockedGloves.includes(color);
+    const card=document.createElement('div');
+    card.className='card '+(unlocked?'':'locked');
+    card.innerHTML=`<img alt="${color} gloves"><div class="cardLabel">${color} GLOVES${unlocked?'':' 🔒'}</div>`;
+    setImg(card.querySelector('img'), [
+      color+' GLOVES DISPLAY',
+      color+' DISPLAY',
+      color+' GLOVES IDLE',
+      color+' GLOVES PLAYER TAUNT',
+      color+' GLOVES DRAW',
+      color+' GLOVES PLAYER BLOCK',
+      color+' GLOVES CPU BLOCK',
+      color+' GLOVES CPU COUNTER',
+      color+' GLOVES PLAYER COUNTER'
+    ]);
+    card.onclick=()=>{
+      if(!unlocked){ showNotice('locker','Buy this glove color in the store.'); return; }
+      state.selectedGloves=color;
+      saveState();
+      showLocker();
+    };
+    g.appendChild(card);
+  });
+};
+
+
+/* V11.3 STORE SCREEN RENDER + BLUE TAUNT OPTION */
+const STORE_REFRESH_MS_V113=3*60*60*1000;
+const STORE_TAUNT_POOL_V113=[
+{id:'GTS',fighter:'GREEN',type:'taunt',name:'GO TO SLEEP TAUNT',price:5000,bases:['GREEN CPU TAUNT 1','GO TO SLEEP TAUNT DISPLAY','GO TO SLEEP LOCKER ROOM TAUNT GTS','GREEN CPU TAUNT GTS']},
+{id:'MOS',fighter:'GREEN',type:'taunt',name:'MAN OF STEEL TAUNT',price:5000,bases:['GREEN CPU TAUNT 2','MAN OF STEEL TAUNT DISPLAY','MAN OF STEEL LOCKER ROOM TAUNT MOS','GREEN CPU TAUNT MOS']},
+{id:'PROUD',fighter:'BLUE',type:'taunt',name:'PROUD OF YOU TAUNT',price:5000,bases:['PROUD OF YOU TAUNT DISPLAY','PROUD OF YOU LOCKER ROOM TAUNT','BLUE CPU TAUNT 1','BLUE CPU TAUNT']}
+];
+const STORE_GLOVE_POOL_V113=[
+{id:'GREEN',type:'glove',name:'GREEN GLOVES',price:3000,bases:['GREEN GLOVES DISPLAY','GREEN GLOVES IDLE','GREEN GLOVES PLAYER TAUNT']},
+{id:'RED',type:'glove',name:'RED GLOVES',price:3000,bases:['RED GLOVES DISPLAY','RED GLOVES IDLE','RED GLOVES PLAYER TAUNT']},
+{id:'BLUE',type:'glove',name:'BLUE GLOVES',price:3000,bases:['BLUE GLOVES DISPLAY','BLUE GLOVES IDLE','BLUE GLOVES PLAYER TAUNT']},
+{id:'PINK',type:'glove',name:'PINK GLOVES',price:3000,bases:['PINK GLOVES DISPLAY','PINK GLOVES IDLE','PINK GLOVES PLAYER TAUNT']},
+{id:'AMERICA',type:'glove',name:'AMERICAN GLOVES',price:10000,gloveId:'AMERICA',bases:['AMERICAN FLAG DISPLAY','AMERICA GLOVES IDLE','AMERICA GLOVES PLAYER TAUNT']},
+{id:'FLAME ON',type:'glove',name:'FLAME ON',price:3000,bases:['FLAME ON DISPLAY','FLAME ON GLOVES DISPLAY','FLAME ON GLOVES IDLE']},
+{id:'WHITE',type:'glove',name:'WHITE GLOVES',price:3000,bases:['WHITE GLOVES DISPLAY','WHITE IDLE','WHITE GLOVES PLAYER TAUNT']}
+];
+function storeCycleV113(){return Math.floor(Date.now()/STORE_REFRESH_MS_V113)}
+function storeNextV113(){return (storeCycleV113()+1)*STORE_REFRESH_MS_V113}
+function currentStoreItemsV113(){const c=storeCycleV113();const taunt=STORE_TAUNT_POOL_V113[c%STORE_TAUNT_POOL_V113.length];const start=(c*3)%STORE_GLOVE_POOL_V113.length;const gloves=[];for(let i=0;i<3;i++)gloves.push(STORE_GLOVE_POOL_V113[(start+i)%STORE_GLOVE_POOL_V113.length]);return{taunt,gloves}}
+function storeOwnedV113(item){if(item.type==='taunt')return state.ownedTaunts.includes(item.id);if(item.type==='glove')return state.unlockedGloves.includes(item.gloveId||item.id);return false}
+function forceStoreImageV113(img,bases){const files=candidateFiles(bases);let i=0;img.style.visibility='visible';img.style.opacity='1';img.onerror=()=>{i++;if(i<files.length)img.src=files[i];else{img.onerror=null;img.style.visibility='visible';img.style.opacity='1'}};img.onload=()=>{img.style.visibility='visible';img.style.opacity='1'};img.src=files[0]}
+function storeCardV113(item){const owned=storeOwnedV113(item);const card=document.createElement('div');card.className='storeV113Item';card.innerHTML=`<div class="storeV113ItemImage"><img alt="${item.name}"></div><div class="storeV113ItemName">${item.name}</div><div class="storeV113ItemPrice ${owned?'storeV113Owned':''}">${owned?'OWNED':'$'+Number(item.price).toLocaleString()}</div>`;forceStoreImageV113(card.querySelector('img'),item.bases);card.onclick=()=>buyStoreItemV113(item);return card}
+function buyStoreItemV113(item){if(!item)return;if(item.type==='taunt'){if(!state.ownedTaunts.includes(item.id)){if((state.cash||0)<item.price){showNotice('store','Not enough cash.');return}state.cash-=item.price;state.ownedTaunts.push(item.id)}ensureSelectedTaunts();const fighter=item.fighter||state.selectedFighter||'GREEN';state.selectedFighter=fighter;state.selectedTaunt=item.id;state.selectedTaunts[fighter]=item.id;saveState();showLocker();return}if(item.type==='glove'){const gloveId=item.gloveId||item.id;if(!state.unlockedGloves.includes(gloveId)){if((state.cash||0)<item.price){showNotice('store','Not enough cash.');return}state.cash-=item.price;state.unlockedGloves.push(gloveId)}state.selectedGloves=gloveId;saveState();showLocker()}}
+function updateStoreCountdownV113(){const el=$('storeCountdown');if(!el)return;const ms=Math.max(0,storeNextV113()-Date.now());const total=Math.floor(ms/1000);const h=Math.floor(total/3600);const m=Math.floor((total%3600)/60);const s=total%60;el.textContent=h>0?`${h}H ${String(m).padStart(2,'0')}M`:`${m}M ${String(s).padStart(2,'0')}S`}
+let storeTimerV113=null,lastStoreCycleV113=-1;
+function renderStoreV113(){setImg($('storeBg'),['STORE SCREEN','STORE SCREEN.png']);if(!state.unlockedGloves.includes('BLACK')){state.unlockedGloves.push('BLACK');saveState()}if($('storeCashAmount'))$('storeCashAmount').textContent='$'+Number(state.cash||0).toLocaleString();const items=currentStoreItemsV113();const t=$('storeTauntSlot');if(t){t.innerHTML='';t.appendChild(storeCardV113(items.taunt))}const g=$('storeGloveSlots');if(g){g.innerHTML='';items.gloves.forEach(item=>g.appendChild(storeCardV113(item)))}updateStoreCountdownV113();lastStoreCycleV113=storeCycleV113()}
+showStore=function(){show('store');renderStoreV113();if(storeTimerV113)clearInterval(storeTimerV113);storeTimerV113=setInterval(()=>{updateStoreCountdownV113();if(storeCycleV113()!==lastStoreCycleV113)renderStoreV113()},1000)}
+backFromStore=function(){if(storeTimerV113){clearInterval(storeTimerV113);storeTimerV113=null}showLocker()}
+
+if(typeof FIGHTER_TAUNT_OPTIONS!=='undefined'){FIGHTER_TAUNT_OPTIONS.BLUE=[
+{id:'DEFAULT',label:'Default Taunt',owned:()=>true,displayBases:(fighter)=>[fighter+' CPU TAUNT',fighter+' PLAYER TAUNT',fighter+' LOCKER ROOM',fighter+' IDLE']},
+{id:'PROUD',label:'Proud Of You',owned:()=>state.ownedTaunts.includes('PROUD'),displayBases:(fighter)=>['PROUD OF YOU TAUNT DISPLAY','PROUD OF YOU LOCKER ROOM TAUNT','BLUE CPU TAUNT 1','BLUE CPU TAUNT','BLUE PLAYER TAUNT']}
+]}
+if(typeof onlineTauntBasesForFighterAndTaunt==='function'){const onlineTauntBasesForFighterAndTaunt_v113_base=onlineTauntBasesForFighterAndTaunt;onlineTauntBasesForFighterAndTaunt=function(fighterId,tauntId){fighterId=String(fighterId||'GREEN').toUpperCase();tauntId=String(tauntId||'DEFAULT').toUpperCase();if(fighterId==='BLUE'&&tauntId==='PROUD')return['PROUD OF YOU TAUNT DISPLAY','PROUD OF YOU LOCKER ROOM TAUNT','BLUE CPU TAUNT 1','BLUE CPU TAUNT'];return onlineTauntBasesForFighterAndTaunt_v113_base(fighterId,tauntId)}}
+const GLOVE_COLORS_V113=['BLACK','GREEN','BLUE','RED','PINK','WHITE','AMERICA','FLAME ON','GOLD'];
+showGloves=function(){show('gloves');setImg($('glovesBg'),SCREEN_BASES.locker);const g=$('glovesGrid');g.innerHTML='';GLOVE_COLORS_V113.forEach(color=>{const unlocked=state.unlockedGloves.includes(color);const displayName=color==='AMERICA'?'AMERICAN':color;const card=document.createElement('div');card.className='card '+(unlocked?'':'locked');card.innerHTML=`<img alt="${displayName} gloves"><div class="cardLabel">${displayName} GLOVES${unlocked?'':' 🔒'}</div>`;setImg(card.querySelector('img'),[color+' GLOVES DISPLAY',color+' DISPLAY',color+' GLOVES IDLE',color+' GLOVES PLAYER TAUNT',color+' GLOVES DRAW',color+' GLOVES PLAYER BLOCK',color+' GLOVES CPU BLOCK',color+' GLOVES CPU COUNTER',color+' GLOVES PLAYER COUNTER']);card.onclick=()=>{if(!unlocked){showNotice('locker','Buy this glove color in the store.');return}state.selectedGloves=color;saveState();showLocker()};g.appendChild(card)})}
+if(!state.unlockedGloves.includes('BLACK')){state.unlockedGloves.push('BLACK');saveState()}
+
+
+/* ============================================================
+   V11.4 STORE 60-MINUTE REFRESH + AMERICAN GLOVES FIX
+   ============================================================ */
+
+const STORE_REFRESH_MS_V114 = 60 * 60 * 1000;
+
+const STORE_TAUNT_POOL_V114 = [
+  { id:'GTS', fighter:'GREEN', type:'taunt', name:'GO TO SLEEP TAUNT', price:5000, bases:['GREEN CPU TAUNT 1','GO TO SLEEP TAUNT DISPLAY','GO TO SLEEP LOCKER ROOM TAUNT GTS','GREEN CPU TAUNT GTS'] },
+  { id:'MOS', fighter:'GREEN', type:'taunt', name:'MAN OF STEEL TAUNT', price:5000, bases:['GREEN CPU TAUNT 2','MAN OF STEEL TAUNT DISPLAY','MAN OF STEEL LOCKER ROOM TAUNT MOS','GREEN CPU TAUNT MOS'] },
+  { id:'PROUD', fighter:'BLUE', type:'taunt', name:'PROUD OF YOU TAUNT', price:5000, bases:['PROUD OF YOU TAUNT DISPLAY','PROUD OF YOU LOCKER ROOM TAUNT','BLUE CPU TAUNT 1','BLUE CPU TAUNT'] }
+];
+
+const STORE_GLOVE_POOL_V114 = [
+  { id:'GREEN', type:'glove', name:'GREEN GLOVES', price:3000, bases:['GREEN GLOVES DISPLAY','GREEN GLOVES IDLE','GREEN GLOVES PLAYER TAUNT'] },
+  { id:'RED', type:'glove', name:'RED GLOVES', price:3000, bases:['RED GLOVES DISPLAY','RED GLOVES IDLE','RED GLOVES PLAYER TAUNT'] },
+  { id:'BLUE', type:'glove', name:'BLUE GLOVES', price:3000, bases:['BLUE GLOVES DISPLAY','BLUE GLOVES IDLE','BLUE GLOVES PLAYER TAUNT'] },
+  { id:'PINK', type:'glove', name:'PINK GLOVES', price:3000, bases:['PINK GLOVES DISPLAY','PINK GLOVES IDLE','PINK GLOVES PLAYER TAUNT'] },
+  /* American gloves use AMERICAN FLAG DISPLAY for display case,
+     and AMERICA GLOVES ... for fight/idle files. */
+  { id:'AMERICA', type:'glove', name:'AMERICAN GLOVES', price:10000, gloveId:'AMERICA', bases:['AMERICAN FLAG DISPLAY','AMERICA GLOVES IDLE','AMERICA GLOVES PLAYER TAUNT'] },
+  { id:'FLAME ON', type:'glove', name:'FLAME ON', price:3000, bases:['FLAME ON DISPLAY','FLAME ON GLOVES DISPLAY','FLAME ON GLOVES IDLE'] },
+  { id:'WHITE', type:'glove', name:'WHITE GLOVES', price:3000, bases:['WHITE GLOVES DISPLAY','WHITE IDLE','WHITE GLOVES PLAYER TAUNT'] }
+];
+
+function storeCycleV114(){ return Math.floor(Date.now() / STORE_REFRESH_MS_V114); }
+function storeNextV114(){ return (storeCycleV114() + 1) * STORE_REFRESH_MS_V114; }
+
+function currentStoreItemsV114(){
+  const cycle = storeCycleV114();
+  const taunt = STORE_TAUNT_POOL_V114[cycle % STORE_TAUNT_POOL_V114.length];
+  const start = (cycle * 3) % STORE_GLOVE_POOL_V114.length;
+  const gloves = [];
+  for(let i=0;i<3;i++) gloves.push(STORE_GLOVE_POOL_V114[(start+i) % STORE_GLOVE_POOL_V114.length]);
+  return {taunt, gloves};
+}
+
+function storeOwnedV114(item){
+  if(item.type === 'taunt') return state.ownedTaunts.includes(item.id);
+  if(item.type === 'glove') return state.unlockedGloves.includes(item.gloveId || item.id);
+  return false;
+}
+
+function forceStoreImageV114(img, bases){
+  const files = candidateFiles(bases);
+  let i = 0;
+  img.style.visibility = 'visible';
+  img.style.opacity = '1';
+  img.onerror = () => {
+    i++;
+    if(i < files.length) img.src = files[i];
+    else{
+      img.onerror = null;
+      img.style.visibility = 'visible';
+      img.style.opacity = '1';
+    }
+  };
+  img.onload = () => {
+    img.style.visibility = 'visible';
+    img.style.opacity = '1';
+  };
+  img.src = files[0];
+}
+
+function storeCardV114(item){
+  const owned = storeOwnedV114(item);
+  const card = document.createElement('div');
+  card.className = 'storeV113Item';
+  card.innerHTML = `
+    <div class="storeV113ItemImage"><img alt="${item.name}"></div>
+    <div class="storeV113ItemName">${item.name}</div>
+    <div class="storeV113ItemPrice ${owned ? 'storeV113Owned' : ''}">${owned ? 'OWNED' : '$' + Number(item.price).toLocaleString()}</div>
+  `;
+  forceStoreImageV114(card.querySelector('img'), item.bases);
+  card.onclick = () => buyStoreItemV114(item);
+  return card;
+}
+
+function buyStoreItemV114(item){
+  if(!item) return;
+
+  if(item.type === 'taunt'){
+    if(!state.ownedTaunts.includes(item.id)){
+      if((state.cash || 0) < item.price){ showNotice('store','Not enough cash.'); return; }
+      state.cash -= item.price;
+      state.ownedTaunts.push(item.id);
+    }
+    ensureSelectedTaunts();
+    const fighter = item.fighter || state.selectedFighter || 'GREEN';
+    state.selectedFighter = fighter;
+    state.selectedTaunt = item.id;
+    state.selectedTaunts[fighter] = item.id;
+    saveState();
+    showLocker();
+    return;
+  }
+
+  if(item.type === 'glove'){
+    const gloveId = item.gloveId || item.id;
+    if(!state.unlockedGloves.includes(gloveId)){
+      if((state.cash || 0) < item.price){ showNotice('store','Not enough cash.'); return; }
+      state.cash -= item.price;
+      state.unlockedGloves.push(gloveId);
+    }
+    state.selectedGloves = gloveId;
+    saveState();
+    showLocker();
+  }
+}
+
+function updateStoreCountdownV114(){
+  const el = $('storeCountdown');
+  if(!el) return;
+
+  const ms = Math.max(0, storeNextV114() - Date.now());
+  const total = Math.floor(ms / 1000);
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+
+  el.textContent = `${m}M ${String(s).padStart(2,'0')}S`;
+}
+
+let storeTimerV114 = null;
+let lastStoreCycleV114 = -1;
+
+function renderStoreV114(){
+  setImg($('storeBg'), ['STORE SCREEN','STORE SCREEN.png']);
+
+  if(!state.unlockedGloves.includes('BLACK')){
+    state.unlockedGloves.push('BLACK');
+    saveState();
+  }
+
+  if($('storeCashAmount')) $('storeCashAmount').textContent = '$' + Number(state.cash || 0).toLocaleString();
+
+  const items = currentStoreItemsV114();
+
+  const taunt = $('storeTauntSlot');
+  if(taunt){
+    taunt.innerHTML = '';
+    taunt.appendChild(storeCardV114(items.taunt));
+  }
+
+  const gloves = $('storeGloveSlots');
+  if(gloves){
+    gloves.innerHTML = '';
+    items.gloves.forEach(item => gloves.appendChild(storeCardV114(item)));
+  }
+
+  updateStoreCountdownV114();
+  lastStoreCycleV114 = storeCycleV114();
+}
+
+showStore = function(){
+  show('store');
+  renderStoreV114();
+
+  if(storeTimerV114) clearInterval(storeTimerV114);
+  storeTimerV114 = setInterval(()=>{
+    updateStoreCountdownV114();
+    if(storeCycleV114() !== lastStoreCycleV114) renderStoreV114();
+  }, 1000);
+};
+
+backFromStore = function(){
+  if(storeTimerV114){
+    clearInterval(storeTimerV114);
+    storeTimerV114 = null;
+  }
+  showLocker();
+};
+
+/* Fix glove selection screen image lookup for American gloves. */
+const GLOVE_COLORS_V114 = ['BLACK','GREEN','BLUE','RED','PINK','WHITE','AMERICA','FLAME ON','GOLD'];
+
+function gloveDisplayBasesV114(color){
+  if(color === 'AMERICA'){
+    return [
+      'AMERICAN FLAG DISPLAY',
+      'AMERICA GLOVES DISPLAY',
+      'AMERICA GLOVES IDLE',
+      'AMERICA GLOVES PLAYER TAUNT'
+    ];
+  }
+  return [
+    color+' GLOVES DISPLAY',
+    color+' DISPLAY',
+    color+' GLOVES IDLE',
+    color+' GLOVES PLAYER TAUNT',
+    color+' GLOVES DRAW',
+    color+' GLOVES PLAYER BLOCK',
+    color+' GLOVES CPU BLOCK',
+    color+' GLOVES CPU COUNTER',
+    color+' GLOVES PLAYER COUNTER'
+  ];
+}
+
+showGloves = function(){
+  show('gloves');
+  setImg($('glovesBg'), SCREEN_BASES.locker);
+  const g=$('glovesGrid');
+  g.innerHTML='';
+
+  GLOVE_COLORS_V114.forEach(color=>{
+    const unlocked=state.unlockedGloves.includes(color);
+    const displayName = color === 'AMERICA' ? 'AMERICAN' : color;
+
+    const card=document.createElement('div');
+    card.className='card '+(unlocked?'':'locked');
+    card.innerHTML=`<img alt="${displayName} gloves"><div class="cardLabel">${displayName} GLOVES${unlocked?'':' 🔒'}</div>`;
+    setImg(card.querySelector('img'), gloveDisplayBasesV114(color));
+    card.onclick=()=>{
+      if(!unlocked){ showNotice('locker','Buy this glove color in the store.'); return; }
+      state.selectedGloves=color;
+      saveState();
+      showLocker();
+    };
+    g.appendChild(card);
+  });
+};
+
+
+/* ============================================================
+   V11.5 PAY TO REFRESH STORE
+   ------------------------------------------------------------
+   Store rotation remains 60 minutes.
+   Player can pay $10,000 to skip to the next item set.
+   Uses localStorage offset so refresh survives page reload.
+   ============================================================ */
+
+const STORE_REFRESH_COST_V115 = 10000;
+const STORE_REFRESH_OFFSET_KEY_V115 = 'counterBoxingStoreRefreshOffsetV115';
+
+function storeOffsetV115(){
+  return Number(localStorage.getItem(STORE_REFRESH_OFFSET_KEY_V115) || 0);
+}
+
+function setStoreOffsetV115(value){
+  localStorage.setItem(STORE_REFRESH_OFFSET_KEY_V115, String(Number(value || 0)));
+}
+
+function adjustedStoreNowV115(){
+  return Date.now() + storeOffsetV115();
+}
+
+/* Override v11.4 cycle functions with offset-aware versions */
+storeCycleV114 = function(){
+  return Math.floor(adjustedStoreNowV115() / STORE_REFRESH_MS_V114);
+};
+
+storeNextV114 = function(){
+  return (storeCycleV114() + 1) * STORE_REFRESH_MS_V114 - storeOffsetV115();
+};
+
+currentStoreItemsV114 = function(){
+  const cycle = storeCycleV114();
+  const taunt = STORE_TAUNT_POOL_V114[cycle % STORE_TAUNT_POOL_V114.length];
+  const start = (cycle * 3) % STORE_GLOVE_POOL_V114.length;
+  const gloves = [];
+  for(let i=0;i<3;i++) gloves.push(STORE_GLOVE_POOL_V114[(start+i) % STORE_GLOVE_POOL_V114.length]);
+  return {taunt, gloves};
+};
+
+function payToRefreshStoreV115(){
+  if((state.cash || 0) < STORE_REFRESH_COST_V115){
+    showNotice('store','Not enough cash to refresh.');
+    return;
+  }
+
+  state.cash -= STORE_REFRESH_COST_V115;
+
+  // Move the store forward by one full 60-minute cycle.
+  setStoreOffsetV115(storeOffsetV115() + STORE_REFRESH_MS_V114);
+
+  saveState();
+  renderStoreV114();
+
+  showNotice('store','Store refreshed.');
+}
+
+/* Add button state + cash update after every render. */
+const renderStoreV114_v115_base = renderStoreV114;
+renderStoreV114 = function(){
+  renderStoreV114_v115_base();
+
+  if($('storeCashAmount')){
+    $('storeCashAmount').textContent = '$' + Number(state.cash || 0).toLocaleString();
+  }
+
+  const btn = $('storeRefreshNowBtn');
+  if(btn){
+    btn.textContent = 'REFRESH NOW $10,000';
+    btn.disabled = false;
+    btn.style.opacity = (state.cash || 0) >= STORE_REFRESH_COST_V115 ? '1' : '.65';
+  }
+};
+
+
+/* ============================================================
+   V11.6 STORE TAUNT DISPLAY / LOCKER / RING ASSET ROUTING
+   ============================================================ */
+
+const STORE_TAUNT_POOL_V116 = [
+  {
+    id:'GTS',
+    fighter:'GREEN',
+    type:'taunt',
+    name:'GO TO SLEEP TAUNT',
+    price:5000,
+    bases:['GO TO SLEEP TAUNT DISPLAY']
+  },
+  {
+    id:'MOS',
+    fighter:'GREEN',
+    type:'taunt',
+    name:'MAN OF STEEL TAUNT',
+    price:5000,
+    bases:['MAN OF STEEL TAUNT DISPLAY']
+  },
+  {
+    id:'PROUD',
+    fighter:'BLUE',
+    type:'taunt',
+    name:'PROUD OF YOU TAUNT',
+    price:5000,
+    bases:['PROUD OF YOU TAUNT DISPLAY']
+  }
+];
+
+/* Store rotation keeps v11.5 60-minute timer, but uses the cleaned taunt display files. */
+currentStoreItemsV114 = function(){
+  const cycle = storeCycleV114();
+  const taunt = STORE_TAUNT_POOL_V116[cycle % STORE_TAUNT_POOL_V116.length];
+  const start = (cycle * 3) % STORE_GLOVE_POOL_V114.length;
+  const gloves = [];
+  for(let i=0;i<3;i++) gloves.push(STORE_GLOVE_POOL_V114[(start+i) % STORE_GLOVE_POOL_V114.length]);
+  return {taunt, gloves};
+};
+
+/* Locker room = LOCKER ROOM TAUNT quality files.
+   Store = TAUNT DISPLAY files.
+   Ring = CPU TAUNT files.
+*/
+if(typeof FIGHTER_TAUNT_OPTIONS !== 'undefined'){
+  FIGHTER_TAUNT_OPTIONS.GREEN = [
+    {
+      id:'DEFAULT',
+      label:'Default Taunt',
+      owned:()=>true,
+      displayBases:(fighter)=>[
+        'GREEN CPU TAUNT',
+        'GREEN PLAYER TAUNT',
+        'GREEN LOCKER ROOM',
+        'GREEN IDLE'
+      ]
+    },
+    {
+      id:'GTS',
+      label:'Go To Sleep',
+      owned:()=>state.ownedTaunts.includes('GTS'),
+      displayBases:(fighter)=>[
+        'GO TO SLEEP LOCKER ROOM TAUNT GTS',
+        'GREEN CPU TAUNT 1',
+        'GREEN CPU TAUNT GTS'
+      ]
+    },
+    {
+      id:'MOS',
+      label:'Man Of Steel',
+      owned:()=>state.ownedTaunts.includes('MOS'),
+      displayBases:(fighter)=>[
+        'MAN OF STEEL LOCKER ROOM TAUNT MOS',
+        'GREEN CPU TAUNT 2',
+        'GREEN CPU TAUNT MOS'
+      ]
+    }
+  ];
+
+  FIGHTER_TAUNT_OPTIONS.BLUE = [
+    {
+      id:'DEFAULT',
+      label:'Default Taunt',
+      owned:()=>true,
+      displayBases:(fighter)=>[
+        'BLUE CPU TAUNT',
+        'BLUE PLAYER TAUNT',
+        'BLUE LOCKER ROOM',
+        'BLUE IDLE'
+      ]
+    },
+    {
+      id:'PROUD',
+      label:'Proud Of You',
+      owned:()=>state.ownedTaunts.includes('PROUD'),
+      displayBases:(fighter)=>[
+        'PROUD OF YOU LOCKER ROOM TAUNT',
+        'BLUE CPU TAUNT 1',
+        'BLUE CPU TAUNT'
+      ]
+    }
+  ];
+}
+
+/* Online/ring taunt lookup: CPU taunt files only after selected taunt. */
+if(typeof onlineTauntBasesForFighterAndTaunt === 'function'){
+  const onlineTauntBasesForFighterAndTaunt_v116_base = onlineTauntBasesForFighterAndTaunt;
+  onlineTauntBasesForFighterAndTaunt = function(fighterId, tauntId){
+    fighterId = String(fighterId || 'GREEN').toUpperCase();
+    tauntId = String(tauntId || 'DEFAULT').toUpperCase();
+
+    if(fighterId === 'BLUE' && tauntId === 'PROUD'){
+      return ['BLUE CPU TAUNT 1','BLUE CPU TAUNT'];
+    }
+
+    if(fighterId === 'GREEN' && tauntId === 'GTS'){
+      return ['GREEN CPU TAUNT 1','GREEN CPU TAUNT GTS','GREEN CPU TAUNT'];
+    }
+
+    if(fighterId === 'GREEN' && tauntId === 'MOS'){
+      return ['GREEN CPU TAUNT 2','GREEN CPU TAUNT MOS','GREEN CPU TAUNT'];
+    }
+
+    return onlineTauntBasesForFighterAndTaunt_v116_base(fighterId, tauntId);
+  };
+}
+
+/* Buy from store should still save the taunt to the right fighter. */
+const buyStoreItemV114_v116_base = buyStoreItemV114;
+buyStoreItemV114 = function(item){
+  if(item && item.type === 'taunt'){
+    if(!state.ownedTaunts.includes(item.id)){
+      if((state.cash || 0) < item.price){ showNotice('store','Not enough cash.'); return; }
+      state.cash -= item.price;
+      state.ownedTaunts.push(item.id);
+    }
+    ensureSelectedTaunts();
+    const fighter = item.fighter || state.selectedFighter || 'GREEN';
+    state.selectedFighter = fighter;
+    state.selectedTaunt = item.id;
+    state.selectedTaunts[fighter] = item.id;
+    saveState();
+    showLocker();
+    return;
+  }
+
+  return buyStoreItemV114_v116_base(item);
+};
+
+
+/* ============================================================
+   V11.7 WHITE + FLAME ON COMING SOON
+   ------------------------------------------------------------
+   White Gloves and Flame On Gloves are not released yet.
+   - Removed from rotating store pool
+   - Show as COMING SOON in glove select
+   - Cannot be selected even if previously in save data
+   ============================================================ */
+
+const COMING_SOON_GLOVES_V117 = ['WHITE','FLAME ON'];
+
+/* Remove coming-soon gloves from active store rotation. */
+if(typeof STORE_GLOVE_POOL_V114 !== 'undefined'){
+  STORE_GLOVE_POOL_V114 = STORE_GLOVE_POOL_V114.filter(item => {
+    const id = item.gloveId || item.id;
+    return !COMING_SOON_GLOVES_V117.includes(id);
+  });
+}
+
+/* If a save already unlocked them during testing, keep them unavailable for now. */
+state.unlockedGloves = (state.unlockedGloves || []).filter(g => !COMING_SOON_GLOVES_V117.includes(g));
+if(COMING_SOON_GLOVES_V117.includes(state.selectedGloves)){
+  state.selectedGloves = 'BLACK';
+}
+saveState();
+
+/* Override glove screen with Coming Soon cards. */
+showGloves = function(){
+  show('gloves');
+  setImg($('glovesBg'), SCREEN_BASES.locker);
+  const g=$('glovesGrid');
+  g.innerHTML='';
+
+  const colors = ['BLACK','GREEN','BLUE','RED','PINK','WHITE','AMERICA','FLAME ON','GOLD'];
+
+  colors.forEach(color=>{
+    const comingSoon = COMING_SOON_GLOVES_V117.includes(color);
+    const unlocked = !comingSoon && state.unlockedGloves.includes(color);
+    const displayName = color === 'AMERICA' ? 'AMERICAN' : color;
+
+    const card=document.createElement('div');
+    card.className='card '+(unlocked?'':'locked')+(comingSoon?' comingSoon':'');
+    if(!unlocked || comingSoon){ card.setAttribute('data-tip', gloveUnlockTipV118(color)); }
+
+    card.innerHTML=`
+      <img alt="${displayName} gloves">
+      ${comingSoon ? '<div class="cardComingSoonText">COMING<br>SOON</div>' : ''}
+      <div class="cardLabel">${displayName} GLOVES${comingSoon?'':' '+(unlocked?'':'🔒')}</div>
+    `;
+
+    if(typeof gloveDisplayBasesV114 === 'function'){
+      setImg(card.querySelector('img'), gloveDisplayBasesV114(color));
+    }else{
+      setImg(card.querySelector('img'), [
+        color+' GLOVES DISPLAY',
+        color+' DISPLAY',
+        color+' GLOVES IDLE',
+        color+' GLOVES PLAYER TAUNT'
+      ]);
+    }
+
+    card.onclick=()=>{
+      if(comingSoon){
+        showNotice('locker','Coming soon.');
+        return;
+      }
+      if(!unlocked){
+        showNotice('locker','Buy this glove color in the store.');
+        return;
+      }
+      state.selectedGloves=color;
+      saveState();
+      showLocker();
+    };
+
+    g.appendChild(card);
+  });
+};
+
+
+/* ============================================================
+   V11.8 TOOLTIP HELPERS
+   ============================================================ */
+function gloveUnlockTipV118(color){
+  if(color === 'WHITE') return 'Coming soon.';
+  if(color === 'FLAME ON') return 'Coming soon.';
+  if(color === 'GOLD') return 'Win the championship, then defend it 6 times to unlock.';
+  if(color === 'BLACK') return 'Unlocked by default.';
+  return 'Buy from the store to unlock.';
+}
+function fighterUnlockTipV118(color){
+  if(color === 'GREEN') return 'Unlocked by default.';
+  return 'Defeat ' + color + ' in career mode to unlock.';
 }
 
 // initial asset load
@@ -3642,14 +6093,15 @@ window.createCounterBoxingRoom = async function(room) {
 
   const cleanRoom = {
     code,
-    ring: String(room.ring || 'RING4').toUpperCase(),
     hostName: String(room.hostName || "PLAYER").slice(0, 16).toUpperCase(),
     hostGloves: String(room.hostGloves || "GREEN").toUpperCase(),
     hostFighter: String(room.hostFighter || "GREEN").toUpperCase(),
+    hostTaunt: String(room.hostTaunt || "DEFAULT").toUpperCase(),
     hostWager: Number(room.hostWager || 0),
     guestName: "",
     guestGloves: "",
     guestFighter: "",
+    guestTaunt: "DEFAULT",
     guestWager: 0,
     totalPurse: Number(room.hostWager || 0),
     status: "waiting",
@@ -3695,6 +6147,7 @@ window.joinCounterBoxingRoom = async function(join) {
     guestName: String(join.guestName || "PLAYER").slice(0, 16).toUpperCase(),
     guestGloves: String(join.guestGloves || "GREEN").toUpperCase(),
     guestFighter: String(join.guestFighter || "BLUE").toUpperCase(),
+    guestTaunt: String(join.guestTaunt || "DEFAULT").toUpperCase(),
     guestWager: Number(join.guestWager || 0),
     totalPurse: Number(room.hostWager || 0) + Number(join.guestWager || 0),
     status: "playing",
